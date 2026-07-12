@@ -1,13 +1,30 @@
 # slim-agents-for-codex
 
+[繁體中文](README.zh-TW.md) | English
+
 Deterministic, reviewed Codex agent presets adapted from `oh-my-opencode-slim`. This community project is not affiliated with OpenAI or the upstream project.
 
 ## Quick start
 
+This project is distributed through GitHub rather than the npm registry.
+
+### Install a GitHub Release package
+
+Download `slim-agents-for-codex-0.1.0.tgz` from the matching GitHub Release, then run:
+
 ```bash
-npx slim-agents-for-codex list-presets
-npx slim-agents-for-codex convert --preset openai-5.6 --output generated
-npx slim-agents-for-codex install --preset openai-5.6
+npm install --global ./slim-agents-for-codex-0.1.0.tgz
+slim-agents-codex list-presets
+```
+
+### Run from a source checkout
+
+```bash
+npm ci
+npm run build
+node dist/cli.js list-presets
+node dist/cli.js convert --preset openai-5.6 --output generated
+node dist/cli.js install --preset openai-5.6
 ```
 
 `install` previews the resolved immutable preset, config path, and backup path before asking for confirmation. Use `--yes` only for explicit non-interactive installation. Override the target with `--codex-home PATH`.
@@ -44,3 +61,9 @@ npm pack --dry-run
 ```
 
 Requires Node.js 20 or newer.
+
+## Maintenance status
+
+This is a community, experimental project maintained on an as-needed basis. It does not promise immediate support for every new Codex model or configuration change. Preset IDs remain immutable: future model mappings should be added as new preset directories instead of replacing historical presets.
+
+The package is intentionally marked private to prevent accidental publication to the npm registry. `npm pack` and installation from the resulting `.tgz` remain supported.

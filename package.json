@@ -1,0 +1,23 @@
+{
+  "name": "slim-agents-for-codex",
+  "version": "0.1.0",
+  "description": "Deterministic oh-my-opencode-slim agent presets for Codex",
+  "type": "module",
+  "bin": { "slim-agents-codex": "dist/cli.js" },
+  "files": ["dist", "presets", "README.md", "LICENSE", "NOTICE.md"],
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "snapshots": "node dist/cli.js convert --all --output presets --check",
+    "pack:check": "npm pack --dry-run --json"
+  },
+  "dependencies": { "smol-toml": "latest" },
+  "devDependencies": {
+    "@types/node": "latest",
+    "typescript": "latest",
+    "vitest": "latest"
+  },
+  "license": "MIT"
+}

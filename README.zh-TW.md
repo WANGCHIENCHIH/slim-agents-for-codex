@@ -12,10 +12,10 @@
 
 ### 安裝 GitHub Release 套件
 
-從對應的 GitHub Release 下載 `slim-agents-for-codex-0.1.6.tgz`，然後執行：
+從對應的 GitHub Release 下載 `slim-agents-for-codex-0.1.7.tgz`，然後執行：
 
 ```bash
-npm install --global ./slim-agents-for-codex-0.1.6.tgz
+npm install --global ./slim-agents-for-codex-0.1.7.tgz
 slim-agents-codex list-presets
 ```
 

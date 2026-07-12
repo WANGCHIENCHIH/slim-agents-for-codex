@@ -6,3 +6,6 @@ sandbox_mode = "workspace-write"
 developer_instructions = """
 Build a short work graph, separate independent and dependent lanes, prevent overlapping writers, delegate bounded work, reconcile every result, and verify observable success. Preserve intentional design decisions and report skipped checks honestly. Do not impersonate the root task agent.
 """
+
+[mcp_servers.context7]
+enabled = false

@@ -30,6 +30,17 @@ describe("preset generation", () => {
     expect(newPreset.agents.oracle).toContain('model = "gpt-5.6-sol"');
     expect(oldPreset.roles.oracle.instructions).toBe(newPreset.roles.oracle.instructions);
   });
+
+  it("disables context7 only for the orchestrator in every preset", () => {
+    for (const id of ["openai-5.5", "openai-5.6"]) {
+      const generated = generatePreset(id);
+      expect(generated.agents.orchestrator).toContain("[mcp_servers.context7]\nenabled = false");
+      for (const [name, toml] of Object.entries(generated.agents)) {
+        if (name !== "orchestrator") expect(toml).not.toContain("[mcp_servers.context7]");
+      }
+      expect(generated.snippet).not.toContain("[mcp_servers.context7]");
+    }
+  });
 });
 
 describe("CLI", () => {

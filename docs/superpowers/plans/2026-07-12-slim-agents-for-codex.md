@@ -59,9 +59,9 @@
 - `PresetManifest`: immutable ID, adapter metadata, source provenance, lifecycle status, snapshot version, and exact role model/effort map.
 - `loadPreset(idOrAlias): PresetManifest` resolves aliases while returning the immutable ID.
 
-- [ ] Write failing tests for nine required roles, invalid effort, missing role, alias resolution, alias cycle, and immutable ID mismatch.
+- [ ] Write failing tests for eight required roles, invalid effort, missing role, alias resolution, alias cycle, and immutable ID mismatch.
 - [ ] Implement schemas and loaders with explicit errors and stable error codes.
-- [ ] Port the nine reviewed Codex prompts from the approved design and current converted TOMLs; do not copy unsupported OpenCode tool syntax.
+- [ ] Port the eight reviewed Codex prompts from the approved design and current converted TOMLs; do not copy unsupported OpenCode tool syntax.
 - [ ] Add `openai-5.5` and `openai-5.6` manifests and aliases with `latest` and `recommended` pointing to `openai-5.6`.
 - [ ] Run targeted tests and commit as `feat: add adapter and versioned preset contracts`.
 
@@ -78,7 +78,7 @@
 - Test: `tests/snapshots/presets.test.ts`
 
 **Interfaces:**
-- `generatePreset(adapter, manifest): GeneratedPreset` returns nine named TOMLs plus a config snippet.
+- `generatePreset(adapter, manifest): GeneratedPreset` returns eight named TOMLs plus a config snippet.
 - Output ordering is stable by required-role order and always ends with LF.
 
 - [ ] Write failing tests for field completeness, TOML escaping, model differences with identical prompts, stable ordering, and forbidden OpenCode tokens.

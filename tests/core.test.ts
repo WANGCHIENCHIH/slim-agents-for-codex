@@ -8,11 +8,14 @@ describe("preset generation", () => {
     expect(resolvePreset("openai-5.5").id).toBe("openai-5.5");
   });
 
-  it("generates nine complete, deterministic agent TOMLs", () => {
+  it("generates the eight upstream agents without inventing a councillor agent", () => {
     const first = generatePreset("openai-5.6");
     const second = generatePreset("openai-5.6");
     expect(first).toEqual(second);
-    expect(Object.keys(first.agents)).toHaveLength(9);
+    expect(Object.keys(first.agents)).toHaveLength(8);
+    expect(first.agents).not.toHaveProperty("councillor");
+    expect(first.snippet).not.toContain("[agents.councillor]");
+    expect(JSON.stringify(first)).not.toMatch(/councillor/i);
     expect(first.agents.explorer).toContain('name = "explorer"');
     expect(first.agents.explorer).toContain('model = "gpt-5.6-luna"');
     expect(first.agents.explorer).not.toMatch(/task_id|council_session|Background Job Board/);

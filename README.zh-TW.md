@@ -12,10 +12,10 @@
 
 ### 安裝 GitHub Release 套件
 
-從對應的 GitHub Release 下載 `slim-agents-for-codex-0.1.1.tgz`，然後執行：
+從對應的 GitHub Release 下載 `slim-agents-for-codex-0.1.2.tgz`，然後執行：
 
 ```bash
-npm install --global ./slim-agents-for-codex-0.1.1.tgz
+npm install --global ./slim-agents-for-codex-0.1.2.tgz
 slim-agents-codex list-presets
 ```
 
@@ -35,7 +35,7 @@ node dist/cli.js install --preset openai-5.6
 
 GitHub 原始碼與 `.tgz` 套件都包含 `presets/<id>/agents/` 與 `config.snippet.toml`，因此不一定要使用 CLI。
 
-1. 將選定版本的九個 TOML 複製到 `CODEX_HOME/agents/slim-agents-for-codex/<preset-id>/`。
+1. 將選定版本的八個 TOML 複製到 `CODEX_HOME/agents/slim-agents-for-codex/<preset-id>/`。
 2. 備份現有的 `config.toml`。
 3. 將該版本的 `config.snippet.toml` 合併進 `config.toml`。
 4. 保留原始 UTF-8 編碼、BOM 狀態與換行格式。

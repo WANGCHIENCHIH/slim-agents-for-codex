@@ -109,7 +109,7 @@ The v1 adapter returns:
 
 - adapter ID and schema version;
 - source project and source commit/version;
-- exactly nine role definitions: orchestrator, oracle, librarian, explorer, designer, fixer, council, councillor, observer;
+- exactly eight role definitions: orchestrator, oracle, librarian, explorer, designer, fixer, council, observer;
 - role name, description, sandbox mode, and reviewed Codex `developer_instructions`;
 - required `max_threads` and `max_depth` constraints;
 - unsupported OpenCode concepts that must not appear in generated output.
@@ -135,7 +135,7 @@ Each manifest records:
 - source repository and commit/version;
 - creation date;
 - lifecycle status such as supported or deprecated;
-- exact nine-role model and reasoning-effort mapping;
+- exact eight-role model and reasoning-effort mapping;
 - snapshot format version.
 
 Deprecated presets remain packaged. Removing old presets requires a documented major-version policy and must never happen silently.
@@ -216,7 +216,7 @@ The README includes quick start, manual installation, preset lifecycle, safety b
 
 ## Success Criteria
 
-- Both CLI and manual workflows install the same nine role definitions.
+- Both CLI and manual workflows install the same eight role definitions.
 - `openai-5.5` and `openai-5.6` remain independently available after newer presets are added.
 - Generation is deterministic and committed snapshots cannot drift unnoticed.
 - Installation preserves unrelated config content, encoding, BOM, and newline style.

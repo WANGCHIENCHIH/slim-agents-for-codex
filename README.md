@@ -12,10 +12,10 @@ This project is distributed through GitHub rather than the npm registry.
 
 ### Install a GitHub Release package
 
-Download `slim-agents-for-codex-0.1.1.tgz` from the matching GitHub Release, then run:
+Download `slim-agents-for-codex-0.1.2.tgz` from the matching GitHub Release, then run:
 
 ```bash
-npm install --global ./slim-agents-for-codex-0.1.1.tgz
+npm install --global ./slim-agents-for-codex-0.1.2.tgz
 slim-agents-codex list-presets
 ```
 
@@ -33,7 +33,7 @@ node dist/cli.js install --preset openai-5.6
 
 ## Manual installation
 
-Every npm package and source checkout includes ready-to-copy files under `presets/<id>/agents/` and `config.snippet.toml`. Copy the nine TOMLs under your `CODEX_HOME/agents/slim-agents-for-codex/<preset-id>/` directory, then merge the snippet into `config.toml`. Preserve its UTF-8 encoding, BOM state, and line endings, and make a backup first.
+Every npm package and source checkout includes ready-to-copy files under `presets/<id>/agents/` and `config.snippet.toml`. Copy the eight TOMLs under your `CODEX_HOME/agents/slim-agents-for-codex/<preset-id>/` directory, then merge the snippet into `config.toml`. Preserve its UTF-8 encoding, BOM state, and line endings, and make a backup first.
 
 Do not place inactive legacy presets under `CODEX_HOME/agents/`: Codex recursively discovers TOML roles there. Store inactive copies under `CODEX_HOME/agent-presets/` instead.
 

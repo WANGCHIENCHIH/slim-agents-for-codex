@@ -17,7 +17,7 @@
 
 CLI 不會自動連線下載或解析上游配置。維護者必須人工檢查上游版本，確認模型名稱、effort 與角色變更，再將審核後的映射加入原始碼。
 
-`convert` 目前只產生九個代理 TOML 與 `config.snippet.toml`，不會建立 `manifest.json`，也不會自動更新 aliases。
+`convert` 目前只產生八個代理 TOML 與 `config.snippet.toml`，不會建立 `manifest.json`，也不會自動更新 aliases。
 
 ## 1. 準備工作目錄
 
@@ -34,8 +34,8 @@ npm ci
 查看上游的新版本設定與角色來源，記錄：
 
 - 上游 commit、tag 或版本日期。
-- 九個角色各自使用的模型名稱。
-- 九個角色各自使用的 reasoning effort。
+- 八個角色各自使用的模型名稱。
+- 八個角色各自使用的 reasoning effort。
 - Prompt、角色清單或行為是否改變。
 - Codex 是否實際支援映射後的模型名稱。
 
@@ -43,7 +43,7 @@ npm ci
 
 ## 3. 新增 preset 映射
 
-編輯 `src/core/presets.ts`，在 `presets` 加入完整的九角色映射：
+編輯 `src/core/presets.ts`，在 `presets` 加入完整的八角色映射：
 
 ```ts
 "openai-5.7": {
@@ -59,7 +59,6 @@ npm ci
     designer: ["實際模型名稱", "medium"],
     fixer: ["實際模型名稱", "medium"],
     council: ["實際模型名稱", "high"],
-    councillor: ["實際模型名稱", "high"],
     observer: ["實際模型名稱", "low"],
   }),
 },
@@ -108,7 +107,6 @@ presets/openai-5.7/
 │   ├── designer.toml
 │   ├── fixer.toml
 │   ├── council.toml
-│   ├── councillor.toml
 │   └── observer.toml
 ├── config.snippet.toml
 └── manifest.json
@@ -129,7 +127,7 @@ npm pack --dry-run
 
 驗證重點：
 
-- 新版包含全部九個角色。
+- 新版包含全部八個角色。
 - `openai-5.5`、`openai-5.6` 與其他歷史 preset 仍存在。
 - `latest`、`recommended` 解析至 `openai-5.7`。
 - 打包內容包含新舊所有 preset。

@@ -17,7 +17,7 @@ Published presets such as `openai-5.5` and `openai-5.6` must remain reproducible
 
 The CLI does not download or parse upstream configurations automatically. A maintainer must inspect the upstream version, verify its model names, effort values, and role changes, and then add the reviewed mapping to this repository.
 
-The `convert` command currently generates the nine agent TOMLs and `config.snippet.toml`. It does not create `manifest.json` or update aliases.
+The `convert` command currently generates the eight agent TOMLs and `config.snippet.toml`. It does not create `manifest.json` or update aliases.
 
 ## 1. Prepare a working copy
 
@@ -34,7 +34,7 @@ Confirm that the working tree is clean and make the change on a new branch.
 Inspect the upstream configuration and role sources. Record:
 
 - The upstream commit, tag, or review date.
-- The model assigned to each of the nine roles.
+- The model assigned to each of the eight roles.
 - The reasoning effort assigned to each role.
 - Whether prompts, the role list, or behavior changed.
 - Whether Codex actually supports the mapped model names.
@@ -43,7 +43,7 @@ Do not infer `sol`, `terra`, `luna`, or any other model name from the version nu
 
 ## 3. Add the preset mapping
 
-Edit `src/core/presets.ts` and add a complete nine-role entry to `presets`:
+Edit `src/core/presets.ts` and add a complete eight-role entry to `presets`:
 
 ```ts
 "openai-5.7": {
@@ -59,7 +59,6 @@ Edit `src/core/presets.ts` and add a complete nine-role entry to `presets`:
     designer: ["actual-model-name", "medium"],
     fixer: ["actual-model-name", "medium"],
     council: ["actual-model-name", "high"],
-    councillor: ["actual-model-name", "high"],
     observer: ["actual-model-name", "low"],
   }),
 },
@@ -108,7 +107,6 @@ presets/openai-5.7/
 │   ├── designer.toml
 │   ├── fixer.toml
 │   ├── council.toml
-│   ├── councillor.toml
 │   └── observer.toml
 ├── config.snippet.toml
 └── manifest.json
@@ -129,7 +127,7 @@ npm pack --dry-run
 
 Verify that:
 
-- The new preset contains all nine roles.
+- The new preset contains all eight roles.
 - `openai-5.5`, `openai-5.6`, and every other historical preset remain present.
 - `latest` and `recommended` resolve to `openai-5.7`.
 - The package includes all new and historical presets.

@@ -27,12 +27,8 @@ description = "Bounded implementation specialist; executes clear specifications 
 config_file = "agents/slim-agents-for-codex/openai-5.6/fixer.toml"
 
 [agents.council]
-description = "Read-only coordinator for multiple independent Councillor perspectives on high-stakes decisions."
+description = "Read-only coordinator for multiple independent perspectives on high-stakes decisions."
 config_file = "agents/slim-agents-for-codex/openai-5.6/council.toml"
-
-[agents.councillor]
-description = "Internal read-only Council worker that provides an independent evidence-based assessment."
-config_file = "agents/slim-agents-for-codex/openai-5.6/councillor.toml"
 
 [agents.observer]
 description = "Read-only visual specialist for images, screenshots, PDFs, diagrams, and exact visible text."

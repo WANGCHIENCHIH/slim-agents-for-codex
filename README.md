@@ -2,7 +2,7 @@
 
 [繁體中文](README.zh-TW.md) | English
 
-Deterministic, reviewed Codex agent presets adapted from `oh-my-opencode-slim`. This community project is not affiliated with OpenAI or the upstream project.
+Deterministic, reviewed Codex agent presets adapted from [alvinunreal/oh-my-opencode-slim](https://github.com/alvinunreal/oh-my-opencode-slim). The original role concepts and behavior are the work of that project; this repository provides a Codex-specific adaptation. This community project is not affiliated with OpenAI or the upstream project.
 
 ## Quick start
 

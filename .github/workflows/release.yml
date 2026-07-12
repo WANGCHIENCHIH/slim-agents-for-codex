@@ -1,0 +1,88 @@
+name: release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing version tag to release (for example, v0.1.0)
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Resolve release tag
+        id: release
+        env:
+          INPUT_TAG: ${{ inputs.tag }}
+        shell: bash
+        run: |
+          if [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]]; then
+            echo "tag=${INPUT_TAG}" >> "$GITHUB_OUTPUT"
+          else
+            echo "tag=${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.release.outputs.tag }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+      - run: npm test
+      - run: npm run typecheck
+      - run: npm run build
+      - run: npm run snapshots
+
+      - name: Build release package
+        id: package
+        shell: bash
+        run: |
+          package_file="$(npm pack --silent)"
+          echo "file=${package_file}" >> "$GITHUB_OUTPUT"
+          sha256sum "$package_file" > "${package_file}.sha256"
+
+      - name: Write release notes
+        shell: bash
+        run: |
+          cat > release-notes.md <<'EOF'
+          ## Installation
+
+          Download the attached `.tgz`, then run:
+
+          ```bash
+          npm install --global ./slim-agents-for-codex-<version>.tgz
+          slim-agents-codex list-presets
+          ```
+
+          The package is distributed through GitHub and is not published to the npm registry.
+
+          See `README.md` or `README.zh-TW.md` for CLI and manual TOML installation instructions.
+          EOF
+
+      - name: Create or update GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_TAG: ${{ steps.release.outputs.tag }}
+          PACKAGE_FILE: ${{ steps.package.outputs.file }}
+        shell: bash
+        run: |
+          if gh release view "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            gh release upload "$RELEASE_TAG" "$PACKAGE_FILE" "${PACKAGE_FILE}.sha256" \
+              --clobber --repo "$GITHUB_REPOSITORY"
+          else
+            gh release create "$RELEASE_TAG" "$PACKAGE_FILE" "${PACKAGE_FILE}.sha256" \
+              --title "$RELEASE_TAG" --notes-file release-notes.md \
+              --repo "$GITHUB_REPOSITORY"
+          fi

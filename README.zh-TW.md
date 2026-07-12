@@ -2,7 +2,7 @@
 
 繁體中文 | [English](README.md)
 
-這是一組經過整理、可重現的 Codex 代理預設，改編自 `oh-my-opencode-slim`。本社群專案與 OpenAI 及原始上游專案沒有隸屬關係。
+這是一組經過整理、可重現的 Codex 代理預設，改編自 [alvinunreal/oh-my-opencode-slim](https://github.com/alvinunreal/oh-my-opencode-slim)。原始代理角色概念與行為設計是該專案的工作成果；本 Repository 提供針對 Codex 的轉換版本。本社群專案與 OpenAI 及原始上游專案沒有隸屬關係。
 
 ## 快速開始
 

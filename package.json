@@ -15,7 +15,7 @@
     "url": "https://github.com/WANGCHIENCHIH/slim-agents-for-codex/issues"
   },
   "bin": { "slim-agents-codex": "dist/cli.js" },
-  "files": ["dist", "presets", "docs/adding-a-preset.zh-TW.md", "docs/preset-lifecycle.md", "README.md", "README.zh-TW.md", "LICENSE", "NOTICE.md"],
+  "files": ["dist", "presets", "docs/adding-a-preset.md", "docs/adding-a-preset.zh-TW.md", "docs/preset-lifecycle.md", "README.md", "README.zh-TW.md", "LICENSE", "NOTICE.md"],
   "engines": { "node": ">=20" },
   "scripts": {
     "build": "tsc -p tsconfig.json",

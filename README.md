@@ -39,6 +39,8 @@ Do not place inactive legacy presets under `CODEX_HOME/agents/`: Codex recursive
 
 Preset IDs are immutable. `openai-5.5` and `openai-5.6` remain available when newer presets are added. `latest` and `recommended` are movable aliases defined in `presets/aliases.json`; the CLI always displays the resolved immutable ID before writing. There is no automatic model fallback.
 
+To add `openai-5.7` or a later generation, follow the [Adding a model preset maintenance guide](docs/adding-a-preset.md).
+
 ## Commands
 
 - `list-presets`

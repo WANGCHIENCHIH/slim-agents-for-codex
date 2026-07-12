@@ -1,5 +1,7 @@
 # 新增模型預設維護指南
 
+[English](adding-a-preset.md) | 繁體中文
+
 本文件說明當 [alvinunreal/oh-my-opencode-slim](https://github.com/alvinunreal/oh-my-opencode-slim) 增加新一代 OpenAI 配置時，如何在本專案建立新的 Codex preset。以下以 `openai-5.7` 為例。
 
 ## 先確認變更類型

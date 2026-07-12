@@ -38,6 +38,14 @@ export const presets: Record<string, Preset> = {
 
 export const aliases = { latest: "openai-5.6", recommended: "openai-5.6" } as const;
 export const roleOrder = ["orchestrator", "oracle", "librarian", "explorer", "designer", "fixer", "council", "observer"];
+const disabledMcpsByRole: Record<string, readonly string[]> = {
+  librarian: ["codegraph"],
+  orchestrator: ["exa", "context7", "grep", "codegraph"],
+  explorer: ["exa", "context7", "grep"],
+  designer: ["exa", "context7", "grep"],
+  oracle: ["context7", "grep"],
+  fixer: ["context7", "grep"],
+};
 
 export function resolvePreset(idOrAlias: string): Preset {
   const id = (aliases as Record<string, string>)[idOrAlias] ?? idOrAlias;
@@ -56,7 +64,7 @@ export function generatePreset(idOrAlias: string) {
   for (const name of roleOrder) {
     const current = roles[name];
     const model = preset.models[name];
-    const mcpOverrides = name === "orchestrator" ? "\n[mcp_servers.context7]\nenabled = false\n" : "";
+    const mcpOverrides = (disabledMcpsByRole[name] ?? []).map((server) => `\n[mcp_servers.${server}]\nenabled = false\n`).join("");
     agents[name] = `name = ${quote(current.name)}\ndescription = ${quote(current.description)}\nmodel = ${quote(model.model)}\nmodel_reasoning_effort = ${quote(model.effort)}\nsandbox_mode = ${quote(current.sandbox)}\ndeveloper_instructions = ${multiline(current.instructions)}\n${mcpOverrides}`;
   }
   const snippet = `[agents]\nmax_threads = 6\nmax_depth = 2\n\n` + roleOrder.map((name) => `[agents.${name}]\ndescription = ${quote(roles[name].description)}\nconfig_file = ${quote(`agents/${name}.toml`)}\n`).join("\n");

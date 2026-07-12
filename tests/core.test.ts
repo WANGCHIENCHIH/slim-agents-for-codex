@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { parse } from "smol-toml";
 import { generatePreset, resolvePreset } from "../src/core/presets.js";
 import { runCli } from "../src/cli.js";
 
@@ -31,14 +32,28 @@ describe("preset generation", () => {
     expect(oldPreset.roles.oracle.instructions).toBe(newPreset.roles.oracle.instructions);
   });
 
-  it("disables context7 only for the orchestrator in every preset", () => {
+  it("generates the exact MCP blacklist for every role and preset", () => {
+    const expected: Record<string, string[]> = {
+      orchestrator: ["codegraph", "context7", "exa", "grep"],
+      oracle: ["context7", "grep"],
+      librarian: ["codegraph"],
+      explorer: ["context7", "exa", "grep"],
+      designer: ["context7", "exa", "grep"],
+      fixer: ["context7", "grep"],
+      council: [],
+      observer: [],
+    };
     for (const id of ["openai-5.5", "openai-5.6"]) {
       const generated = generatePreset(id);
-      expect(generated.agents.orchestrator).toContain("[mcp_servers.context7]\nenabled = false");
       for (const [name, toml] of Object.entries(generated.agents)) {
-        if (name !== "orchestrator") expect(toml).not.toContain("[mcp_servers.context7]");
+        const document = parse(toml) as { mcp_servers?: Record<string, { enabled?: boolean }> };
+        const disabled = Object.entries(document.mcp_servers ?? {})
+          .filter(([, config]) => config.enabled === false)
+          .map(([server]) => server)
+          .sort();
+        expect(disabled).toEqual(expected[name]);
       }
-      expect(generated.snippet).not.toContain("[mcp_servers.context7]");
+      expect(generated.snippet).not.toContain("[mcp_servers.");
     }
   });
 });

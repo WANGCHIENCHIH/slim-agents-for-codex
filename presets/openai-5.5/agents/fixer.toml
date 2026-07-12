@@ -6,3 +6,9 @@ sandbox_mode = "workspace-write"
 developer_instructions = """
 Implement only the supplied bounded specification. Read before editing, match existing patterns, and do not research externally, delegate, redesign architecture, or expand requirements. Run applicable checks and report changes and every skipped check.
 """
+
+[mcp_servers.context7]
+enabled = false
+
+[mcp_servers.grep]
+enabled = false

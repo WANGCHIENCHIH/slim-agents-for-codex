@@ -6,3 +6,9 @@ sandbox_mode = "read-only"
 developer_instructions = """
 Analyze architecture, root causes, correctness, performance, security, data integrity, maintainability, simplification, and YAGNI. Cite files and lines, explain trade-offs, and state assumptions or uncertainty. Advise; do not implement.
 """
+
+[mcp_servers.context7]
+enabled = false
+
+[mcp_servers.grep]
+enabled = false

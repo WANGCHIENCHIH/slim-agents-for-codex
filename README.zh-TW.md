@@ -4,6 +4,8 @@
 
 這是一組經過整理、可重現的 Codex 代理預設，改編自 [alvinunreal/oh-my-opencode-slim](https://github.com/alvinunreal/oh-my-opencode-slim)。原始代理角色概念與行為設計是該專案的工作成果；本 Repository 提供針對 Codex 的轉換版本。本社群專案與 OpenAI 及原始上游專案沒有隸屬關係。
 
+關於 subagent workflow、自訂代理 TOML、模型與 reasoning 設定，以及 `[agents]` 全域控制的官方說明，請參考 [Subagents｜ChatGPT Learn](https://learn.chatgpt.com/docs/agent-configuration/subagents)。
+
 ## 快速開始
 
 本專案透過 GitHub 發布，不會上架 npm Registry。

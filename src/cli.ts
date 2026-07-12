@@ -42,6 +42,23 @@ export async function runCli(args: string[], io: CliIo): Promise<number> {
     return 0;
   }
   if (command === "validate") {
+    const codexHomeOption = valueAfter(args, "--codex-home");
+    if (codexHomeOption) {
+      const codexHome = resolve(codexHomeOption);
+      const configPath = join(codexHome, "config.toml");
+      const config = parse(await readFile(configPath, "utf8")) as Record<string, unknown>;
+      const agents = config.agents as Record<string, unknown> | undefined;
+      for (const name of roleOrder) {
+        const role = agents?.[name] as Record<string, unknown> | undefined;
+        const configFile = role?.config_file;
+        if (typeof configFile !== "string") throw new Error(`Missing config_file for role: ${name}`);
+        if (configFile.replaceAll("\\", "/") !== `agents/${name}.toml`) throw new Error(`Invalid config_file for role: ${name}`);
+        const document = parse(await readFile(resolve(dirname(configPath), configFile), "utf8"));
+        if (document.name !== name || !document.model || !document.developer_instructions) throw new Error(`Invalid role: ${name}`);
+      }
+      io.log(`valid installation: ${codexHome} (${roleOrder.length} roles)`);
+      return 0;
+    }
     const directory = resolve(valueAfter(args, "--path", "presets/openai-5.6/agents")!);
     for (const name of roleOrder) {
       const document = parse(await readFile(join(directory, `${name}.toml`), "utf8"));
@@ -52,7 +69,10 @@ export async function runCli(args: string[], io: CliIo): Promise<number> {
   }
   if (command === "install" || command === "switch-preset") {
     const preset = valueAfter(args, "--preset", "latest")!;
-    const codexHome = resolve(valueAfter(args, "--codex-home", process.env.CODEX_HOME ?? join(homedir(), ".codex"))!);
+    const scope = valueAfter(args, "--scope");
+    if (scope && scope !== "global" && scope !== "project") throw new Error(`Invalid scope: ${scope}`);
+    const defaultHome = scope === "project" ? join(process.cwd(), ".codex") : process.env.CODEX_HOME ?? join(homedir(), ".codex");
+    const codexHome = resolve(valueAfter(args, "--codex-home", defaultHome)!);
     const preview = await previewInstall({ codexHome, preset });
     io.log(`preset: ${preset} -> ${preview.resolvedPreset}`);
     io.log(`config: ${preview.configPath}`);

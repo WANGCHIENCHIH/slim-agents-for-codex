@@ -12,10 +12,10 @@ This project is distributed through GitHub rather than the npm registry.
 
 ### Install a GitHub Release package
 
-Download `slim-agents-for-codex-0.1.4.tgz` from the matching GitHub Release, then run:
+Download `slim-agents-for-codex-0.1.5.tgz` from the matching GitHub Release, then run:
 
 ```bash
-npm install --global ./slim-agents-for-codex-0.1.4.tgz
+npm install --global ./slim-agents-for-codex-0.1.5.tgz
 slim-agents-codex list-presets
 ```
 
@@ -29,13 +29,13 @@ node dist/cli.js convert --preset openai-5.6 --output generated
 node dist/cli.js install --preset openai-5.6
 ```
 
-`install` previews the resolved immutable preset, config path, and backup path before asking for confirmation. Use `--yes` only for explicit non-interactive installation. Override the target with `--codex-home PATH`.
+`install` previews the resolved immutable preset, config path, and backup path before asking for confirmation. Use `--scope global` for `CODEX_HOME` (or `~/.codex`) and `--scope project` for the current project's `.codex` directory. An explicit `--codex-home PATH` overrides the scope target. Use `--yes` only for explicit non-interactive installation.
 
 ## Manual installation
 
 Every npm package and source checkout includes ready-to-copy files under `presets/<id>/agents/` and `config.snippet.toml`. For a global installation, copy the eight TOMLs directly into `CODEX_HOME/agents/` and merge the snippet into `CODEX_HOME/config.toml`. For a project-scoped installation, copy them into `<project>/.codex/agents/` and merge the snippet into `<project>/.codex/config.toml`. In both scopes, `config_file = "agents/<role>.toml"` resolves relative to the config file that declares the role, as specified by the [Codex Configuration Reference](https://learn.chatgpt.com/docs/config-file/config-reference). Preserve its UTF-8 encoding, BOM state, and line endings, and make a backup first.
 
-The CLI follows the same layout. Its default `--codex-home` is `~/.codex`; pass `--codex-home .codex` from a project root for project-scoped installation.
+The CLI follows the same layout. Use `--scope global` for the global location or `--scope project` from a project root; use `--codex-home DIR` only when an explicit location is needed.
 
 Do not place inactive legacy presets under `CODEX_HOME/agents/`: Codex recursively discovers TOML roles there. Store inactive copies under `CODEX_HOME/agent-presets/` instead.
 
@@ -51,10 +51,11 @@ To add `openai-5.7` or a later generation, follow the [Adding a model preset mai
 - `convert --preset ID --output DIR`
 - `convert --all --output DIR`
 - `validate --path DIR`
-- `install --preset ID [--codex-home DIR] [--yes]`
-- `switch-preset --preset ID [--codex-home DIR] [--yes]`
+- `validate --codex-home DIR`
+- `install --preset ID [--scope global|project] [--codex-home DIR] [--yes]`
+- `switch-preset --preset ID [--scope global|project] [--codex-home DIR] [--yes]`
 
-Structural validation does not prove that an account is entitled to use a model. Start a new Codex task after changing global configuration.
+Use `validate --path DIR` to check a preset's agent TOMLs. Use `validate --codex-home DIR` to parse that directory's `config.toml`, resolve each `agents/<role>.toml` path relative to it, and validate the installed role files. Structural validation does not prove that an account is entitled to use a model. Start a new Codex task after changing global configuration.
 
 ## Development
 

@@ -45,9 +45,11 @@ describe("safe installation", () => {
     await writeFile(join(codexHome, "config.toml"), "[agents]\nmax_threads = 6\nmax_depth = 1\n", "utf8");
     const previousDirectory = process.cwd();
     const output: string[] = [];
+    let resolvedCodexHome = codexHome;
 
     try {
       process.chdir(project);
+      resolvedCodexHome = join(process.cwd(), ".codex");
       const code = await runCli(["install", "--scope", "project"], {
         log: (line) => output.push(line),
         confirm: async () => false,
@@ -57,6 +59,6 @@ describe("safe installation", () => {
       process.chdir(previousDirectory);
     }
 
-    expect(output).toContain(`config: ${join(codexHome, "config.toml")}`);
+    expect(output).toContain(`config: ${join(resolvedCodexHome, "config.toml")}`);
   });
 });

@@ -1,6 +1,6 @@
 {
   "name": "slim-agents-for-codex",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Deterministic oh-my-opencode-slim agent presets for Codex",
   "private": true,
   "type": "module",

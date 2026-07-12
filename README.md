@@ -10,10 +10,10 @@ This project is distributed through GitHub rather than the npm registry.
 
 ### Install a GitHub Release package
 
-Download `slim-agents-for-codex-0.1.0.tgz` from the matching GitHub Release, then run:
+Download `slim-agents-for-codex-0.1.1.tgz` from the matching GitHub Release, then run:
 
 ```bash
-npm install --global ./slim-agents-for-codex-0.1.0.tgz
+npm install --global ./slim-agents-for-codex-0.1.1.tgz
 slim-agents-codex list-presets
 ```
 

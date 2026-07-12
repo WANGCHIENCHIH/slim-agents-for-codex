@@ -15,9 +15,9 @@ describe("safe installation", () => {
     expect(installed).toContain('model = "existing"');
     expect(installed).toContain("max_depth = 2");
     expect(installed.match(/^\[agents\]$/gm)).toHaveLength(1);
-    expect(installed).not.toContain("config_file");
-    expect(installed).not.toMatch(/^\[agents\.[^\]]+\]$/m);
-    expect(await readFile(join(home, "agents", "slim-agents-for-codex", "openai-5.6", "explorer.toml"), "utf8")).toContain('name = "explorer"');
+    expect(installed).toContain("[agents.explorer]");
+    expect(installed).toContain('config_file = "agents/explorer.toml"');
+    expect(await readFile(join(home, "agents", "explorer.toml"), "utf8")).toContain('name = "explorer"');
     expect(installed).toContain("\r\n");
   });
 });

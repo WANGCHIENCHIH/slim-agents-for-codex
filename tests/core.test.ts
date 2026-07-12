@@ -16,8 +16,8 @@ describe("preset generation", () => {
     expect(first.agents).not.toHaveProperty("councillor");
     expect(first.snippet).not.toContain("[agents.councillor]");
     expect(JSON.stringify(first)).not.toMatch(/councillor/i);
-    expect(first.snippet).not.toContain("config_file");
-    expect(first.snippet).not.toMatch(/^\[agents\.[^\]]+\]$/m);
+    expect(first.snippet).toContain("[agents.explorer]");
+    expect(first.snippet).toContain('config_file = "agents/explorer.toml"');
     expect(first.agents.explorer).toContain('name = "explorer"');
     expect(first.agents.explorer).toContain('model = "gpt-5.6-luna"');
     expect(first.agents.explorer).not.toMatch(/task_id|council_session|Background Job Board/);

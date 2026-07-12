@@ -12,10 +12,10 @@ This project is distributed through GitHub rather than the npm registry.
 
 ### Install a GitHub Release package
 
-Download `slim-agents-for-codex-0.1.3.tgz` from the matching GitHub Release, then run:
+Download `slim-agents-for-codex-0.1.4.tgz` from the matching GitHub Release, then run:
 
 ```bash
-npm install --global ./slim-agents-for-codex-0.1.3.tgz
+npm install --global ./slim-agents-for-codex-0.1.4.tgz
 slim-agents-codex list-presets
 ```
 
@@ -33,7 +33,9 @@ node dist/cli.js install --preset openai-5.6
 
 ## Manual installation
 
-Every npm package and source checkout includes ready-to-copy files under `presets/<id>/agents/` and `config.snippet.toml`. Copy the eight TOMLs under your `CODEX_HOME/agents/slim-agents-for-codex/<preset-id>/` directory, then merge the snippet into `config.toml`. Preserve its UTF-8 encoding, BOM state, and line endings, and make a backup first.
+Every npm package and source checkout includes ready-to-copy files under `presets/<id>/agents/` and `config.snippet.toml`. For a global installation, copy the eight TOMLs directly into `CODEX_HOME/agents/` and merge the snippet into `CODEX_HOME/config.toml`. For a project-scoped installation, copy them into `<project>/.codex/agents/` and merge the snippet into `<project>/.codex/config.toml`. In both scopes, `config_file = "agents/<role>.toml"` resolves relative to the config file that declares the role, as specified by the [Codex Configuration Reference](https://learn.chatgpt.com/docs/config-file/config-reference). Preserve its UTF-8 encoding, BOM state, and line endings, and make a backup first.
+
+The CLI follows the same layout. Its default `--codex-home` is `~/.codex`; pass `--codex-home .codex` from a project root for project-scoped installation.
 
 Do not place inactive legacy presets under `CODEX_HOME/agents/`: Codex recursively discovers TOML roles there. Store inactive copies under `CODEX_HOME/agent-presets/` instead.
 

@@ -12,10 +12,10 @@
 
 ### 安裝 GitHub Release 套件
 
-從對應的 GitHub Release 下載 `slim-agents-for-codex-0.1.3.tgz`，然後執行：
+從對應的 GitHub Release 下載 `slim-agents-for-codex-0.1.4.tgz`，然後執行：
 
 ```bash
-npm install --global ./slim-agents-for-codex-0.1.3.tgz
+npm install --global ./slim-agents-for-codex-0.1.4.tgz
 slim-agents-codex list-presets
 ```
 
@@ -35,11 +35,13 @@ node dist/cli.js install --preset openai-5.6
 
 GitHub 原始碼與 `.tgz` 套件都包含 `presets/<id>/agents/` 與 `config.snippet.toml`，因此不一定要使用 CLI。
 
-1. 將選定版本的八個 TOML 複製到 `CODEX_HOME/agents/slim-agents-for-codex/<preset-id>/`。
-2. 備份現有的 `config.toml`。
-3. 將該版本的 `config.snippet.toml` 合併進 `config.toml`。
+1. 全域安裝時，將選定版本的八個 TOML 直接複製到 `CODEX_HOME/agents/`；專案安裝時，複製到 `<project>/.codex/agents/`。
+2. 備份對應的 `CODEX_HOME/config.toml` 或 `<project>/.codex/config.toml`。
+3. 將該版本的 `config.snippet.toml` 合併進對應的 `config.toml`。兩種 scope 都使用 `config_file = "agents/<role>.toml"`，並依 [Codex Configuration Reference](https://learn.chatgpt.com/docs/config-file/config-reference) 的規則，由宣告角色的 config 檔所在位置解析。
 4. 保留原始 UTF-8 編碼、BOM 狀態與換行格式。
 5. 重新開啟 Codex 工作。
+
+CLI 也使用相同布局。`--codex-home` 預設為 `~/.codex`；若要安裝至專案，請在專案根目錄傳入 `--codex-home .codex`。
 
 不要把未啟用的舊版預設放在 `CODEX_HOME/agents/` 下，因為 Codex 會遞迴探索其中的 TOML 角色。請將非作用中的版本存放於 `CODEX_HOME/agent-presets/`。
 

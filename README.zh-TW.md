@@ -45,6 +45,8 @@ GitHub 原始碼與 `.tgz` 套件都包含 `presets/<id>/agents/` 與 `config.sn
 
 預設 ID 不會被覆寫。未來加入新版本時，`openai-5.5` 與 `openai-5.6` 仍會保留。`latest` 和 `recommended` 是定義在 `presets/aliases.json` 的可移動別名；CLI 在寫入前會顯示解析後的固定版本。本專案不會自動替換或降級模型。
 
+需要新增 `openai-5.7` 或後續版本時，請參考[新增模型預設維護指南](docs/adding-a-preset.zh-TW.md)。
+
 ## 指令
 
 - `list-presets`

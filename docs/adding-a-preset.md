@@ -10,8 +10,9 @@ Compare the new upstream version with the previous one before editing this proje
 
 - If only model names and reasoning effort values changed, add a new preset directly.
 - If role prompts, the role list, or role behavior changed, do not edit the shared `roles` object directly. Version the role definitions by adapter or preset first.
+- If the existing Codex translation is incorrect across presets, fix the shared generator, regenerate every affected snapshot, and release the correction as a new package version without moving old tags.
 
-Published presets such as `openai-5.5` and `openai-5.6` must remain reproducible. Adding a new generation must not rewrite or delete them.
+Published model mappings and manifests such as `openai-5.5` and `openai-5.6` must remain reproducible. Adding a new generation must not rewrite or delete them.
 
 ## Current limitations
 
@@ -138,7 +139,7 @@ Verify that:
 Update both `package.json` and `package-lock.json` according to the scope of the change:
 
 - Adding a mapping without breaking an existing interface normally increments the minor version, for example from `0.1.1` to `0.2.0`.
-- Do not overwrite a published preset to correct it. Create a new correction preset ID and choose a patch or minor package version according to the impact.
+- A model/effort correction requires a new preset ID. A correction to the shared Codex translation may regenerate affected historical agent TOMLs, but requires a new package version and must not overwrite an existing tag or Release asset.
 
 Update the Release package filename in both the English and Traditional Chinese READMEs.
 
@@ -165,7 +166,7 @@ After publication, verify the Release asset names and CI result. Install the `.t
 
 ## When prompts or roles change
 
-The current `roles` object in `src/core/presets.ts` is shared by every preset. Editing it directly when upstream prompts or role behavior changes would make older presets generate different content, which violates the immutable-preset rule.
+The current `roles` object in `src/core/presets.ts` is shared by every preset. Editing it directly for an intentional prompt or role-behavior change in a newer upstream release would make older presets adopt that new behavior.
 
 Version the role sources first, for example:
 
@@ -178,3 +179,5 @@ src/adapters/oh-my-opencode-slim/
 ```
 
 Each preset manifest should reference a specific role-source version. Add the preset containing the new prompts only after versioning the role definitions and adding regression coverage for historical presets.
+
+This versioning requirement does not prevent correcting an error in the existing Codex translation. Apply such a correction to the shared generator only when the reviewed rule was already intended to apply across those presets, cover it with regression tests, regenerate every affected snapshot, and publish it in a new package release.

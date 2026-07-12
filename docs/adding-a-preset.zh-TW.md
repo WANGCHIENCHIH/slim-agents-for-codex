@@ -10,8 +10,9 @@
 
 - 若只有模型名稱與 reasoning effort 改變，可直接新增 preset。
 - 若角色 Prompt、角色數量或行為也改變，不要直接修改共用的 `roles`，應先將角色定義改為按 adapter 或 preset 版本保存。
+- 若既有 Codex 轉換規則對所有 preset 都有錯誤，應修正共用 generator、重新產生所有受影響 snapshot，並以新的套件版本發布，不得移動舊 tag。
 
-原因是 `openai-5.5`、`openai-5.6` 等已發布 preset 必須維持可重現，不應因新增版本而被改寫或刪除。
+`openai-5.5`、`openai-5.6` 等已發布 preset 的模型映射與 manifest 必須維持可重現，不應因新增版本而被改寫或刪除。
 
 ## 目前的限制
 
@@ -138,7 +139,7 @@ npm pack --dry-run
 依變更幅度更新 `package.json` 與 `package-lock.json`：
 
 - 只增加映射且不破壞既有介面，通常增加 minor 版本，例如 `0.1.1` 到 `0.2.0`。
-- 修正已發布 preset 時，不要覆寫原目錄；建立新的修正版 preset ID，並依影響選擇 patch 或 minor 套件版本。
+- 模型或 effort 映射修正必須建立新的 preset ID。共用 Codex 轉換規則的修正可以重新產生受影響的歷史角色 TOML，但必須使用新的套件版本，且不得覆寫既有 tag 或 Release 附件。
 
 同步更新英文與繁中 README 中的 Release 套件檔名。
 
@@ -165,7 +166,7 @@ git push origin v0.2.0
 
 ## Prompt 或角色有變更時
 
-目前 `src/core/presets.ts` 的 `roles` 是所有 preset 共用。若上游新版本修改 Prompt 或角色行為，直接編輯共用 `roles` 會讓舊版重新產生時得到不同內容，違反 immutable preset 原則。
+目前 `src/core/presets.ts` 的 `roles` 是所有 preset 共用。若上游新版本刻意修改 Prompt 或角色行為，直接編輯共用 `roles` 會讓舊版也採用新行為。
 
 此時應先重構為版本化角色來源，例如：
 
@@ -178,3 +179,5 @@ src/adapters/oh-my-opencode-slim/
 ```
 
 每個 preset manifest 應指向明確的角色來源版本。完成版本化與回歸測試後，才能加入包含新 Prompt 的 preset。
+
+上述版本化要求不妨礙修正既有 Codex 轉換錯誤。只有在已審核規則原本就應套用至這些 preset 時，才可修正共用 generator；必須加入回歸測試、重新產生所有受影響 snapshot，並以新的套件版本發布，不得覆寫既有 tag 或 Release 附件。

@@ -58,6 +58,6 @@ export function generatePreset(idOrAlias: string) {
     const model = preset.models[name];
     agents[name] = `name = ${quote(current.name)}\ndescription = ${quote(current.description)}\nmodel = ${quote(model.model)}\nmodel_reasoning_effort = ${quote(model.effort)}\nsandbox_mode = ${quote(current.sandbox)}\ndeveloper_instructions = ${multiline(current.instructions)}\n`;
   }
-  const snippet = `[agents]\nmax_threads = 6\nmax_depth = 2\n\n` + roleOrder.map((name) => `[agents.${name}]\ndescription = ${quote(roles[name].description)}\nconfig_file = ${quote(`agents/slim-agents-for-codex/${preset.id}/${name}.toml`)}\n`).join("\n");
+  const snippet = `[agents]\nmax_threads = 6\nmax_depth = 2\n`;
   return { preset, roles, agents, snippet };
 }

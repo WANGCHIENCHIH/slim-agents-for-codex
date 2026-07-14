@@ -119,10 +119,12 @@ describe("safe installation", () => {
     const previousDirectory = process.cwd();
     const output: string[] = [];
     let resolvedCodexHome = codexHome;
+    let resolvedSkillsHome = join(project, ".agents", "skills");
 
     try {
       process.chdir(project);
       resolvedCodexHome = join(process.cwd(), ".codex");
+      resolvedSkillsHome = join(process.cwd(), ".agents", "skills");
       const code = await runCli(["install", "--scope", "project"], {
         log: (line) => output.push(line),
         confirm: async () => false,
@@ -133,7 +135,7 @@ describe("safe installation", () => {
     }
 
     expect(output).toContain(`config: ${join(resolvedCodexHome, "config.toml")}`);
-    expect(output).toContain(`skills: ${join(project, ".agents", "skills")}`);
+    expect(output).toContain(`skills: ${resolvedSkillsHome}`);
     await expect(access(join(project, ".agents", "skills"))).rejects.toThrow();
   });
 

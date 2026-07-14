@@ -66,13 +66,13 @@ jobs:
         run: |
           smoke_root="$(mktemp -d)"
           npm install --prefix "$smoke_root/npm" "./$PACKAGE_FILE"
-          cli="$smoke_root/npm/node_modules/.bin/slim-agents-codex"
-          "$cli" list-presets | grep 'latest -> openai-5.6.1'
-          "$cli" install --preset openai-5.6.1 \
+          cli="$smoke_root/npm/node_modules/slim-agents-for-codex/dist/cli.js"
+          node "$cli" list-presets | grep -F -- 'latest -> openai-5.6.1'
+          node "$cli" install --preset openai-5.6.1 \
             --codex-home "$smoke_root/codex" \
             --skills-home "$smoke_root/skills" \
             --yes
-          "$cli" validate --preset openai-5.6.1 \
+          node "$cli" validate --preset openai-5.6.1 \
             --codex-home "$smoke_root/codex" \
             --skills-home "$smoke_root/skills"
           test -f "$smoke_root/skills/slim-council/SKILL.md"

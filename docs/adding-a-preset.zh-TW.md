@@ -18,7 +18,7 @@
 
 CLI 不會自動連線下載或解析上游配置。維護者必須人工檢查上游版本，確認模型名稱、effort 與角色變更，再將審核後的映射加入原始碼。
 
-`convert` 目前只產生八個代理 TOML 與 `config.snippet.toml`，不會建立 `manifest.json`，也不會自動更新 aliases。
+`convert` 會依 preset 選定的版本化角色來源產生代理 TOML、`config.snippet.toml` 與 `manifest.json`；搭配 `--all` 時，也會從 generator 的 source of truth 產生 `presets/aliases.json`。
 
 ## 1. 準備工作目錄
 
@@ -35,8 +35,8 @@ npm ci
 查看上游的新版本設定與角色來源，記錄：
 
 - 上游 commit、tag 或版本日期。
-- 八個角色各自使用的模型名稱。
-- 八個角色各自使用的 reasoning effort。
+- 選定角色來源中每個角色使用的模型名稱。
+- 選定角色來源中每個角色使用的 reasoning effort。
 - Prompt、角色清單或行為是否改變。
 - Codex 是否實際支援映射後的模型名稱。
 
@@ -44,14 +44,18 @@ npm ci
 
 ## 3. 新增 preset 映射
 
-編輯 `src/core/presets.ts`，在 `presets` 加入完整的八角色映射：
+編輯 `src/core/presets.ts`，依選定的版本化角色來源加入完整映射。目前七角色來源使用：
 
 ```ts
 "openai-5.7": {
   id: "openai-5.7",
   adapter: "oh-my-opencode-slim",
+  adapterSchemaVersion: 2,
+  source: "alvinunreal/oh-my-opencode-slim",
   sourceVersion: "reviewed-YYYY-MM",
+  created: "YYYY-MM-DD",
   status: "supported",
+  snapshotFormatVersion: 1,
   models: mapping({
     orchestrator: ["實際模型名稱", "medium"],
     oracle: ["實際模型名稱", "high"],
@@ -60,7 +64,6 @@ npm ci
     designer: ["實際模型名稱", "medium"],
     fixer: ["實際模型名稱", "medium"],
     council: ["實際模型名稱", "high"],
-    observer: ["實際模型名稱", "low"],
   }),
 },
 ```
@@ -76,24 +79,15 @@ export const aliases = {
 } as const;
 ```
 
-## 4. 同步 aliases 與 manifest
+## 4. 審核 aliases 與 manifest metadata
 
-修改 `presets/aliases.json`：
-
-```json
-{
-  "latest": "openai-5.7",
-  "recommended": "openai-5.7"
-}
-```
-
-建立 `presets/openai-5.7/manifest.json`。可參考上一版 manifest，但必須更新 preset ID、來源版本與審核資訊。不要修改既有版本的 manifest。
+Alias target 與所有 manifest 欄位都應維護在 `src/core/presets.ts`。產生前請確認 preset ID、adapter schema version、來源、來源版本、建立日期、status 與 snapshot format。不要手動修改產生出的 `presets/aliases.json` 或 preset manifest，也不要變更既有 immutable preset 的 metadata。
 
 ## 5. 產生 TOML snapshot
 
 ```bash
 npm run build
-node dist/cli.js convert --preset openai-5.7 --output presets
+node dist/cli.js convert --all --output presets
 ```
 
 完成後應有：
@@ -107,8 +101,7 @@ presets/openai-5.7/
 │   ├── explorer.toml
 │   ├── designer.toml
 │   ├── fixer.toml
-│   ├── council.toml
-│   └── observer.toml
+│   └── council.toml
 ├── config.snippet.toml
 └── manifest.json
 ```
@@ -118,7 +111,8 @@ presets/openai-5.7/
 ## 6. 驗證
 
 ```bash
-node dist/cli.js validate --path presets/openai-5.7/agents
+node dist/cli.js validate --path presets/openai-5.7/agents --preset openai-5.7
+node dist/cli.js convert --all --output presets --check
 npm test
 npm run typecheck
 npm run build
@@ -128,11 +122,11 @@ npm pack --dry-run
 
 驗證重點：
 
-- 新版包含全部八個角色。
+- 新版精確包含版本化角色來源宣告的全部角色。
 - `openai-5.5`、`openai-5.6` 與其他歷史 preset 仍存在。
 - `latest`、`recommended` 解析至 `openai-5.7`。
 - 打包內容包含新舊所有 preset。
-- 結構驗證成功不應被描述為帳號一定具備模型權限。
+- 精確 snapshot 與語意驗證成功不應被描述為帳號一定具備模型權限。
 
 ## 7. 更新專案版本
 

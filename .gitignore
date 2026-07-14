@@ -3,3 +3,4 @@ dist/
 *.tgz
 .npm-cache/
 .tmp/
+.slim/deepwork/

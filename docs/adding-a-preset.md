@@ -18,7 +18,7 @@ Published model mappings and manifests such as `openai-5.5` and `openai-5.6` mus
 
 The CLI does not download or parse upstream configurations automatically. A maintainer must inspect the upstream version, verify its model names, effort values, and role changes, and then add the reviewed mapping to this repository.
 
-The `convert` command currently generates the eight agent TOMLs and `config.snippet.toml`. It does not create `manifest.json` or update aliases.
+The `convert` command generates the agent TOMLs selected by the preset's versioned role source, `config.snippet.toml`, and `manifest.json`. With `--all`, it also renders `presets/aliases.json` from the generator source of truth.
 
 ## 1. Prepare a working copy
 
@@ -35,7 +35,7 @@ Confirm that the working tree is clean and make the change on a new branch.
 Inspect the upstream configuration and role sources. Record:
 
 - The upstream commit, tag, or review date.
-- The model assigned to each of the eight roles.
+- The model assigned to every role in the selected role source.
 - The reasoning effort assigned to each role.
 - Whether prompts, the role list, or behavior changed.
 - Whether Codex actually supports the mapped model names.
@@ -44,14 +44,18 @@ Do not infer `sol`, `terra`, `luna`, or any other model name from the version nu
 
 ## 3. Add the preset mapping
 
-Edit `src/core/presets.ts` and add a complete eight-role entry to `presets`:
+Edit `src/core/presets.ts` and add a complete mapping for the selected versioned role source. The current seven-role source uses:
 
 ```ts
 "openai-5.7": {
   id: "openai-5.7",
   adapter: "oh-my-opencode-slim",
+  adapterSchemaVersion: 2,
+  source: "alvinunreal/oh-my-opencode-slim",
   sourceVersion: "reviewed-YYYY-MM",
+  created: "YYYY-MM-DD",
   status: "supported",
+  snapshotFormatVersion: 1,
   models: mapping({
     orchestrator: ["actual-model-name", "medium"],
     oracle: ["actual-model-name", "high"],
@@ -60,7 +64,6 @@ Edit `src/core/presets.ts` and add a complete eight-role entry to `presets`:
     designer: ["actual-model-name", "medium"],
     fixer: ["actual-model-name", "medium"],
     council: ["actual-model-name", "high"],
-    observer: ["actual-model-name", "low"],
   }),
 },
 ```
@@ -76,24 +79,15 @@ export const aliases = {
 } as const;
 ```
 
-## 4. Synchronize aliases and the manifest
+## 4. Review alias and manifest metadata
 
-Update `presets/aliases.json`:
-
-```json
-{
-  "latest": "openai-5.7",
-  "recommended": "openai-5.7"
-}
-```
-
-Create `presets/openai-5.7/manifest.json`. You may use the previous manifest as a reference, but update its preset ID, source version, and review information. Do not modify an existing preset's manifest.
+Keep alias targets and all manifest fields in `src/core/presets.ts`. Review the preset ID, adapter schema version, source, source version, creation date, status, and snapshot format before generation. Do not hand-edit generated `presets/aliases.json` or a preset manifest, and do not change metadata for an existing immutable preset.
 
 ## 5. Generate the TOML snapshot
 
 ```bash
 npm run build
-node dist/cli.js convert --preset openai-5.7 --output presets
+node dist/cli.js convert --all --output presets
 ```
 
 The result should contain:
@@ -107,8 +101,7 @@ presets/openai-5.7/
 │   ├── explorer.toml
 │   ├── designer.toml
 │   ├── fixer.toml
-│   ├── council.toml
-│   └── observer.toml
+│   └── council.toml
 ├── config.snippet.toml
 └── manifest.json
 ```
@@ -118,7 +111,8 @@ Inspect the `model`, `model_reasoning_effort`, `sandbox_mode`, and `developer_in
 ## 6. Verify the preset
 
 ```bash
-node dist/cli.js validate --path presets/openai-5.7/agents
+node dist/cli.js validate --path presets/openai-5.7/agents --preset openai-5.7
+node dist/cli.js convert --all --output presets --check
 npm test
 npm run typecheck
 npm run build
@@ -128,11 +122,11 @@ npm pack --dry-run
 
 Verify that:
 
-- The new preset contains all eight roles.
+- The new preset contains exactly the roles declared by its versioned role source.
 - `openai-5.5`, `openai-5.6`, and every other historical preset remain present.
 - `latest` and `recommended` resolve to `openai-5.7`.
 - The package includes all new and historical presets.
-- Structural validation is not described as proof that an account can use the models.
+- Exact snapshot and semantic validation are not described as proof that an account can use the models.
 
 ## 7. Update the project version
 

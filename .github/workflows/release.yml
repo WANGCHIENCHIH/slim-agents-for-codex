@@ -39,6 +39,12 @@ jobs:
           node-version: 20
           cache: npm
 
+      - name: Verify tag matches package version
+        env:
+          RELEASE_TAG: ${{ steps.release.outputs.tag }}
+        shell: bash
+        run: node -e 'const p=require("./package.json"); if (`v${p.version}` !== process.env.RELEASE_TAG) throw new Error(`tag ${process.env.RELEASE_TAG} does not match package ${p.version}`)'
+
       - run: npm ci
       - run: npm test
       - run: npm run typecheck
@@ -53,6 +59,25 @@ jobs:
           echo "file=${package_file}" >> "$GITHUB_OUTPUT"
           sha256sum "$package_file" > "${package_file}.sha256"
 
+      - name: Smoke-test packed agent and Skill installation
+        env:
+          PACKAGE_FILE: ${{ steps.package.outputs.file }}
+        shell: bash
+        run: |
+          smoke_root="$(mktemp -d)"
+          npm install --prefix "$smoke_root/npm" "./$PACKAGE_FILE"
+          cli="$smoke_root/npm/node_modules/.bin/slim-agents-codex"
+          "$cli" list-presets | grep 'latest -> openai-5.6.1'
+          "$cli" install --preset openai-5.6.1 \
+            --codex-home "$smoke_root/codex" \
+            --skills-home "$smoke_root/skills" \
+            --yes
+          "$cli" validate --preset openai-5.6.1 \
+            --codex-home "$smoke_root/codex" \
+            --skills-home "$smoke_root/skills"
+          test -f "$smoke_root/skills/slim-council/SKILL.md"
+          test -f "$smoke_root/skills/slim-orchestration/SKILL.md"
+
       - name: Write release notes
         shell: bash
         run: |
@@ -64,11 +89,14 @@ jobs:
           ```bash
           npm install --global ./slim-agents-for-codex-<version>.tgz
           slim-agents-codex list-presets
+          slim-agents-codex install --preset openai-5.6.1 --scope global
           ```
+
+          Existing `0.1.x` installations should use `switch-preset` instead of `install`.
 
           The package is distributed through GitHub and is not published to the npm registry.
 
-          See `README.md` or `README.zh-TW.md` for CLI and manual TOML installation instructions.
+          The install command deploys the selected agent preset and both managed Slim Skills. See `README.md` or `README.zh-TW.md` for project-scoped and manual installation instructions.
           EOF
 
       - name: Create or update GitHub Release
@@ -79,10 +107,9 @@ jobs:
         shell: bash
         run: |
           if gh release view "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
-            gh release upload "$RELEASE_TAG" "$PACKAGE_FILE" "${PACKAGE_FILE}.sha256" \
-              --clobber --repo "$GITHUB_REPOSITORY"
-          else
-            gh release create "$RELEASE_TAG" "$PACKAGE_FILE" "${PACKAGE_FILE}.sha256" \
-              --title "$RELEASE_TAG" --notes-file release-notes.md \
-              --repo "$GITHUB_REPOSITORY"
+            echo "Release $RELEASE_TAG already exists; refusing to overwrite its assets." >&2
+            exit 1
           fi
+          gh release create "$RELEASE_TAG" "$PACKAGE_FILE" "${PACKAGE_FILE}.sha256" \
+            --title "$RELEASE_TAG" --notes-file release-notes.md \
+            --repo "$GITHUB_REPOSITORY"

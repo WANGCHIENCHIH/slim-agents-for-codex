@@ -2,9 +2,11 @@
 
 ## Sources of truth
 
-- Treat `src/core/presets.ts` as the source of truth for roles, model/effort mappings, MCP blacklists, aliases, and generated agent TOML.
+- Treat `src/core/presets.ts` as the canonical assembly for preset-to-role-source selection, model/effort mappings, MCP blacklists, aliases, and generated agent TOML. Keep versioned role prompts and role order under `src/core/role-sources/`.
 - Do not hand-edit files under `presets/<id>/agents/`. Change the generator, run tests, build, and regenerate snapshots.
-- Keep exactly these eight roles unless a reviewed upstream change explicitly changes the adapter: `orchestrator`, `oracle`, `librarian`, `explorer`, `designer`, `fixer`, `council`, and `observer`. Do not invent a `councillor` role.
+- Preserve the historical eight-role source for `openai-5.5` and `openai-5.6`. Current `.1` revisions contain exactly seven roles: `orchestrator`, `oracle`, `librarian`, `explorer`, `designer`, `fixer`, and `council`. Do not reintroduce `observer` into the current source or invent a `councillor` role.
+- Keep Council and Orchestrator as peer child coordinators. Council dynamically selects installed expert agents for feasibility, risks, and independent perspectives; Orchestrator implements an agreed approach through the five fixed Slim specialists. Neither coordinator spawns the other.
+- Keep Root as the approval gate between Council advice and Orchestrator execution. Council prefers grilling, document-grounded challenge, deep research, brainstorming, and document co-authoring skills when available; do not hard-code installation-specific skill paths in generated TOML.
 
 ## Preset lifecycle
 
@@ -17,8 +19,8 @@
 
 - Generate `config_file = "agents/<role>.toml"`. The path is relative to the declaring global or project `config.toml`.
 - Install active global agents flat under `CODEX_HOME/agents/` and project agents flat under `<project>/.codex/agents/`. Keep inactive legacy copies outside auto-discovery, such as `CODEX_HOME/agent-presets/`.
-- Express role MCP restrictions only as role-local `[mcp_servers.<id>]` tables with `enabled = false`. Do not force allowed servers to `enabled = true`, and do not put role-specific MCP restrictions in `config.snippet.toml`.
-- Preserve the reviewed MCP blacklist matrix in `src/core/presets.ts`. Tests must compare the exact parsed disabled-server set for every role and preset.
+- Do not emit role-local `[mcp_servers.<id>]` tables. Codex first deserializes a standalone agent file as a complete config and then merges it with the parent config: a transport-less disabled table fails the first step, while a dummy transport can conflict with an inherited transport during the second step. Keep portable role denylist guidance in `developer_instructions`; installation-specific hard MCP policy belongs to the active Codex configuration.
+- Preserve the reviewed MCP denylist matrix in `src/core/presets.ts`. Tests must compare the exact behavioral denylist for every role and preset and reject generated role-local MCP fragments.
 
 ## Change and verification discipline
 

@@ -51,14 +51,24 @@ describe("preset generation", () => {
     expect(first.agents.explorer).not.toMatch(/task_id|council_session|Background Job Board/);
   });
 
-  it("keeps every retained GPT model and effort mapping unchanged", () => {
+  it("keeps every retained GPT-5.5 model and effort mapping unchanged", () => {
     const retained = ["orchestrator", "oracle", "librarian", "explorer", "designer", "fixer", "council"];
-    for (const [legacyId, revisionId] of [["openai-5.5", "openai-5.5.1"], ["openai-5.6", "openai-5.6.1"]]) {
-      const legacy = resolvePreset(legacyId);
-      const revision = resolvePreset(revisionId);
-      for (const name of retained) expect(revision.models[name]).toEqual(legacy.models[name]);
-      expect(revision.models).not.toHaveProperty("observer");
-    }
+    const legacy = resolvePreset("openai-5.5");
+    const revision = resolvePreset("openai-5.5.1");
+    for (const name of retained) expect(revision.models[name]).toEqual(legacy.models[name]);
+    expect(revision.models).not.toHaveProperty("observer");
+  });
+
+  it("uses the requested GPT-5.6.1 model and effort mappings", () => {
+    expect(resolvePreset("openai-5.6.1").models).toEqual({
+      orchestrator: { model: "gpt-5.6-terra", effort: "xhigh" },
+      oracle: { model: "gpt-5.6-sol", effort: "xhigh" },
+      librarian: { model: "gpt-5.6-luna", effort: "low" },
+      explorer: { model: "gpt-5.6-luna", effort: "low" },
+      designer: { model: "gpt-5.6-luna", effort: "medium" },
+      fixer: { model: "gpt-5.6-luna", effort: "xhigh" },
+      council: { model: "gpt-5.6-sol", effort: "high" },
+    });
   });
 
   it("encodes bounded recursive orchestration for the five Slim specialists", () => {

@@ -1,13 +1,11 @@
 ---
 name: slim-orchestration
-description: Orchestrate large, high-risk, multi-phase Codex execution through the five built-in Slim specialists with dependency planning, persistent state, review gates, bounded delegation, and final verification. Use for cross-cutting changes, unsafe-to-partially-ship migrations, or sustained specialist coordination. Do not activate for routine multi-file changes, simple fixes, or quick documentation work.
+description: Run a gated critical path for large, high-risk, multi-phase Codex execution through the five built-in Slim specialists. Use for cross-cutting changes, unsafe-to-partially-ship migrations, or sustained coordination that needs persistent state, dependency ordering, specialist handoffs, and phase verification. Route routine multi-file changes, simple fixes, and quick documentation work directly.
 ---
 
 # Slim Orchestration
 
-Act as the scheduler for one root-approved execution subtree. Coordinate work; do not become the default worker.
-
-Use this skill only when the task is large enough to justify persistent planning and several specialist lanes. For smaller work, return control to Root so it can use a specialist directly or work without orchestration.
+Act as the scheduler for one Root-approved execution subtree. Drive its critical path through explicit owners and phase gates; return smaller work to Root.
 
 ## Fixed team
 
@@ -19,57 +17,52 @@ Route work only to these five built-in Slim specialists:
 - `designer`: define or implement visual and interaction work when design judgment is material.
 - `fixer`: implement scoped changes and run proportionate verification.
 
-Do not draw from arbitrary custom roles. Do not spawn `orchestrator`, `council`, or another meta-coordinator. The Council owns deliberation; this skill owns execution of an approved direction.
+Use the narrowest matching specialist. Keep deliberation with Council and execution here; custom roles and meta-coordinators remain outside this subtree.
 
-## Start and persist the work
+## 1. Open the execution ledger
 
-1. Confirm the assigned objective, non-goals, constraints, approval boundary, and observable completion criteria.
-2. Inspect `.gitignore`. If needed, add `.slim/deepwork/` so orchestration state remains local and is not committed accidentally.
-3. Create `.slim/deepwork/<task-slug>.md` before substantial delegation. Keep it current throughout the task.
-4. Record:
-   - objective and non-goals;
-   - constraints and assumptions;
-   - verified evidence and open questions;
-   - work phases and dependencies;
-   - lane owners and write ownership;
-   - validation gates, failures, and recovery decisions;
-   - final verification and unresolved risk.
+- Confirm the objective, non-goals, constraints, Root approval boundary, and observable completion criteria.
+- Inspect `.gitignore` and keep `.slim/deepwork/` local. Add the ignore entry when needed.
+- Create `.slim/deepwork/<task-slug>.md` before substantial delegation.
+- Record the objective, evidence, open questions, phases, dependencies, lane owners, write ownership, phase gates, failures, recovery decisions, final verification, and unresolved risk.
 
-The state file is a recovery aid, not a substitute for reporting meaningful checkpoints to Root.
+This stage is complete when the ledger exists, the assigned boundary is explicit, and progress can be resumed from the file without reconstructing prior work. Keep it current and continue reporting meaningful checkpoints to Root.
 
-## Build the execution plan
+## 2. Map the critical path
 
-1. Ask `explorer` to map the affected repository surface when cross-file ownership or call paths are not already known.
-2. Ask `librarian` to verify current external contracts when versions, providers, APIs, or standards materially affect the work.
-3. Convert evidence into dependency-ordered phases with a measurable validation gate after each phase.
-4. Ask `oracle` to review the plan before risky, irreversible, security-sensitive, or cross-cutting implementation.
-5. If visual or interaction work is material, obtain a concrete `designer` handoff before assigning implementation. The handoff must state the intended behavior, states, and acceptance evidence.
-6. Assign implementation to `fixer`, or to `designer` when the owned deliverable is specifically visual or interaction-focused.
+- Ask `explorer` to map the affected surface when ownership or call paths are unclear.
+- Ask `librarian` to verify current external contracts when versions, providers, APIs, or standards can change the implementation.
+- Convert the evidence into dependency-ordered phases. Give each phase inputs, one accountable owner, outputs, and a measurable phase gate.
+- Ask `oracle` to review the plan before irreversible, security-sensitive, architectural, or cross-cutting implementation.
+- Obtain a `designer` handoff for material visual or interaction work. Capture intended behavior, states, and acceptance evidence before implementation.
+- Assign implementation to `fixer`, or to `designer` for an explicitly visual or interaction-owned deliverable.
 
-Do not dispatch implementation from an unreviewed guess when the missing evidence can change the implementation direction.
+This stage is complete when every phase has enough evidence to execute, dependencies are ordered, ownership is non-overlapping, and each gate can distinguish pass from fail. Return material unresolved direction choices to Root.
 
-## Schedule specialist lanes
+## 3. Dispatch single-writer lanes
 
-- Prefer independent lanes in parallel only when they do not depend on each other's output.
-- Use the smallest specialist set that covers the work; do not spawn agents merely to fill every role.
-- Default to `fork_turns="none"` and send a self-contained assignment with objective, non-goals, evidence, files or responsibility owned, expected output, and required checks. A full-history fork inherits the current agent type, model, and effort, so it must not be combined with selection of a different specialist type.
-- Tell writing specialists that they are not alone in the codebase. They must preserve unrelated changes and accommodate concurrent edits.
-- Keep at most one writer responsible for an overlapping file surface.
+- Run independent lanes in parallel only when neither depends on the other's output.
+- Use the smallest specialist set that covers the current phase.
+- Default to `fork_turns="none"`. Send a self-contained assignment with objective, non-goals, evidence, owned files or responsibility, expected output, and required checks. A full-history fork inherits the current agent type, model, and effort and cannot select a different specialist type.
+- Tell writers that they share the worktree, must preserve unrelated changes, and must accommodate concurrent edits.
+- Keep a single writer for every overlapping file surface.
 - Track each spawned agent by its task name or agent identity and actual status. Wait for every required lane before integration.
-- If a lane fails, times out, or returns unusable evidence, diagnose the cause before retrying. Revise the prompt, narrow the task, or reassign to another one of the five specialists only when the new action addresses that cause.
-- Respect the Codex depth boundary: Root is depth 0, this Orchestrator is depth 1, and specialists are depth 2. Specialists must not delegate further.
+- Diagnose failed, timed-out, or unusable lanes before retrying; change the prompt, scope, or specialist to address that cause.
+- Keep the depth boundary explicit: Root is depth 0, Orchestrator is depth 1, and specialists are depth 2 and must not delegate further.
 
-## Validate each phase
+This stage is complete when every required lane is terminal, its output is available for inspection, and no required owner or dependency remains unresolved.
 
-After every implementation phase:
+## 4. Pass the phase gate
 
-1. Inspect the actual diff or artifact, not only the specialist summary.
-2. Run the focused checks that encode the phase's intent.
-3. Ask `oracle` for a second review when the phase changes architecture, security boundaries, data contracts, or rollout risk.
-4. Record results and remaining risk in the deep-work state file.
-5. Continue only when the current gate passes or Root explicitly accepts the documented exception.
+- Inspect the actual diff or artifact and reconcile shared-worktree changes.
+- Run the focused checks that encode the phase's intent.
+- Ask `oracle` for a second review when the phase changes architecture, security boundaries, data contracts, or rollout risk.
+- Record evidence, failures, recovery decisions, and remaining risk in the ledger.
+- Advance the critical path only after the phase gate passes or Root explicitly accepts the documented exception.
 
-## Return to Root
+The phase is complete when its observable gate passes, or the ledger contains Root's explicit exception and its residual risk. Repeat stages 2-4 until every phase is gated.
+
+## 5. Close the subtree
 
 Return a concise integration report containing:
 
@@ -79,4 +72,6 @@ Return a concise integration report containing:
 - unresolved risks, disagreements, or decisions still requiring Root;
 - whether the assigned subtree satisfies its observable completion criteria.
 
-Do not claim the overall task is complete, approve your own scope expansion, deploy, publish, or make an external decision reserved for Root.
+The subtree is complete when the ledger and report account for every phase, lane, check, exception, and unresolved risk.
+
+Keep the overall decision with Root: do not approve scope expansion, deploy, publish, make an external decision, or declare the user's whole task complete.

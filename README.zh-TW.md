@@ -12,15 +12,15 @@
 
 ### 安裝 GitHub Release 套件
 
-從對應的 GitHub Release 下載 `slim-agents-for-codex-0.2.0.tgz`，然後執行：
+從對應的 GitHub Release 下載 `slim-agents-for-codex-0.3.0.tgz`，然後執行：
 
 ```bash
-npm install --global ./slim-agents-for-codex-0.2.0.tgz
+npm install --global ./slim-agents-for-codex-0.3.0.tgz
 slim-agents-codex list-presets
-slim-agents-codex install --preset openai-5.6.1 --scope global
+slim-agents-codex install --preset openai-5.6.2 --scope global
 ```
 
-如果已安裝 `0.1.x` preset，請改用 `slim-agents-codex switch-preset --preset openai-5.6.1 --scope global`。切換時會先封存即將被替換的受管 agents 與 Skills，再對新安裝執行 post-validation。
+如果已安裝先前版本，請改用 `slim-agents-codex switch-preset --preset openai-5.6.2 --scope global`。切換時會先封存即將被替換的受管 agents 與 Skills，再對新安裝執行 post-validation。
 
 ### 從原始碼執行
 
@@ -28,8 +28,8 @@ slim-agents-codex install --preset openai-5.6.1 --scope global
 npm ci
 npm run build
 node dist/cli.js list-presets
-node dist/cli.js convert --preset openai-5.6.1 --output generated
-node dist/cli.js install --preset openai-5.6.1
+node dist/cli.js convert --preset openai-5.6.2 --output generated
+node dist/cli.js install --preset openai-5.6.2
 ```
 
 `install` 寫入前會顯示實際解析出的固定版本、設定檔路徑、Skill 路徑與備份路徑，並要求確認；它會同時安裝選定的 agent preset 與兩個受管 Slim Skills。`--scope global` 使用 `CODEX_HOME`（或 `~/.codex`）及 `$HOME/.agents/skills`，`--scope project` 使用目前專案的 `.codex` 及 `.agents/skills`；明確提供的 `--codex-home PATH`、`--skills-home PATH` 會覆寫對應目標。只有在明確需要非互動式安裝時才使用 `--yes`。
@@ -38,7 +38,7 @@ node dist/cli.js install --preset openai-5.6.1
 
 GitHub 原始碼與 `.tgz` 套件都包含 `presets/<id>/agents/` 與 `config.snippet.toml`，因此不一定要使用 CLI。
 
-1. 全域安裝時，將選定 preset 的全部 TOML 複製到 `CODEX_HOME/agents/`；專案安裝時，複製到 `<project>/.codex/agents/`。歷史 `openai-5.5`、`openai-5.6` 有八個角色，目前 `.1` 修正版有七個角色。
+1. 全域安裝時，將選定 preset 的全部 TOML 複製到 `CODEX_HOME/agents/`；專案安裝時，複製到 `<project>/.codex/agents/`。歷史 `openai-5.5`、`openai-5.6` 有八個角色；`.1` 與 `.2` 修正版有七個角色。
 2. 備份對應的 `CODEX_HOME/config.toml` 或 `<project>/.codex/config.toml`。
 3. 將該版本的 `config.snippet.toml` 合併進對應的 `config.toml`。兩種 scope 都使用 `config_file = "agents/<role>.toml"`，並依 [Codex Configuration Reference](https://learn.chatgpt.com/docs/config-file/config-reference) 的規則，由宣告角色的 config 檔所在位置解析。
 4. 將 `slim-council`、`slim-orchestration` 複製到全域 `$HOME/.agents/skills/` 或專案 `<project>/.agents/skills/`。
@@ -51,7 +51,7 @@ CLI 也使用相同布局。全域位置使用 `--scope global`，在專案根�
 
 ## 預設版本生命週期
 
-預設 ID 不會被覆寫。`openai-5.5` 與 `openai-5.6` 保留為歷史八角色轉換；`openai-5.5.1` 與 `openai-5.6.1` 對七個保留角色使用完全相同的 GPT model／effort，移除 Observer，並加入 Codex 原生巢狀協調。`latest` 和 `recommended` 是定義在 `presets/aliases.json` 的可移動別名；CLI 在寫入前會顯示解析後的固定版本。本專案不會自動替換或降級模型。
+預設 ID 不會被覆寫。`openai-5.5` 與 `openai-5.6` 保留為歷史八角色轉換；`openai-5.5.1` 與 `openai-5.6.1` 保留既有七角色 Codex 協調契約。`openai-5.6.2` 完全沿用 `openai-5.6.1` 的 model／effort，改用新的 role source，將經審核的上游 v2.2.8 完整 agent prompt 移植到 Codex `developer_instructions`；Observer 與 Councillor 仍不加入。`latest` 和 `recommended` 解析至 `openai-5.6.2`；CLI 在寫入前會顯示解析後的固定版本。本專案不會自動替換或降級模型。
 
 ## 協調架構
 

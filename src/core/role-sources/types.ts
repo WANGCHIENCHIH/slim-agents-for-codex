@@ -1,4 +1,4 @@
-export type Effort = "low" | "medium" | "high";
+export type Effort = "low" | "medium" | "high" | "xhigh";
 export type Sandbox = "read-only" | "workspace-write";
 
 export interface Role {

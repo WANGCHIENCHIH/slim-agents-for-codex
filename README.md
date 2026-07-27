@@ -12,15 +12,15 @@ This project is distributed through GitHub rather than the npm registry.
 
 ### Install a GitHub Release package
 
-Download `slim-agents-for-codex-0.2.0.tgz` from the matching GitHub Release, then run:
+Download `slim-agents-for-codex-0.3.0.tgz` from the matching GitHub Release, then run:
 
 ```bash
-npm install --global ./slim-agents-for-codex-0.2.0.tgz
+npm install --global ./slim-agents-for-codex-0.3.0.tgz
 slim-agents-codex list-presets
-slim-agents-codex install --preset openai-5.6.1 --scope global
+slim-agents-codex install --preset openai-5.6.2 --scope global
 ```
 
-If a `0.1.x` preset is already installed, use `slim-agents-codex switch-preset --preset openai-5.6.1 --scope global` instead. The switch archives the managed agents and Skills it replaces before post-validating the new installation.
+If a previous release is already installed, use `slim-agents-codex switch-preset --preset openai-5.6.2 --scope global` instead. The switch archives the managed agents and Skills it replaces before post-validating the new installation.
 
 ### Run from a source checkout
 

@@ -160,6 +160,10 @@ describe("preset generation", () => {
 
     for (const role of ["explorer", "librarian", "oracle", "designer", "fixer"]) expect(orchestration).toContain(`\`${role}\``);
     expect(orchestration).toMatch(/scheduler/i);
+    expect(orchestration).toMatch(/critical path/i);
+    expect(orchestration).toMatch(/single.writer/i);
+    expect(orchestration).toMatch(/phase gate/i);
+    expect(orchestration).toMatch(/complete when/i);
     expect(orchestration).toMatch(/\.slim\/deepwork\//i);
     expect(orchestration).toMatch(/oracle.*review|review.*oracle/is);
     expect(orchestration).toMatch(/designer.*handoff|handoff.*designer/is);
@@ -172,6 +176,9 @@ describe("preset generation", () => {
     expect(council).toMatch(/installed agents.*descriptions|descriptions.*installed agents/is);
     expect(council).toMatch(/feasibility|viable/i);
     expect(council).toMatch(/risk/i);
+    expect(council).toMatch(/quorum/i);
+    expect(council).toMatch(/blind/i);
+    expect(council).toMatch(/complete when/i);
     expect(council).toMatch(/root.*approv|root.*authoriz/i);
     expect(council).toMatch(/independent/i);
     expect(council).toMatch(/advisory.*must not edit|must not edit.*advisory/is);

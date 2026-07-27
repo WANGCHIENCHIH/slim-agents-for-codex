@@ -1,5 +1,6 @@
 import { reviewed202607RoleSource } from "./role-sources/reviewed-2026-07.js";
 import { slimCodex202607RoleSource } from "./role-sources/slim-codex-2026-07/index.js";
+import { slimCodexUpstream228RoleSource } from "./role-sources/slim-codex-upstream-2.2.8/index.js";
 import type { Effort, Role, RoleSource } from "./role-sources/types.js";
 
 export type { Effort, Role } from "./role-sources/types.js";
@@ -19,6 +20,7 @@ export interface Preset {
 const roleSources: Record<string, RoleSource> = {
   [reviewed202607RoleSource.id]: reviewed202607RoleSource,
   [slimCodex202607RoleSource.id]: slimCodex202607RoleSource,
+  [slimCodexUpstream228RoleSource.id]: slimCodexUpstream228RoleSource,
 };
 
 const mapping = (pairs: Record<string, [string, Effort]>): Preset["models"] => Object.fromEntries(Object.entries(pairs).map(([name, [model, effort]]) => [name, { model, effort }]));
@@ -28,11 +30,12 @@ export const presets: Record<string, Preset> = {
   "openai-5.6": { id: "openai-5.6", adapter: "oh-my-opencode-slim", adapterSchemaVersion: 1, source: "alvinunreal/oh-my-opencode-slim", sourceVersion: "reviewed-2026-07", created: "2026-07-12", status: "supported", snapshotFormatVersion: 1, models: mapping({ orchestrator: ["gpt-5.6-terra", "medium"], oracle: ["gpt-5.6-sol", "high"], librarian: ["gpt-5.6-luna", "low"], explorer: ["gpt-5.6-luna", "low"], designer: ["gpt-5.6-luna", "medium"], fixer: ["gpt-5.6-luna", "medium"], council: ["gpt-5.6-sol", "high"], observer: ["gpt-5.6-luna", "low"] }) },
   "openai-5.5.1": { id: "openai-5.5.1", adapter: "oh-my-opencode-slim", adapterSchemaVersion: 2, source: "alvinunreal/oh-my-opencode-slim", sourceVersion: "slim-codex-2026-07", created: "2026-07-14", status: "supported", snapshotFormatVersion: 1, models: mapping({ orchestrator: ["gpt-5.5", "medium"], oracle: ["gpt-5.5", "high"], librarian: ["gpt-5.4-mini", "low"], explorer: ["gpt-5.4-mini", "low"], designer: ["gpt-5.4-mini", "medium"], fixer: ["gpt-5.5", "low"], council: ["gpt-5.5", "high"] }) },
   "openai-5.6.1": { id: "openai-5.6.1", adapter: "oh-my-opencode-slim", adapterSchemaVersion: 2, source: "alvinunreal/oh-my-opencode-slim", sourceVersion: "slim-codex-2026-07", created: "2026-07-14", status: "supported", snapshotFormatVersion: 1, models: mapping({ orchestrator: ["gpt-5.6-terra", "xhigh"], oracle: ["gpt-5.6-sol", "xhigh"], librarian: ["gpt-5.6-luna", "low"], explorer: ["gpt-5.6-luna", "low"], designer: ["gpt-5.6-luna", "medium"], fixer: ["gpt-5.6-luna", "xhigh"], council: ["gpt-5.6-sol", "high"] }) },
+  "openai-5.6.2": { id: "openai-5.6.2", adapter: "oh-my-opencode-slim", adapterSchemaVersion: 2, source: "alvinunreal/oh-my-opencode-slim", sourceVersion: "slim-codex-upstream-2.2.8", created: "2026-07-27", status: "supported", snapshotFormatVersion: 1, models: mapping({ orchestrator: ["gpt-5.6-terra", "xhigh"], oracle: ["gpt-5.6-sol", "xhigh"], librarian: ["gpt-5.6-luna", "low"], explorer: ["gpt-5.6-luna", "low"], designer: ["gpt-5.6-luna", "medium"], fixer: ["gpt-5.6-luna", "xhigh"], council: ["gpt-5.6-sol", "high"] }) },
 };
 
-export const aliases = { latest: "openai-5.6.1", recommended: "openai-5.6.1" } as const;
-export const roles = slimCodex202607RoleSource.roles;
-export const roleOrder = [...slimCodex202607RoleSource.roleOrder];
+export const aliases = { latest: "openai-5.6.2", recommended: "openai-5.6.2" } as const;
+export const roles = slimCodexUpstream228RoleSource.roles;
+export const roleOrder = [...slimCodexUpstream228RoleSource.roleOrder];
 export const managedRoleNames = [...new Set(Object.values(roleSources).flatMap((source) => source.roleOrder))];
 
 const disabledMcpsByRole: Record<string, readonly string[]> = {

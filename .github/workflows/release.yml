@@ -67,12 +67,12 @@ jobs:
           smoke_root="$(mktemp -d)"
           npm install --prefix "$smoke_root/npm" "./$PACKAGE_FILE"
           cli="$smoke_root/npm/node_modules/slim-agents-for-codex/dist/cli.js"
-          node "$cli" list-presets | grep -F -- 'latest -> openai-5.6.1'
-          node "$cli" install --preset openai-5.6.1 \
+          node "$cli" list-presets | grep -F -- 'latest -> openai-5.6.2'
+          node "$cli" install --preset openai-5.6.2 \
             --codex-home "$smoke_root/codex" \
             --skills-home "$smoke_root/skills" \
             --yes
-          node "$cli" validate --preset openai-5.6.1 \
+          node "$cli" validate --preset openai-5.6.2 \
             --codex-home "$smoke_root/codex" \
             --skills-home "$smoke_root/skills"
           test -f "$smoke_root/skills/slim-council/SKILL.md"
@@ -89,7 +89,7 @@ jobs:
           ```bash
           npm install --global ./slim-agents-for-codex-<version>.tgz
           slim-agents-codex list-presets
-          slim-agents-codex install --preset openai-5.6.1 --scope global
+          slim-agents-codex install --preset openai-5.6.2 --scope global
           ```
 
           Existing `0.1.x` installations should use `switch-preset` instead of `install`.

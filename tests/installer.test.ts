@@ -95,12 +95,12 @@ describe("safe installation", () => {
     await installPreset(preview);
     const output: string[] = [];
 
-    await expect(runCli(["validate", "--codex-home", home], {
+    await expect(runCli(["validate", "--preset", "openai-5.6.1", "--codex-home", home], {
       log: () => undefined,
       confirm: async () => false,
     })).rejects.toThrow(/--skills-home/);
 
-    const code = await runCli(["validate", "--codex-home", home, "--skills-home", skillsHome], {
+    const code = await runCli(["validate", "--preset", "openai-5.6.1", "--codex-home", home, "--skills-home", skillsHome], {
       log: (line) => output.push(line),
       confirm: async () => false,
     });

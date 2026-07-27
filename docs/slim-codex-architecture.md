@@ -38,7 +38,8 @@ Codex parses every standalone agent TOML as a complete config layer before it me
 
 - `reviewed-2026-07` backs immutable eight-role `openai-5.5` and `openai-5.6` snapshots.
 - `slim-codex-2026-07` backs seven-role `openai-5.5.1` and `openai-5.6.1` snapshots.
-- The `.1` presets retain every GPT model and effort mapping for their seven retained roles.
+- `slim-codex-upstream-2.2.8` backs seven-role `openai-5.6.2`. It ports the reviewed upstream agent prompts from `oh-my-opencode-slim` v2.2.8 at commit `1c0e1f4abe217b6965997201c37ff1de6720c13d`, adapting OpenCode-specific tools and scheduler state to Codex while preserving the Root approval boundary.
+- `openai-5.6.2` retains every GPT model and effort mapping from `openai-5.6.1`; only the versioned role contract changes.
 - Observer is not present in the current source. Visual inspection belongs to Oracle, Explorer, or Designer according to the task.
 
 Generated and installed agent TOMLs remain flat under `agents/`. Additional Council-selectable custom experts are installed independently under project `.codex/agents/` or global `CODEX_HOME/agents/` and registered in the matching `config.toml`.

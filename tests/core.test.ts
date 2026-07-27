@@ -22,8 +22,10 @@ async function createCodexHomeFromPreset(id: string) {
 }
 
 describe("preset generation", () => {
-  it("keeps immutable presets and resolves latest to the seven-role 5.6 revision", () => {
-    expect(resolvePreset("latest").id).toBe("openai-5.6.1");
+  it("keeps immutable presets and resolves latest to the reviewed 5.6.2 role contract", () => {
+    expect(resolvePreset("latest").id).toBe("openai-5.6.2");
+    expect(resolvePreset("recommended").id).toBe("openai-5.6.2");
+    expect(resolvePreset("openai-5.6.2").models).toEqual(resolvePreset("openai-5.6.1").models);
     expect(resolvePreset("openai-5.5").id).toBe("openai-5.5");
     expect(resolvePreset("openai-5.6").id).toBe("openai-5.6");
   });
@@ -69,6 +71,52 @@ describe("preset generation", () => {
       fixer: { model: "gpt-5.6-luna", effort: "xhigh" },
       council: { model: "gpt-5.6-sol", effort: "high" },
     });
+  });
+
+  it("ports the reviewed upstream specialist prompts into generated developer instructions", () => {
+    const generated = generatePreset("openai-5.6.2");
+    const instructions = Object.fromEntries(
+      Object.entries(generated.agents).map(([name, toml]) => [
+        name,
+        (parse(toml) as { developer_instructions: string }).developer_instructions,
+      ]),
+    );
+
+    expect(instructions.oracle).toMatch(/identify root causes.*architectural solutions with trade-?offs.*YAGNI/is);
+    expect(instructions.librarian).toMatch(/external repositories.*official documentation.*implementation examples.*library internals/is);
+    expect(instructions.librarian).toMatch(/evidence-based answers with sources.*official docs.*official and community patterns/is);
+    expect(instructions.librarian).not.toMatch(/prefer.*CodeGraph/i);
+    expect(instructions.explorer).toMatch(/text\/regex patterns.*structural patterns.*file discovery/is);
+    expect(instructions.explorer).toMatch(/line numbers/is);
+    expect(instructions.explorer).toMatch(/<results>\s*<files>.*<\/files>\s*<answer>/is);
+    for (const section of ["Typography", "Color & Theme", "Motion & Interaction", "Spatial Composition", "Visual Depth", "Styling Approach", "Match Vision to Execution"]) {
+      expect(instructions.designer).toContain(section);
+    }
+    expect(instructions.designer).toMatch(/distinctive, characterful fonts.*cohesive aesthetic.*one well-timed animation/is);
+    expect(instructions.fixer).toMatch(/implement, not plan or research.*no external research.*no design work/is);
+    expect(instructions.fixer).toMatch(/<summary>.*<changes>.*<verification>.*skip reason/is);
+    for (const name of ["designer", "fixer"]) expect(instructions[name]).toMatch(/apply_patch.*destructive.*target/is);
+    for (const name of ["oracle", "librarian", "explorer"]) expect(instructions[name]).toMatch(/READ-ONLY.*do not modify files/is);
+  });
+
+  it("adapts upstream routing and synthesis contracts without weakening Codex coordinator boundaries", () => {
+    const generated = generatePreset("openai-5.6.2");
+    const orchestrator = (parse(generated.agents.orchestrator) as { developer_instructions: string }).developer_instructions;
+    const council = (parse(generated.agents.council) as { developer_instructions: string }).developer_instructions;
+
+    for (const name of ["explorer", "librarian", "oracle", "designer", "fixer"]) {
+      expect(orchestrator).toMatch(new RegExp(`\\b${name}\\b[\\s\\S]*?Delegate when[\\s\\S]*?Do not delegate when`, "i"));
+    }
+    expect(orchestrator).toMatch(/routing threshold.*plan and parallelize.*design handoff.*verify/is);
+    expect(orchestrator).toMatch(/root-approved.*only.*five Slim specialists/is);
+    expect(orchestrator).toMatch(/do not (?:spawn|delegate to).*(?:orchestrator|council)/i);
+    expect(orchestrator).not.toMatch(/observer|councillor|task_id|Background Job Board/i);
+
+    expect(council).toMatch(/Synthesis Process.*review each.*individually.*agreements.*contradictions.*resolve.*reasoning/is);
+    expect(council).toMatch(/Perspective Details.*key insight.*confidence.*agreement.*disagreement/is);
+    expect(council).toMatch(/Root.*pre-approved.*Council-safe.*read-only/is);
+    expect(council).toMatch(/unanimous.*majority.*split.*insufficient evidence/is);
+    expect(council).toMatch(/do not spawn.*(?:orchestrator|council)/i);
   });
 
   it("encodes bounded recursive orchestration for the five Slim specialists", () => {
@@ -210,7 +258,7 @@ describe("CLI", () => {
     const code = await runCli(["list-presets"], { log: (line) => output.push(line), confirm: async () => false });
     expect(code).toBe(0);
     expect(output.join("\n")).toContain("openai-5.5");
-    expect(output.join("\n")).toContain("latest -> openai-5.6.1");
+    expect(output.join("\n")).toContain("latest -> openai-5.6.2");
   });
 
   it("validates both legacy and current role sets against their selected preset", async () => {

@@ -28,15 +28,15 @@ If a `0.1.x` preset is already installed, use `slim-agents-codex switch-preset -
 npm ci
 npm run build
 node dist/cli.js list-presets
-node dist/cli.js convert --preset openai-5.6.1 --output generated
-node dist/cli.js install --preset openai-5.6.1
+node dist/cli.js convert --preset openai-5.6.2 --output generated
+node dist/cli.js install --preset openai-5.6.2
 ```
 
 `install` previews the resolved immutable preset, config path, Skill path, and backup path before asking for confirmation. It installs both the selected agent preset and the two managed Slim Skills. Use `--scope global` for `CODEX_HOME` (or `~/.codex`) plus `$HOME/.agents/skills`, and `--scope project` for the current project's `.codex` plus `.agents/skills`. Explicit `--codex-home PATH` and `--skills-home PATH` options override those targets. Use `--yes` only for explicit non-interactive installation.
 
 ## Manual installation
 
-Every npm package and source checkout includes ready-to-copy files under `presets/<id>/agents/`, `config.snippet.toml`, and `.agents/skills/`. Copy every TOML from the selected preset into `CODEX_HOME/agents/` for a global installation or `<project>/.codex/agents/` for a project installation, then merge the snippet into the matching `config.toml`. Copy `slim-council` and `slim-orchestration` into `$HOME/.agents/skills/` globally or `<project>/.agents/skills/` for one repository. Historical `openai-5.5` and `openai-5.6` presets contain eight roles; current `.1` revisions contain seven. In both scopes, `config_file = "agents/<role>.toml"` resolves relative to the config file that declares the role, as specified by the [Codex Configuration Reference](https://learn.chatgpt.com/docs/config-file/config-reference). Preserve UTF-8 encoding, BOM state, and line endings, and make backups first.
+Every npm package and source checkout includes ready-to-copy files under `presets/<id>/agents/`, `config.snippet.toml`, and `.agents/skills/`. Copy every TOML from the selected preset into `CODEX_HOME/agents/` for a global installation or `<project>/.codex/agents/` for a project installation, then merge the snippet into the matching `config.toml`. Copy `slim-council` and `slim-orchestration` into `$HOME/.agents/skills/` globally or `<project>/.agents/skills/` for one repository. Historical `openai-5.5` and `openai-5.6` presets contain eight roles; the `.1` and `.2` revisions contain seven. In both scopes, `config_file = "agents/<role>.toml"` resolves relative to the config file that declares the role, as specified by the [Codex Configuration Reference](https://learn.chatgpt.com/docs/config-file/config-reference). Preserve UTF-8 encoding, BOM state, and line endings, and make backups first.
 
 The CLI follows the same layout. Use `--scope global` for the global location or `--scope project` from a project root; use `--codex-home DIR` only when an explicit location is needed.
 
@@ -44,7 +44,7 @@ Do not place inactive legacy presets under `CODEX_HOME/agents/`: Codex recursive
 
 ## Preset lifecycle
 
-Preset IDs are immutable. `openai-5.5` and `openai-5.6` remain available as the historical eight-role translation. `openai-5.5.1` and `openai-5.6.1` retain the same GPT model and effort mappings for seven roles while removing Observer and adding Codex-native recursive coordination. `latest` and `recommended` are movable aliases defined in `presets/aliases.json`; the CLI always displays the resolved immutable ID before writing. There is no automatic model fallback.
+Preset IDs are immutable. `openai-5.5` and `openai-5.6` remain available as the historical eight-role translation. `openai-5.5.1` and `openai-5.6.1` retain the reviewed seven-role Codex coordination contract. `openai-5.6.2` keeps the exact `openai-5.6.1` model and effort mappings while selecting a new role source that ports the complete reviewed upstream v2.2.8 agent prompts into Codex `developer_instructions`. Observer and Councillor remain excluded. `latest` and `recommended` resolve to `openai-5.6.2`; the CLI always displays the resolved immutable ID before writing. There is no automatic model fallback.
 
 ## Coordination model
 

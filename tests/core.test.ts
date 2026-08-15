@@ -337,6 +337,18 @@ describe("CLI", () => {
     }
   });
 
+  it("generates and verifies every supported snapshot through the public CLI", async () => {
+    const outputRoot = await mkdtemp(join(tmpdir(), "slim-convert-happy-"));
+    const generated: string[] = [];
+    const checked: string[] = [];
+
+    expect(await runCli(["convert", "--all", "--output", outputRoot], { log: (line) => generated.push(line), confirm: async () => false })).toBe(0);
+    expect(await readdir(outputRoot)).toEqual(["aliases.json", "openai-5.5", "openai-5.6"]);
+    expect(await runCli(["convert", "--all", "--output", outputRoot, "--check"], { log: (line) => checked.push(line), confirm: async () => false })).toBe(0);
+    expect(generated).toHaveLength(2);
+    expect(checked).toHaveLength(3);
+  });
+
   it("convert --check rejects a missing selected manifest without mutating files", async () => {
     const outputRoot = await mkdtemp(join(tmpdir(), "slim-convert-check-"));
     await copyPresetSnapshot("openai-5.6", outputRoot);

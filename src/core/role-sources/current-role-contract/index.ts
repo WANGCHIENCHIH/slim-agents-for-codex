@@ -1,7 +1,7 @@
 import { coreSpecialists } from "./core-specialists.js";
 import { council } from "./council.js";
 import { orchestrator } from "./orchestrator.js";
-import type { RoleSource } from "../types.js";
+import type { RoleContract } from "../types.js";
 
 const verificationAssignment = `## Verification
 
@@ -10,8 +10,7 @@ const verificationAssignment = `## Verification
 
 // Current portable contract reviewed from alvinunreal/oh-my-opencode-slim
 // v2.2.14 at commit 150eaf5d755c63bdfbf53d509fcff9df37662e42.
-export const currentRoleContract: RoleSource = {
-  id: "current-role-contract",
+export const currentRoleContract: RoleContract = {
   roleOrder: ["orchestrator", "oracle", "librarian", "explorer", "designer", "fixer", "council"],
   roles: {
     orchestrator: {

@@ -9,8 +9,7 @@ export interface Role {
   disabledMcps?: readonly string[];
 }
 
-export interface RoleSource {
-  id: string;
+export interface RoleContract {
   roleOrder: readonly string[];
   roles: Record<string, Role>;
 }

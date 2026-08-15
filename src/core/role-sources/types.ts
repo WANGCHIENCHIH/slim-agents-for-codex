@@ -6,6 +6,7 @@ export interface Role {
   description: string;
   sandbox: Sandbox;
   instructions: string;
+  disabledMcps?: readonly string[];
 }
 
 export interface RoleSource {

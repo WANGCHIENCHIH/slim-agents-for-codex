@@ -1,54 +1,36 @@
-import { reviewed202607RoleSource } from "./role-sources/reviewed-2026-07.js";
-import { slimCodex202607RoleSource } from "./role-sources/slim-codex-2026-07/index.js";
-import { slimCodexUpstream228RoleSource } from "./role-sources/slim-codex-upstream-2.2.8/index.js";
-import { slimCodexUpstream2214RoleSource } from "./role-sources/slim-codex-upstream-2.2.14/index.js";
-import { slimCodex20260815RoleSource } from "./role-sources/slim-codex-2026-08-15/index.js";
-import type { Effort, Role, RoleSource } from "./role-sources/types.js";
+import packageJson from "../../package.json" with { type: "json" };
+import { currentRoleContract } from "./role-sources/current-role-contract/index.js";
+import type { Effort, Role } from "./role-sources/types.js";
 
 export type { Effort, Role } from "./role-sources/types.js";
 
 export interface Preset {
   id: string;
   adapter: "oh-my-opencode-slim";
-  adapterSchemaVersion: 1 | 2;
+  adapterSchemaVersion: 2;
   source: "alvinunreal/oh-my-opencode-slim";
-  sourceVersion: string;
   created: string;
-  status: "supported" | "deprecated";
+  status: "supported";
   snapshotFormatVersion: 1;
   models: Record<string, { model: string; effort: Effort }>;
 }
 
-const roleSources: Record<string, RoleSource> = {
-  [reviewed202607RoleSource.id]: reviewed202607RoleSource,
-  [slimCodex202607RoleSource.id]: slimCodex202607RoleSource,
-  [slimCodexUpstream228RoleSource.id]: slimCodexUpstream228RoleSource,
-  [slimCodexUpstream2214RoleSource.id]: slimCodexUpstream2214RoleSource,
-  [slimCodex20260815RoleSource.id]: slimCodex20260815RoleSource,
-};
-
 const mapping = (pairs: Record<string, [string, Effort]>): Preset["models"] => Object.fromEntries(Object.entries(pairs).map(([name, [model, effort]]) => [name, { model, effort }]));
 
 export const presets: Record<string, Preset> = {
-  "openai-5.5": { id: "openai-5.5", adapter: "oh-my-opencode-slim", adapterSchemaVersion: 1, source: "alvinunreal/oh-my-opencode-slim", sourceVersion: "reviewed-2026-07", created: "2026-07-12", status: "supported", snapshotFormatVersion: 1, models: mapping({ orchestrator: ["gpt-5.5", "medium"], oracle: ["gpt-5.5", "high"], librarian: ["gpt-5.4-mini", "low"], explorer: ["gpt-5.4-mini", "low"], designer: ["gpt-5.4-mini", "medium"], fixer: ["gpt-5.5", "low"], council: ["gpt-5.5", "high"], observer: ["gpt-5.4-mini", "low"] }) },
-  "openai-5.6": { id: "openai-5.6", adapter: "oh-my-opencode-slim", adapterSchemaVersion: 1, source: "alvinunreal/oh-my-opencode-slim", sourceVersion: "reviewed-2026-07", created: "2026-07-12", status: "supported", snapshotFormatVersion: 1, models: mapping({ orchestrator: ["gpt-5.6-terra", "medium"], oracle: ["gpt-5.6-sol", "high"], librarian: ["gpt-5.6-luna", "low"], explorer: ["gpt-5.6-luna", "low"], designer: ["gpt-5.6-luna", "medium"], fixer: ["gpt-5.6-luna", "medium"], council: ["gpt-5.6-sol", "high"], observer: ["gpt-5.6-luna", "low"] }) },
-  "openai-5.5.1": { id: "openai-5.5.1", adapter: "oh-my-opencode-slim", adapterSchemaVersion: 2, source: "alvinunreal/oh-my-opencode-slim", sourceVersion: "slim-codex-2026-07", created: "2026-07-14", status: "supported", snapshotFormatVersion: 1, models: mapping({ orchestrator: ["gpt-5.5", "medium"], oracle: ["gpt-5.5", "high"], librarian: ["gpt-5.4-mini", "low"], explorer: ["gpt-5.4-mini", "low"], designer: ["gpt-5.4-mini", "medium"], fixer: ["gpt-5.5", "low"], council: ["gpt-5.5", "high"] }) },
-  "openai-5.6.1": { id: "openai-5.6.1", adapter: "oh-my-opencode-slim", adapterSchemaVersion: 2, source: "alvinunreal/oh-my-opencode-slim", sourceVersion: "slim-codex-2026-07", created: "2026-07-14", status: "supported", snapshotFormatVersion: 1, models: mapping({ orchestrator: ["gpt-5.6-terra", "xhigh"], oracle: ["gpt-5.6-sol", "xhigh"], librarian: ["gpt-5.6-luna", "low"], explorer: ["gpt-5.6-luna", "low"], designer: ["gpt-5.6-luna", "medium"], fixer: ["gpt-5.6-luna", "xhigh"], council: ["gpt-5.6-sol", "high"] }) },
-  "openai-5.6.2": { id: "openai-5.6.2", adapter: "oh-my-opencode-slim", adapterSchemaVersion: 2, source: "alvinunreal/oh-my-opencode-slim", sourceVersion: "slim-codex-upstream-2.2.8", created: "2026-07-27", status: "supported", snapshotFormatVersion: 1, models: mapping({ orchestrator: ["gpt-5.6-terra", "xhigh"], oracle: ["gpt-5.6-sol", "xhigh"], librarian: ["gpt-5.6-luna", "low"], explorer: ["gpt-5.6-luna", "low"], designer: ["gpt-5.6-luna", "medium"], fixer: ["gpt-5.6-luna", "xhigh"], council: ["gpt-5.6-sol", "high"] }) },
-  "openai-5.6.3": { id: "openai-5.6.3", adapter: "oh-my-opencode-slim", adapterSchemaVersion: 2, source: "alvinunreal/oh-my-opencode-slim", sourceVersion: "slim-codex-upstream-2.2.14", created: "2026-08-15", status: "supported", snapshotFormatVersion: 1, models: mapping({ orchestrator: ["gpt-5.6-terra", "high"], oracle: ["gpt-5.6-sol", "high"], librarian: ["gpt-5.6-luna", "low"], explorer: ["gpt-5.6-luna", "low"], designer: ["gpt-5.6-luna", "medium"], fixer: ["gpt-5.6-luna", "high"], council: ["gpt-5.6-sol", "high"] }) },
-  "openai-5.6.4": { id: "openai-5.6.4", adapter: "oh-my-opencode-slim", adapterSchemaVersion: 2, source: "alvinunreal/oh-my-opencode-slim", sourceVersion: "slim-codex-2026-08-15", created: "2026-08-15", status: "supported", snapshotFormatVersion: 1, models: mapping({ orchestrator: ["gpt-5.6-terra", "high"], oracle: ["gpt-5.6-sol", "high"], librarian: ["gpt-5.6-luna", "low"], explorer: ["gpt-5.6-luna", "low"], designer: ["gpt-5.6-luna", "medium"], fixer: ["gpt-5.6-luna", "high"], council: ["gpt-5.6-sol", "high"] }) },
+  "openai-5.5": { id: "openai-5.5", adapter: "oh-my-opencode-slim", adapterSchemaVersion: 2, source: "alvinunreal/oh-my-opencode-slim", created: "2026-07-12", status: "supported", snapshotFormatVersion: 1, models: mapping({ orchestrator: ["gpt-5.5", "medium"], oracle: ["gpt-5.5", "high"], librarian: ["gpt-5.4-mini", "low"], explorer: ["gpt-5.4-mini", "low"], designer: ["gpt-5.4-mini", "medium"], fixer: ["gpt-5.5", "low"], council: ["gpt-5.5", "high"] }) },
+  "openai-5.6": { id: "openai-5.6", adapter: "oh-my-opencode-slim", adapterSchemaVersion: 2, source: "alvinunreal/oh-my-opencode-slim", created: "2026-07-12", status: "supported", snapshotFormatVersion: 1, models: mapping({ orchestrator: ["gpt-5.6-terra", "high"], oracle: ["gpt-5.6-sol", "high"], librarian: ["gpt-5.6-luna", "low"], explorer: ["gpt-5.6-luna", "low"], designer: ["gpt-5.6-luna", "medium"], fixer: ["gpt-5.6-luna", "high"], council: ["gpt-5.6-sol", "high"] }) },
 };
 
-export const aliases = { latest: "openai-5.6.4", recommended: "openai-5.6.4" } as const;
-export const managedRoleNames = [...new Set(Object.values(roleSources).flatMap((source) => source.roleOrder))];
+export const aliases = { latest: "openai-5.6", recommended: "openai-5.6" } as const;
+export const managedRoleNames = [...currentRoleContract.roleOrder, "observer"];
 
-const disabledMcpsByRole: Record<string, readonly string[]> = {
-  librarian: ["codegraph"],
-  orchestrator: ["exa", "context7", "grep", "codegraph"],
-  explorer: ["exa", "context7", "grep"],
-  designer: ["exa", "context7", "grep"],
-  oracle: ["context7", "grep"],
-  fixer: ["context7", "grep"],
+const retiredPresets: Record<string, string> = {
+  "openai-5.5.1": "openai-5.5",
+  "openai-5.6.1": "openai-5.6",
+  "openai-5.6.2": "openai-5.6",
+  "openai-5.6.3": "openai-5.6",
+  "openai-5.6.4": "openai-5.6",
 };
 
 const rootProfileInstructions = {
@@ -72,19 +54,15 @@ Do not spawn orchestrator, council, or another meta-coordinator.
 The user retains every approval and execution decision.`,
 } as const;
 
-function sourceFor(preset: Preset): RoleSource {
-  const source = roleSources[preset.sourceVersion];
-  if (!source) throw new Error(`Unknown role source: ${preset.sourceVersion}`);
-  return source;
-}
-
 export function resolvePreset(idOrAlias: string): Preset {
   const id = (aliases as Record<string, string>)[idOrAlias] ?? idOrAlias;
+  const replacement = retiredPresets[id];
+  if (replacement) throw new Error(`Retired preset: ${id}. Use ${replacement} for the current configuration; use the historical Package Version or Git tag for the exact historical configuration.`);
   const preset = presets[id];
   if (!preset) throw new Error(`Unknown preset: ${idOrAlias}`);
-  const expected = [...sourceFor(preset).roleOrder].sort();
+  const expected = [...currentRoleContract.roleOrder].sort();
   const actual = Object.keys(preset.models).sort();
-  if (actual.length !== expected.length || actual.some((name, index) => name !== expected[index])) throw new Error(`Preset ${id} must map exactly ${expected.length} roles from ${preset.sourceVersion}`);
+  if (actual.length !== expected.length || actual.some((name, index) => name !== expected[index])) throw new Error(`Preset ${id} must map exactly ${expected.length} roles from the Current Role Contract`);
   return preset;
 }
 
@@ -98,31 +76,31 @@ export function renderAliases() {
 
 export function generatePreset(idOrAlias: string) {
   const preset = resolvePreset(idOrAlias);
-  const source = sourceFor(preset);
   const agents: Record<string, string> = {};
-  for (const name of source.roleOrder) {
-    const current = source.roles[name] as Role;
+  for (const name of currentRoleContract.roleOrder) {
+    const current = currentRoleContract.roles[name] as Role;
     const model = preset.models[name];
-    const allowsCodeGraph = preset.id === "openai-5.6.4" && name === "orchestrator";
-    const deniedMcps = [...(disabledMcpsByRole[name] ?? [])].filter((mcp) => !allowsCodeGraph || mcp !== "codegraph").sort();
+    const deniedMcps = [...(current.disabledMcps ?? [])].sort();
     const mcpPolicy = deniedMcps.length > 0 ? `\n\nMCP denylist: ${deniedMcps.join(", ")}. Do not use these MCP servers in this role.` : "";
     agents[name] = `name = ${quote(current.name)}\ndescription = ${quote(current.description)}\nmodel = ${quote(model.model)}\nmodel_reasoning_effort = ${quote(model.effort)}\nsandbox_mode = ${quote(current.sandbox)}\ndeveloper_instructions = ${multiline(current.instructions + mcpPolicy)}\n`;
   }
   const rootProfiles = Object.fromEntries(Object.entries(rootProfileInstructions).map(([name, instructions]) => {
     const model = preset.models[name];
     const effort = name === "council" ? "medium" : model.effort;
-    return [name, `model = ${quote(model.model)}\nmodel_reasoning_effort = ${quote(effort)}\nsandbox_mode = ${quote(source.roles[name].sandbox)}\ndeveloper_instructions = ${multiline(instructions)}\n`];
+    return [name, `model = ${quote(model.model)}\nmodel_reasoning_effort = ${quote(effort)}\nsandbox_mode = ${quote(currentRoleContract.roles[name].sandbox)}\ndeveloper_instructions = ${multiline(instructions)}\n`];
   })) as Record<keyof typeof rootProfileInstructions, string>;
-  const snippet = `[agents]\nmax_threads = 6\nmax_depth = 2\n\n` + source.roleOrder.map((name) => `[agents.${name}]\ndescription = ${quote(source.roles[name].description)}\nconfig_file = ${quote(`agents/${name}.toml`)}\n`).join("\n");
+  const snippet = `[agents]\nmax_threads = 6\nmax_depth = 2\n\n` + currentRoleContract.roleOrder.map((name) => `[agents.${name}]\ndescription = ${quote(currentRoleContract.roles[name].description)}\nconfig_file = ${quote(`agents/${name}.toml`)}\n`).join("\n");
   const manifest = renderJson({
-    id: preset.id,
+    packageVersion: packageJson.version,
+    presetId: preset.id,
     adapter: preset.adapter,
     adapterSchemaVersion: preset.adapterSchemaVersion,
     source: preset.source,
-    sourceVersion: preset.sourceVersion,
+    upstreamVersion: "2.2.14",
+    upstreamCommit: "150eaf5d755c63bdfbf53d509fcff9df37662e42",
     created: preset.created,
     status: preset.status,
     snapshotFormatVersion: preset.snapshotFormatVersion,
   });
-  return { preset, roles: source.roles, roleOrder: [...source.roleOrder], agents, rootProfiles, snippet, manifest };
+  return { preset, roles: currentRoleContract.roles, roleOrder: [...currentRoleContract.roleOrder], agents, rootProfiles, snippet, manifest };
 }

@@ -1,6 +1,6 @@
 # Slim Codex architecture
 
-The current Codex translation uses seven runtime roles while preserving the historical eight-role presets.
+The current package exposes two model-generation presets backed by one seven-role Current Role Contract.
 
 ## Runtime graph
 
@@ -30,23 +30,17 @@ Orchestrator is the execution team. It receives one root-approved bounded outcom
 
 Every coordinator-to-specialist spawn uses `fork_turns="none"` with a self-contained assignment. Codex full-history forks inherit the current agent type, model, and reasoning effort, so they cannot also select a different registered role.
 
-## Role sources and presets
+## Current Role Contract and presets
 
-`src/core/presets.ts` is the canonical assembly for role-source selection, model and effort mappings, aliases, and MCP restrictions. Prompt and role-order history lives under `src/core/role-sources/`.
+`src/core/role-sources/current-role-contract/` owns the complete current seven-role behavior: role order, names, descriptions, instructions, sandbox choices, MCP guidance, and optional Skill routing. Historical contracts remain in historical packages and Git tags rather than an inheritance chain in the current source.
 
-Codex parses every standalone agent TOML as a complete config layer before it merges that layer into a spawned session. A bare `[mcp_servers.<id>] enabled = false` table fails standalone parsing because it has no transport; a dummy transport can then conflict with the inherited server transport during merging. Portable generated roles therefore keep the reviewed MCP denylist as behavioral `developer_instructions` and emit no role-local MCP tables. Hard per-role MCP enforcement requires installation-specific complete transports or a future Codex-native denylist mechanism.
+`src/core/presets.ts` owns the supported model-generation mappings and aliases. `openai-5.5` and `openai-5.6` share the Current Role Contract; only their model and effort mappings differ. The exact generated identity is `(Package Version, Preset ID)`, recorded in each manifest. Current upstream audit provenance is metadata only and never selects behavior.
 
-- `reviewed-2026-07` backs immutable eight-role `openai-5.5` and `openai-5.6` snapshots.
-- `slim-codex-2026-07` backs seven-role `openai-5.5.1` and `openai-5.6.1` snapshots.
-- `slim-codex-upstream-2.2.8` backs seven-role `openai-5.6.2`. It ports the reviewed upstream agent prompts from `oh-my-opencode-slim` v2.2.8 at commit `1c0e1f4abe217b6965997201c37ff1de6720c13d`, adapting OpenCode-specific tools and scheduler state to Codex while preserving the Root approval boundary.
-- `openai-5.6.2` retains every GPT model and effort mapping from `openai-5.6.1`; only the versioned role contract changes.
-- `slim-codex-upstream-2.2.14` backs seven-role `openai-5.6.3`. It adapts the portable verification-ownership changes reviewed from upstream v2.2.14 at commit `150eaf5d755c63bdfbf53d509fcff9df37662e42` while excluding OpenCode-only task, scheduler, and multiplexer behavior.
-- `openai-5.6.3` keeps the `.2` models but uses `high` effort for Orchestrator, Oracle, and Fixer. Librarian and Explorer remain `low`, Designer `medium`, and Council `high`.
-- `slim-codex-2026-08-15` backs seven-role `openai-5.6.4`, adding the local reviewed Oracle simplification-review routing while retaining the v2.2.14 verification contract.
-- `openai-5.6.4` retains every `.3` model and effort mapping, allows Orchestrator to use CodeGraph, and lets read-only Oracle use `$ponytail-review` when that Skill is installed.
-- Observer is not present in the current source. Visual inspection belongs to Oracle, Explorer, or Designer according to the task.
+Codex parses every standalone agent TOML as a complete config layer before merging it into a spawned session. Portable generated roles therefore keep their reviewed MCP denylist as behavioral `developer_instructions` and emit no role-local MCP tables. Hard per-role MCP enforcement requires installation-specific complete transports or a future Codex-native denylist mechanism.
 
-Generated and installed agent TOMLs remain flat under `agents/`. Additional Council-selectable custom experts are installed independently under project `.codex/agents/` or global `CODEX_HOME/agents/` and registered in the matching `config.toml`.
+Observer is retained only as a retired managed-role name so `switch-preset` can archive and remove it from an existing eight-role installation. Observer has no current role contract or generated TOML. Visual inspection belongs to Oracle, Explorer, or Designer according to the task.
+
+Generated and installed agent TOMLsGenerated and installed agent TOMLs remain flat under `agents/`. Additional Council-selectable custom experts are installed independently under project `.codex/agents/` or global `CODEX_HOME/agents/` and registered in the matching `config.toml`.
 
 ## Skill boundary
 

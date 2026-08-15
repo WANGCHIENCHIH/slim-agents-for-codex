@@ -17,10 +17,10 @@ Download `slim-agents-for-codex-0.4.0.tgz` from the matching GitHub Release, the
 ```bash
 npm install --global ./slim-agents-for-codex-0.4.0.tgz
 slim-agents-codex list-presets
-slim-agents-codex install --preset openai-5.6.3 --scope global
+slim-agents-codex install --preset openai-5.6 --scope global
 ```
 
-If a previous release is already installed, use `slim-agents-codex switch-preset --preset openai-5.6.3 --scope global` instead. The switch archives the managed agents and Skills it replaces before post-validating the new installation.
+If a previous release is already installed, use `slim-agents-codex switch-preset --preset openai-5.6 --scope global` instead. The switch archives the managed agents and Skills it replaces before post-validating the new installation.
 
 ### Run from a source checkout
 
@@ -28,15 +28,15 @@ If a previous release is already installed, use `slim-agents-codex switch-preset
 npm ci
 npm run build
 node dist/cli.js list-presets
-node dist/cli.js convert --preset openai-5.6.4 --output generated
-node dist/cli.js install --preset openai-5.6.4
+node dist/cli.js convert --preset openai-5.6 --output generated
+node dist/cli.js install --preset openai-5.6
 ```
 
-`install` previews the resolved immutable preset, config path, Skill path, and backup path before asking for confirmation. It installs both the selected agent preset and the two managed Slim Skills. Use `--scope global` for `CODEX_HOME` (or `~/.codex`) plus `$HOME/.agents/skills`, and `--scope project` for the current project's `.codex` plus `.agents/skills`. Explicit `--codex-home PATH` and `--skills-home PATH` options override those targets. Use `--yes` only for explicit non-interactive installation.
+`install` previews the resolved Preset ID, config path, Skill path, and backup path before asking for confirmation. It installs both the selected agent preset and the two managed Slim Skills. Use `--scope global` for `CODEX_HOME` (or `~/.codex`) plus `$HOME/.agents/skills`, and `--scope project` for the current project's `.codex` plus `.agents/skills`. Explicit `--codex-home PATH` and `--skills-home PATH` options override those targets. Use `--yes` only for explicit non-interactive installation.
 
 ## Manual installation
 
-Every npm package and source checkout includes ready-to-copy files under `presets/<id>/agents/`, `config.snippet.toml`, the two generated Root profiles (`orchestrator.config.toml` and `council.config.toml`), and `.agents/skills/`. Copy every agent TOML from the selected preset into `CODEX_HOME/agents/` for a global installation or `<project>/.codex/agents/` for a project installation, then merge the snippet into the matching `config.toml`. To use a generated Root profile, copy it to `CODEX_HOME` and start Codex with `--profile orchestrator` or `--profile council`. Copy `slim-council` and `slim-orchestration` into `$HOME/.agents/skills/` globally or `<project>/.agents/skills/` for one repository. Historical `openai-5.5` and `openai-5.6` presets contain eight roles; the `.1` through `.4` revisions contain seven. In both scopes, `config_file = "agents/<role>.toml"` resolves relative to the config file that declares the role, as specified by the [Codex Configuration Reference](https://learn.chatgpt.com/docs/config-file/config-reference). Preserve UTF-8 encoding, BOM state, and line endings, and make backups first.
+Every npm package and source checkout includes ready-to-copy files under `presets/<id>/agents/`, `config.snippet.toml`, the two generated Root profiles (`orchestrator.config.toml` and `council.config.toml`), and `.agents/skills/`. Copy every agent TOML from the selected preset into `CODEX_HOME/agents/` for a global installation or `<project>/.codex/agents/` for a project installation, then merge the snippet into the matching `config.toml`. To use a generated Root profile, copy it to `CODEX_HOME` and start Codex with `--profile orchestrator` or `--profile council`. Copy `slim-council` and `slim-orchestration` into `$HOME/.agents/skills/` globally or `<project>/.agents/skills/` for one repository. Both supported presets contain the package's Current Role Contract of seven roles. Exact historical configurations belong to their historical package version or Git tag. In both scopes, `config_file = "agents/<role>.toml"` resolves relative to the config file that declares the role, as specified by the [Codex Configuration Reference](https://learn.chatgpt.com/docs/config-file/config-reference). Preserve UTF-8 encoding, BOM state, and line endings, and make backups first.
 
 The CLI follows the same layout. Use `--scope global` for the global location or `--scope project` from a project root; use `--codex-home DIR` only when an explicit location is needed.
 
@@ -44,7 +44,9 @@ Do not place inactive legacy presets under `CODEX_HOME/agents/`: Codex recursive
 
 ## Preset lifecycle
 
-Preset IDs are immutable. `openai-5.5` and `openai-5.6` remain available as the historical eight-role translation. `openai-5.5.1` and `openai-5.6.1` retain the reviewed seven-role Codex coordination contract. `openai-5.6.2` keeps the exact `openai-5.6.1` model and effort mappings while selecting a role source reviewed from upstream v2.2.8. `openai-5.6.3` adapts the portable upstream v2.2.14 verification-ownership changes and uses `high` effort for Orchestrator, Oracle, and Fixer. `openai-5.6.4` keeps those models and efforts, allows Orchestrator to use CodeGraph, and lets read-only Oracle use `$ponytail-review` when installed. OpenCode-only task, scheduler, and multiplexer behavior remains excluded. Observer and Councillor remain excluded. `latest` and `recommended` resolve to `openai-5.6.4`; the CLI always displays the resolved immutable ID before writing. There is no automatic model fallback.
+The latest package supports only `openai-5.5` and `openai-5.6`, each naming an OpenAI model generation. Both generate the same seven-role Current Role Contract; only model and effort mappings differ. `latest` and `recommended` resolve to `openai-5.6`.
+
+The exact output identity is `(Package Version, Preset ID)`. Same-generation prompt, policy, role, model, or effort maintenance changes the Package Version without adding a suffix ID. Retired IDs `openai-5.5.1` and `openai-5.6.1` through `openai-5.6.4` fail before writes and direct users to the unsuffixed ID or the corresponding historical package/tag. There is no automatic model fallback.
 
 ## Coordination model
 
@@ -57,7 +59,7 @@ Council and Orchestrator never spawn each other. With `agents.max_depth = 2`, th
 
 Some project-scoped expert agent configurations under `.codex/agents/` are adapted from [VoltAgent/awesome-codex-subagents](https://github.com/VoltAgent/awesome-codex-subagents). They remain subject to the upstream MIT License; see the bundled [license notice](.codex/agents/awesome-codex-subagents.LICENSE).
 
-See [Slim Codex architecture](docs/slim-codex-architecture.md) for the runtime graph, versioned role sources, and skill boundary.
+See [Slim Codex architecture](docs/slim-codex-architecture.md) for the runtime graph, Current Role Contract, Package Version boundary, and skill boundary.
 
 See [Council expert agents](docs/council-expert-agents.md) for the minimal read-only custom-agent TOML, model inheritance policy, bulk model-update script, and parent-permission limitation.
 
@@ -92,6 +94,6 @@ Requires Node.js 20 or newer.
 
 ## Maintenance status
 
-This is a community, experimental project maintained on an as-needed basis. It does not promise immediate support for every new Codex model or configuration change. Preset IDs remain immutable: future model mappings should be added as new preset directories instead of replacing historical presets.
+This is a community, experimental project maintained on an as-needed basis. It does not promise immediate support for every new Codex model or configuration change. Preset IDs remain stable for a model generation. Same-generation contract or mapping maintenance ships as a new Package Version; adopting a new model generation adds one new unsuffixed Preset ID.
 
 The package is intentionally marked private to prevent accidental publication to the npm registry. `npm pack` and installation from the resulting `.tgz` remain supported.

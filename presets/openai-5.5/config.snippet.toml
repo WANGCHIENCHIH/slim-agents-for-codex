@@ -3,33 +3,29 @@ max_threads = 6
 max_depth = 2
 
 [agents.orchestrator]
-description = "Workflow coordinator for planning, bounded delegation, reconciliation, and verification."
+description = "Execution-team coordinator that implements a root-approved approach through the five Slim specialists."
 config_file = "agents/orchestrator.toml"
 
 [agents.oracle]
-description = "Read-only strategic advisor for architecture, difficult debugging, risk, simplification, and code review."
+description = "Strategic technical advisor. Use for architecture decisions, complex debugging, code review, simplification, and engineering guidance."
 config_file = "agents/oracle.toml"
 
 [agents.librarian]
-description = "Read-only specialist for current official documentation, authoritative sources, and library research."
+description = "External documentation and library research. Use for official docs lookup, GitHub examples, and understanding library internals."
 config_file = "agents/librarian.toml"
 
 [agents.explorer]
-description = "Fast read-only codebase reconnaissance; locates files, symbols, patterns, and relevant lines."
+description = "Fast codebase search and pattern matching. Use for finding files, locating code patterns, and answering where-is-X questions."
 config_file = "agents/explorer.toml"
 
 [agents.designer]
-description = "UI/UX design, review, and implementation specialist for user-visible quality and polish."
+description = "UI/UX design, review, and implementation. Use for styling, responsive design, component architecture, and visual polish."
 config_file = "agents/designer.toml"
 
 [agents.fixer]
-description = "Bounded implementation specialist; executes clear specifications without research or architectural expansion."
+description = "Fast implementation specialist. Receives complete context and a bounded task specification, then executes code changes efficiently."
 config_file = "agents/fixer.toml"
 
 [agents.council]
-description = "Read-only coordinator for multiple independent perspectives on high-stakes decisions."
+description = "Council chair that selects matching installed agents and synthesizes their independent advice into a structured decision report."
 config_file = "agents/council.toml"
-
-[agents.observer]
-description = "Read-only visual specialist for images, screenshots, PDFs, diagrams, and exact visible text."
-config_file = "agents/observer.toml"

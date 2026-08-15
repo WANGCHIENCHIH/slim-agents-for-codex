@@ -4,7 +4,7 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { parse } from "smol-toml";
 import { packagedSkillsHome } from "../src/core/installer.js";
-import { generatePreset, presets, renderAliases, resolvePreset, roles } from "../src/core/presets.js";
+import { generatePreset, presets, renderAliases, resolvePreset } from "../src/core/presets.js";
 import { runCli } from "../src/cli.js";
 
 async function copyPresetSnapshot(id: string, targetRoot: string) {
@@ -25,7 +25,6 @@ describe("preset generation", () => {
   it("keeps immutable presets and resolves latest to the reviewed 5.6.4 role contract", () => {
     expect(resolvePreset("latest").id).toBe("openai-5.6.4");
     expect(resolvePreset("recommended").id).toBe("openai-5.6.4");
-    expect(roles).toBe(generatePreset("latest").roles);
     expect(resolvePreset("openai-5.6.4").models).toEqual(resolvePreset("openai-5.6.3").models);
     expect(resolvePreset("openai-5.6.2").models).toEqual(resolvePreset("openai-5.6.1").models);
     expect(resolvePreset("openai-5.6.3").models).toEqual({

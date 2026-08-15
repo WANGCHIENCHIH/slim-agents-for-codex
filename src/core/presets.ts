@@ -40,8 +40,6 @@ export const presets: Record<string, Preset> = {
 };
 
 export const aliases = { latest: "openai-5.6.4", recommended: "openai-5.6.4" } as const;
-export const roles = slimCodex20260815RoleSource.roles;
-export const roleOrder = [...slimCodex20260815RoleSource.roleOrder];
 export const managedRoleNames = [...new Set(Object.values(roleSources).flatMap((source) => source.roleOrder))];
 
 const disabledMcpsByRole: Record<string, readonly string[]> = {

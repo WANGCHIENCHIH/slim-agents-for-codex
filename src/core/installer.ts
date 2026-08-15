@@ -10,10 +10,8 @@ export interface InstallRequest { codexHome: string; preset: string; mode?: "ins
 export interface InstallPreview {
   request: InstallRequest;
   configPath: string;
-  configExisted: boolean;
   backupPath?: string;
   archivePath: string;
-  original: Buffer;
   updated: Buffer;
   files: Record<string, string>;
   existingManagedFiles: string[];
@@ -166,10 +164,8 @@ export async function previewInstall(request: InstallRequest): Promise<InstallPr
   return {
     request,
     configPath,
-    configExisted,
     backupPath: configExisted ? `${configPath}.backup-${timestamp}` : undefined,
     archivePath: join(request.codexHome, "agent-presets", "slim-agents-for-codex", `backup-${timestamp}`),
-    original,
     updated,
     files: generated.agents,
     existingManagedFiles,

@@ -21,7 +21,6 @@ describe("safe installation", () => {
 
     const preview = await previewInstall({ codexHome: home, preset: "openai-5.6.1" });
 
-    expect(preview.configExisted).toBe(false);
     expect(preview.backupPath).toBeUndefined();
     await expect(access(configPath)).rejects.toThrow();
 

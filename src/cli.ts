@@ -3,6 +3,7 @@ import { mkdir, readdir, readFile, unlink, writeFile } from "node:fs/promises";
 import { homedir } from "node:os";
 import { basename, dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { isDeepStrictEqual } from "node:util";
 import { createInterface } from "node:readline/promises";
 import { parse } from "smol-toml";
 import { installPreset, managedSkillNames, previewInstall, validateInstalledSkills } from "./core/installer.js";
@@ -47,16 +48,6 @@ function generatedArtifacts(id: string, output: string) {
   };
 }
 
-function stable(value: unknown): unknown {
-  if (Array.isArray(value)) return value.map(stable);
-  if (!value || typeof value !== "object") return value;
-  return Object.fromEntries(Object.entries(value as Record<string, unknown>).sort(([left], [right]) => left.localeCompare(right)).map(([key, nested]) => [key, stable(nested)]));
-}
-
-function matchesSemantically(actual: unknown, expected: unknown) {
-  return JSON.stringify(stable(actual)) === JSON.stringify(stable(expected));
-}
-
 async function assertGeneratedArtifactsMatch(id: string, output: string) {
   const generated = generatedArtifacts(id, output);
   const agentsDirectory = join(generated.root, "agents");
@@ -88,7 +79,7 @@ async function assertGeneratedArtifactsMatch(id: string, output: string) {
 async function assertRoleDocument(name: string, expectedToml: string, actualTomlPath: string) {
   const actual = parse(await readFile(actualTomlPath, "utf8"));
   const expected = parse(expectedToml);
-  if (!matchesSemantically(actual, expected)) throw new Error(`Role semantic drift: ${name}`);
+  if (!isDeepStrictEqual(actual, expected)) throw new Error(`Role semantic drift: ${name}`);
 }
 
 export async function runCli(args: string[], io: CliIo): Promise<number> {

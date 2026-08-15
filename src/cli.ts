@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 import { isDeepStrictEqual } from "node:util";
 import { createInterface } from "node:readline/promises";
 import { parse } from "smol-toml";
-import { installPreset, managedSkillNames, previewInstall, validateInstalledSkills } from "./core/installer.js";
+import { InstallRollbackError, installPreset, managedSkillNames, previewInstall, validateInstalledPreset } from "./core/installer.js";
 import { aliases, generatePreset, managedRoleNames, presets, renderAliases } from "./core/presets.js";
 
 export interface CliIo { log(line: string): void; confirm(question: string): Promise<boolean> }
@@ -124,22 +124,9 @@ export async function runCli(args: string[], io: CliIo): Promise<number> {
       const skillsHomeOption = valueAfter(args, "--skills-home");
       if (!skillsHomeOption) throw new Error("--skills-home is required with --codex-home so managed Skills are validated");
       const codexHome = resolve(codexHomeOption);
-      const configPath = join(codexHome, "config.toml");
-      const config = parse(await readFile(configPath, "utf8")) as Record<string, unknown>;
-      const agents = config.agents as Record<string, unknown> | undefined;
-      const configuredManagedRoles = managedRoleNames.filter((name) => agents?.[name] !== undefined).sort();
-      const expectedManagedRoles = [...generated.roleOrder].sort();
-      if (JSON.stringify(configuredManagedRoles) !== JSON.stringify(expectedManagedRoles)) throw new Error(`Installed managed roles do not match preset: ${generated.preset.id}`);
-      for (const name of generated.roleOrder) {
-        const role = agents?.[name] as Record<string, unknown> | undefined;
-        const configFile = role?.config_file;
-        if (typeof configFile !== "string") throw new Error(`Missing config_file for role: ${name}`);
-        if (configFile.replaceAll("\\", "/") !== `agents/${name}.toml`) throw new Error(`Invalid config_file for role: ${name}`);
-        await assertRoleDocument(name, generated.agents[name], resolve(dirname(configPath), configFile));
-      }
+      await validateInstalledPreset({ codexHome, skillsHome: resolve(skillsHomeOption), preset: generated.preset.id });
       io.log(`valid installation: ${codexHome} (${generated.roleOrder.length} roles)`);
       const skillsHome = resolve(skillsHomeOption);
-      await validateInstalledSkills(skillsHome);
       io.log(`valid skills: ${skillsHome} (${managedSkillNames.length} skills)`);
       return 0;
     }
@@ -169,16 +156,21 @@ export async function runCli(args: string[], io: CliIo): Promise<number> {
       io.log("cancelled; no files changed");
       return 2;
     }
-    const result = await installPreset(preview);
     try {
-      await runCli(["validate", "--codex-home", codexHome, "--skills-home", result.skillsHome, "--preset", result.preset], io);
+      const result = await installPreset(preview);
+      io.log(`valid installation: ${codexHome} (${generatePreset(result.preset).roleOrder.length} roles)`);
+      io.log(`valid skills: ${result.skillsHome} (${managedSkillNames.length} skills)`);
+      io.log(`installed ${result.preset} at ${result.target}`);
+      return 0;
     } catch (error) {
-      const message = error instanceof Error ? error.message : String(error);
-      const configRecovery = result.backupPath ? `Restore config from ${result.backupPath}` : `Remove newly created config ${preview.configPath}`;
-      throw new Error(`Post-install validation failed: ${message}. ${configRecovery} and restore managed agents or skills from ${result.archivePath}`);
+      if (!(error instanceof InstallRollbackError)) throw error;
+      io.log(`reason: ${error.reason}`);
+      io.log(`rollback ${error.rollback}`);
+      for (const failure of error.rollbackFailures) io.log(`rollback failure: ${failure.reason}`);
+      for (const path of error.recoveryArtifacts) io.log(`recovery: ${path}`);
+      if (error.rollback === "incomplete") io.log(`unresolved: ${error.unresolved.join(", ")}`);
+      return 1;
     }
-    io.log(`installed ${result.preset} at ${result.target}`);
-    return 0;
   }
   io.log(`unknown command: ${command}`);
   return 1;

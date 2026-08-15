@@ -22,10 +22,11 @@ async function createCodexHomeFromPreset(id: string) {
 }
 
 describe("preset generation", () => {
-  it("keeps immutable presets and resolves latest to the reviewed 5.6.3 role contract", () => {
-    expect(resolvePreset("latest").id).toBe("openai-5.6.3");
-    expect(resolvePreset("recommended").id).toBe("openai-5.6.3");
+  it("keeps immutable presets and resolves latest to the reviewed 5.6.4 role contract", () => {
+    expect(resolvePreset("latest").id).toBe("openai-5.6.4");
+    expect(resolvePreset("recommended").id).toBe("openai-5.6.4");
     expect(roles).toBe(generatePreset("latest").roles);
+    expect(resolvePreset("openai-5.6.4").models).toEqual(resolvePreset("openai-5.6.3").models);
     expect(resolvePreset("openai-5.6.2").models).toEqual(resolvePreset("openai-5.6.1").models);
     expect(resolvePreset("openai-5.6.3").models).toEqual({
       orchestrator: { model: "gpt-5.6-terra", effort: "high" },
@@ -147,6 +148,15 @@ describe("preset generation", () => {
     expect(instructions.designer).toMatch(/assigned validation should be user-visible/i);
     expect(instructions.fixer).toMatch(/Performed:.*Result:/is);
     expect(JSON.stringify(instructions)).not.toMatch(/task_result|Background Job Board|wait_for_user|wake scheduler|restart recovery|multiplexer/i);
+  });
+
+  it("lets the latest orchestrator use CodeGraph and Oracle use ponytail-review when installed", () => {
+    const generated = generatePreset("latest");
+    const orchestrator = (parse(generated.agents.orchestrator) as { developer_instructions: string }).developer_instructions;
+    const oracle = (parse(generated.agents.oracle) as { developer_instructions: string }).developer_instructions;
+
+    expect(orchestrator).not.toMatch(/MCP denylist:.*codegraph/i);
+    expect(oracle).toMatch(/\$ponytail-review.*when available/is);
   });
 
   it("adapts upstream routing and synthesis contracts without weakening Codex coordinator boundaries", () => {
@@ -277,7 +287,8 @@ describe("preset generation", () => {
       for (const [name, toml] of Object.entries(generated.agents)) {
         const document = parse(toml) as { developer_instructions: string; mcp_servers?: Record<string, unknown> };
         expect(Object.keys(document.mcp_servers ?? {})).toEqual([]);
-        if (expected[name].length > 0) expect(document.developer_instructions).toContain(`MCP denylist: ${expected[name].join(", ")}.`);
+        const deniedMcps = name === "orchestrator" && id === "openai-5.6.4" ? ["context7", "exa", "grep"] : expected[name];
+        if (deniedMcps.length > 0) expect(document.developer_instructions).toContain(`MCP denylist: ${deniedMcps.join(", ")}.`);
         else expect(document.developer_instructions).not.toContain("MCP denylist:");
       }
       expect(generated.snippet).not.toContain("[mcp_servers.");
@@ -318,7 +329,7 @@ describe("CLI", () => {
     const code = await runCli(["list-presets"], { log: (line) => output.push(line), confirm: async () => false });
     expect(code).toBe(0);
     expect(output.join("\n")).toContain("openai-5.5");
-    expect(output.join("\n")).toContain("latest -> openai-5.6.3");
+    expect(output.join("\n")).toContain("latest -> openai-5.6.4");
   });
 
   it("validates both legacy and current role sets against their selected preset", async () => {

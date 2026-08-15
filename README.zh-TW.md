@@ -63,9 +63,11 @@ Root Codex agent 負責使用者需求與最終驗證；Council 與 Orchestrator
 
 Council 與 Orchestrator 不會互相呼叫。`agents.max_depth = 2` 時，它們選出的專家是 Root 的孫代理，不能再繼續委派。後端、資安、資料庫、Docker、CI/CD、UI/UX 等額外專家可作為一般 TOML 安裝在 `.codex/agents/` 或 `CODEX_HOME/agents/`，Council 只會從 Root 預先核可的 advisory agent description 中選擇議員。Council 議員 TOML 應設定 `sandbox_mode = "read-only"`；若需要硬性的唯讀隔離，parent turn 也必須使用 read-only 權限，因為 Codex 會把即時 permission override 套用到子代理。
 
+`.codex/agents/` 內部分專案級專家代理設定改編自 [VoltAgent/awesome-codex-subagents](https://github.com/VoltAgent/awesome-codex-subagents)，並沿用其 MIT License；詳見隨附的[授權聲明](.codex/agents/awesome-codex-subagents.LICENSE)。
+
 完整 runtime graph、版本化角色來源與 skill 邊界請參考 [Slim Codex architecture](docs/slim-codex-architecture.md)。
 
-Council 專用 read-only custom-agent TOML、model 繼承政策與 parent permission 限制請參考 [Council expert agents](docs/council-expert-agents.md)。
+Council 專用 read-only custom-agent TOML、model 繼承政策、批次模型更新腳本與 parent permission 限制請參考 [Council expert agents](docs/council-expert-agents.md)。
 
 原始碼 checkout 會自動提供兩個 workflow：`.agents/skills/slim-orchestration/` 負責五個 specialist 的執行編排，`.agents/skills/slim-council/` 負責按任務組成專家議會。Release package 會包含兩個目錄，`install`、`switch-preset` 會把它們部署到選定的 Skill scope；仍可選擇手動複製。安裝後請開啟新的 Codex 工作。
 

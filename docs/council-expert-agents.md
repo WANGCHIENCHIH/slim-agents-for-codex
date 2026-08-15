@@ -31,6 +31,34 @@ The `config_file` path is relative to that `config.toml`. Use the same pattern u
 - Do not add `skills.config` merely to make the agent eligible. Council's preferred methods are optional and discovered in the active task.
 - Put `Council-safe read-only` and the actual professional domain in the description. Council uses descriptions for routing, while Root remains responsible for verifying the TOML.
 
+## Updating agent models in bulk
+
+[`scripts/update-agent-models.mjs`](../scripts/update-agent-models.mjs) updates exact top-level `model = "..."` values in the flat project agent directory. It does not recurse, alter other fields, or normalize UTF-8 BOM and line endings.
+
+When model mappings change:
+
+1. Edit `modelMap` at the top of the script. Keep each reviewed old-to-new model mapping explicit.
+2. Preview from the repository root:
+
+   ```bash
+   node scripts/update-agent-models.mjs --dry-run
+   ```
+
+3. Confirm the matched count and inspect the intended scope, then apply:
+
+   ```bash
+   node scripts/update-agent-models.mjs
+   ```
+
+4. Run the preview again; an idempotent update reports `Matched 0 agent file(s)`.
+5. Inspect `git diff -- .codex/agents` and run the focused behavior test:
+
+   ```bash
+   npm test -- --run tests/update-agent-models.test.ts
+   ```
+
+The default directory is `.codex/agents`. Use `--directory PATH` before `--dry-run` or apply when updating another flat agent directory. Restart with a new Codex task after changing agent configuration.
+
 ## Permission limitation
 
 [Codex subagents inherit the parent turn's live permission mode](https://learn.chatgpt.com/docs/agent-configuration/subagents.md). A read-only custom agent file is therefore necessary but may not override a broader live permission choice. For enforced read-only deliberation, start the Council turn under read-only permissions. In a workspace-write turn, advisory behavior is an instruction boundary rather than guaranteed privilege reduction.

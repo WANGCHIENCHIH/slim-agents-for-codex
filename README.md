@@ -55,9 +55,11 @@ The root Codex agent owns the user request and final verification. Council and O
 
 Council and Orchestrator never spawn each other. With `agents.max_depth = 2`, their selected experts are grandchildren of the root and cannot delegate again. Additional domain experts such as backend, security, database, Docker, CI/CD, or UI/UX agents can be installed as normal TOMLs under `.codex/agents/` or `CODEX_HOME/agents/`; Council selects only Root-approved advisory agents from the available descriptions. Council-member TOMLs should use `sandbox_mode = "read-only"`, and hard read-only deliberation also requires the parent turn to run with read-only permissions because Codex reapplies live permission overrides to subagents.
 
+Some project-scoped expert agent configurations under `.codex/agents/` are adapted from [VoltAgent/awesome-codex-subagents](https://github.com/VoltAgent/awesome-codex-subagents). They remain subject to the upstream MIT License; see the bundled [license notice](.codex/agents/awesome-codex-subagents.LICENSE).
+
 See [Slim Codex architecture](docs/slim-codex-architecture.md) for the runtime graph, versioned role sources, and skill boundary.
 
-See [Council expert agents](docs/council-expert-agents.md) for the minimal read-only custom-agent TOML, model inheritance policy, and the parent-permission limitation.
+See [Council expert agents](docs/council-expert-agents.md) for the minimal read-only custom-agent TOML, model inheritance policy, bulk model-update script, and parent-permission limitation.
 
 The source checkout exposes two workflows automatically: `.agents/skills/slim-orchestration/` for five-specialist execution and `.agents/skills/slim-council/` for task-specific expert deliberation. Release packages include both directories, and `install` or `switch-preset` deploys them to the selected Skill scope. Manual copying remains supported. Start a new Codex task after installation.
 

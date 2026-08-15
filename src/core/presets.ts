@@ -1,6 +1,7 @@
 import { reviewed202607RoleSource } from "./role-sources/reviewed-2026-07.js";
 import { slimCodex202607RoleSource } from "./role-sources/slim-codex-2026-07/index.js";
 import { slimCodexUpstream228RoleSource } from "./role-sources/slim-codex-upstream-2.2.8/index.js";
+import { slimCodexUpstream2214RoleSource } from "./role-sources/slim-codex-upstream-2.2.14/index.js";
 import type { Effort, Role, RoleSource } from "./role-sources/types.js";
 
 export type { Effort, Role } from "./role-sources/types.js";
@@ -21,6 +22,7 @@ const roleSources: Record<string, RoleSource> = {
   [reviewed202607RoleSource.id]: reviewed202607RoleSource,
   [slimCodex202607RoleSource.id]: slimCodex202607RoleSource,
   [slimCodexUpstream228RoleSource.id]: slimCodexUpstream228RoleSource,
+  [slimCodexUpstream2214RoleSource.id]: slimCodexUpstream2214RoleSource,
 };
 
 const mapping = (pairs: Record<string, [string, Effort]>): Preset["models"] => Object.fromEntries(Object.entries(pairs).map(([name, [model, effort]]) => [name, { model, effort }]));
@@ -31,11 +33,12 @@ export const presets: Record<string, Preset> = {
   "openai-5.5.1": { id: "openai-5.5.1", adapter: "oh-my-opencode-slim", adapterSchemaVersion: 2, source: "alvinunreal/oh-my-opencode-slim", sourceVersion: "slim-codex-2026-07", created: "2026-07-14", status: "supported", snapshotFormatVersion: 1, models: mapping({ orchestrator: ["gpt-5.5", "medium"], oracle: ["gpt-5.5", "high"], librarian: ["gpt-5.4-mini", "low"], explorer: ["gpt-5.4-mini", "low"], designer: ["gpt-5.4-mini", "medium"], fixer: ["gpt-5.5", "low"], council: ["gpt-5.5", "high"] }) },
   "openai-5.6.1": { id: "openai-5.6.1", adapter: "oh-my-opencode-slim", adapterSchemaVersion: 2, source: "alvinunreal/oh-my-opencode-slim", sourceVersion: "slim-codex-2026-07", created: "2026-07-14", status: "supported", snapshotFormatVersion: 1, models: mapping({ orchestrator: ["gpt-5.6-terra", "xhigh"], oracle: ["gpt-5.6-sol", "xhigh"], librarian: ["gpt-5.6-luna", "low"], explorer: ["gpt-5.6-luna", "low"], designer: ["gpt-5.6-luna", "medium"], fixer: ["gpt-5.6-luna", "xhigh"], council: ["gpt-5.6-sol", "high"] }) },
   "openai-5.6.2": { id: "openai-5.6.2", adapter: "oh-my-opencode-slim", adapterSchemaVersion: 2, source: "alvinunreal/oh-my-opencode-slim", sourceVersion: "slim-codex-upstream-2.2.8", created: "2026-07-27", status: "supported", snapshotFormatVersion: 1, models: mapping({ orchestrator: ["gpt-5.6-terra", "xhigh"], oracle: ["gpt-5.6-sol", "xhigh"], librarian: ["gpt-5.6-luna", "low"], explorer: ["gpt-5.6-luna", "low"], designer: ["gpt-5.6-luna", "medium"], fixer: ["gpt-5.6-luna", "xhigh"], council: ["gpt-5.6-sol", "high"] }) },
+  "openai-5.6.3": { id: "openai-5.6.3", adapter: "oh-my-opencode-slim", adapterSchemaVersion: 2, source: "alvinunreal/oh-my-opencode-slim", sourceVersion: "slim-codex-upstream-2.2.14", created: "2026-08-15", status: "supported", snapshotFormatVersion: 1, models: mapping({ orchestrator: ["gpt-5.6-terra", "high"], oracle: ["gpt-5.6-sol", "high"], librarian: ["gpt-5.6-luna", "low"], explorer: ["gpt-5.6-luna", "low"], designer: ["gpt-5.6-luna", "medium"], fixer: ["gpt-5.6-luna", "high"], council: ["gpt-5.6-sol", "high"] }) },
 };
 
-export const aliases = { latest: "openai-5.6.2", recommended: "openai-5.6.2" } as const;
-export const roles = slimCodexUpstream228RoleSource.roles;
-export const roleOrder = [...slimCodexUpstream228RoleSource.roleOrder];
+export const aliases = { latest: "openai-5.6.3", recommended: "openai-5.6.3" } as const;
+export const roles = slimCodexUpstream2214RoleSource.roles;
+export const roleOrder = [...slimCodexUpstream2214RoleSource.roleOrder];
 export const managedRoleNames = [...new Set(Object.values(roleSources).flatMap((source) => source.roleOrder))];
 
 const disabledMcpsByRole: Record<string, readonly string[]> = {
@@ -46,6 +49,27 @@ const disabledMcpsByRole: Record<string, readonly string[]> = {
   oracle: ["context7", "grep"],
   fixer: ["context7", "grep"],
 };
+
+const rootProfileInstructions = {
+  orchestrator: `You are the primary Root Orchestrator.
+
+Always load and follow \`$slim-orchestration\` as the governing workflow.
+Interpret references to Root in that skill as the user/owner approval boundary.
+Because you are the primary agent, you own the final user response and overall
+completion decision, but material product decisions remain with the user.
+
+Do not spawn another orchestrator or council.
+For routine work, follow the skill's instruction to execute directly.`,
+  council: `You are the primary Root Council chair.
+
+Always load and follow \`$slim-council\` as the governing workflow.
+Interpret references to Root in that skill as the user/owner.
+Return the Council report directly to the user.
+
+Remain advisory-only: do not edit or implement.
+Do not spawn orchestrator, council, or another meta-coordinator.
+The user retains every approval and execution decision.`,
+} as const;
 
 function sourceFor(preset: Preset): RoleSource {
   const source = roleSources[preset.sourceVersion];
@@ -82,6 +106,11 @@ export function generatePreset(idOrAlias: string) {
     const mcpPolicy = deniedMcps.length > 0 ? `\n\nMCP denylist: ${deniedMcps.join(", ")}. Do not use these MCP servers in this role.` : "";
     agents[name] = `name = ${quote(current.name)}\ndescription = ${quote(current.description)}\nmodel = ${quote(model.model)}\nmodel_reasoning_effort = ${quote(model.effort)}\nsandbox_mode = ${quote(current.sandbox)}\ndeveloper_instructions = ${multiline(current.instructions + mcpPolicy)}\n`;
   }
+  const rootProfiles = Object.fromEntries(Object.entries(rootProfileInstructions).map(([name, instructions]) => {
+    const model = preset.models[name];
+    const effort = name === "council" ? "medium" : model.effort;
+    return [name, `model = ${quote(model.model)}\nmodel_reasoning_effort = ${quote(effort)}\nsandbox_mode = ${quote(source.roles[name].sandbox)}\ndeveloper_instructions = ${multiline(instructions)}\n`];
+  })) as Record<keyof typeof rootProfileInstructions, string>;
   const snippet = `[agents]\nmax_threads = 6\nmax_depth = 2\n\n` + source.roleOrder.map((name) => `[agents.${name}]\ndescription = ${quote(source.roles[name].description)}\nconfig_file = ${quote(`agents/${name}.toml`)}\n`).join("\n");
   const manifest = renderJson({
     id: preset.id,
@@ -93,5 +122,5 @@ export function generatePreset(idOrAlias: string) {
     status: preset.status,
     snapshotFormatVersion: preset.snapshotFormatVersion,
   });
-  return { preset, roles: source.roles, roleOrder: [...source.roleOrder], agents, snippet, manifest };
+  return { preset, roles: source.roles, roleOrder: [...source.roleOrder], agents, rootProfiles, snippet, manifest };
 }

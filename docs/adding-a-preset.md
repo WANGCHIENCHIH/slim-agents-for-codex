@@ -18,7 +18,7 @@ Published model mappings and manifests such as `openai-5.5` and `openai-5.6` mus
 
 The CLI does not download or parse upstream configurations automatically. A maintainer must inspect the upstream version, verify its model names, effort values, and role changes, and then add the reviewed mapping to this repository.
 
-The `convert` command generates the agent TOMLs selected by the preset's versioned role source, `config.snippet.toml`, and `manifest.json`. With `--all`, it also renders `presets/aliases.json` from the generator source of truth.
+The `convert` command generates the agent TOMLs selected by the preset's versioned role source, the primary Orchestrator and Council profiles, `config.snippet.toml`, and `manifest.json`. With `--all`, it also renders `presets/aliases.json` from the generator source of truth.
 
 ## 1. Prepare a working copy
 
@@ -102,6 +102,8 @@ presets/openai-5.7/
 │   ├── designer.toml
 │   ├── fixer.toml
 │   └── council.toml
+├── orchestrator.config.toml
+├── council.config.toml
 ├── config.snippet.toml
 └── manifest.json
 ```

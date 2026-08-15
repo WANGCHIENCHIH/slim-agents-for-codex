@@ -57,6 +57,8 @@ This stage is complete when every required lane is terminal, its output is avail
 - Inspect the actual diff or artifact and reconcile shared-worktree changes.
 - Run the focused checks that encode the phase's intent.
 - Ask `oracle` for a second review when the phase changes architecture, security boundaries, data contracts, or rollout risk.
+- Each Oracle gate allows at most two re-reviews. Use one only when remediation materially changes the reviewed risk or focused evidence cannot resolve the finding; do not reopen accepted, unchanged findings.
+- Label every Oracle prompt with the review attempt and re-review remaining count. When the budget is exhausted, record the remaining risk and return the decision to Root.
 - Record evidence, failures, recovery decisions, and remaining risk in the ledger.
 - Advance the critical path only after the phase gate passes or Root explicitly accepts the documented exception.
 

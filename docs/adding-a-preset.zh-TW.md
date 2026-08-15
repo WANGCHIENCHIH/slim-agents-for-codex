@@ -18,7 +18,7 @@
 
 CLI 不會自動連線下載或解析上游配置。維護者必須人工檢查上游版本，確認模型名稱、effort 與角色變更，再將審核後的映射加入原始碼。
 
-`convert` 會依 preset 選定的版本化角色來源產生代理 TOML、`config.snippet.toml` 與 `manifest.json`；搭配 `--all` 時，也會從 generator 的 source of truth 產生 `presets/aliases.json`。
+`convert` 會依 preset 選定的版本化角色來源產生代理 TOML、Orchestrator 與 Council 主代理 profiles、`config.snippet.toml` 與 `manifest.json`；搭配 `--all` 時，也會從 generator 的 source of truth 產生 `presets/aliases.json`。
 
 ## 1. 準備工作目錄
 
@@ -102,6 +102,8 @@ presets/openai-5.7/
 │   ├── designer.toml
 │   ├── fixer.toml
 │   └── council.toml
+├── orchestrator.config.toml
+├── council.config.toml
 ├── config.snippet.toml
 └── manifest.json
 ```

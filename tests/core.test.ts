@@ -4,7 +4,7 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { parse } from "smol-toml";
 import { packagedSkillsHome } from "../src/core/installer.js";
-import { generatePreset, presets, renderAliases, resolvePreset } from "../src/core/presets.js";
+import { generatePreset, presets, renderAliases, resolvePreset, roles } from "../src/core/presets.js";
 import { runCli } from "../src/cli.js";
 
 async function copyPresetSnapshot(id: string, targetRoot: string) {
@@ -22,10 +22,20 @@ async function createCodexHomeFromPreset(id: string) {
 }
 
 describe("preset generation", () => {
-  it("keeps immutable presets and resolves latest to the reviewed 5.6.2 role contract", () => {
-    expect(resolvePreset("latest").id).toBe("openai-5.6.2");
-    expect(resolvePreset("recommended").id).toBe("openai-5.6.2");
+  it("keeps immutable presets and resolves latest to the reviewed 5.6.3 role contract", () => {
+    expect(resolvePreset("latest").id).toBe("openai-5.6.3");
+    expect(resolvePreset("recommended").id).toBe("openai-5.6.3");
+    expect(roles).toBe(generatePreset("latest").roles);
     expect(resolvePreset("openai-5.6.2").models).toEqual(resolvePreset("openai-5.6.1").models);
+    expect(resolvePreset("openai-5.6.3").models).toEqual({
+      orchestrator: { model: "gpt-5.6-terra", effort: "high" },
+      oracle: { model: "gpt-5.6-sol", effort: "high" },
+      librarian: { model: "gpt-5.6-luna", effort: "low" },
+      explorer: { model: "gpt-5.6-luna", effort: "low" },
+      designer: { model: "gpt-5.6-luna", effort: "medium" },
+      fixer: { model: "gpt-5.6-luna", effort: "high" },
+      council: { model: "gpt-5.6-sol", effort: "high" },
+    });
     expect(resolvePreset("openai-5.5").id).toBe("openai-5.5");
     expect(resolvePreset("openai-5.6").id).toBe("openai-5.6");
   });
@@ -51,6 +61,25 @@ describe("preset generation", () => {
     expect(first.agents.explorer).toContain('name = "explorer"');
     expect(first.agents.explorer).toContain('model = "gpt-5.6-luna"');
     expect(first.agents.explorer).not.toMatch(/task_id|council_session|Background Job Board/);
+  });
+
+  it("generates primary orchestrator and council profiles with their Root defaults", () => {
+    const generated = generatePreset("openai-5.6.2");
+    const orchestrator = parse(generated.rootProfiles.orchestrator) as Record<string, unknown>;
+    const council = parse(generated.rootProfiles.council) as Record<string, unknown>;
+
+    expect(orchestrator).toMatchObject({
+      model: "gpt-5.6-terra",
+      model_reasoning_effort: "xhigh",
+      sandbox_mode: "workspace-write",
+    });
+    expect(orchestrator.developer_instructions).toMatch(/primary Root Orchestrator.*\$slim-orchestration.*Do not spawn another orchestrator or council/is);
+    expect(council).toMatchObject({
+      model: "gpt-5.6-sol",
+      model_reasoning_effort: "medium",
+      sandbox_mode: "read-only",
+    });
+    expect(council.developer_instructions).toMatch(/primary Root Council chair.*\$slim-council.*advisory-only/is);
   });
 
   it("keeps every retained GPT-5.5 model and effort mapping unchanged", () => {
@@ -97,6 +126,27 @@ describe("preset generation", () => {
     expect(instructions.fixer).toMatch(/<summary>.*<changes>.*<verification>.*skip reason/is);
     for (const name of ["designer", "fixer"]) expect(instructions[name]).toMatch(/apply_patch.*destructive.*target/is);
     for (const name of ["oracle", "librarian", "explorer"]) expect(instructions[name]).toMatch(/READ-ONLY.*do not modify files/is);
+  });
+
+  it("ports the 2.2.14 verification ownership contract without OpenCode runtime instructions", () => {
+    const generated = generatePreset("openai-5.6.3");
+    const instructions = Object.fromEntries(
+      Object.entries(generated.agents).map(([name, toml]) => [
+        name,
+        (parse(toml) as { developer_instructions: string }).developer_instructions,
+      ]),
+    );
+
+    expect(instructions.orchestrator).toMatch(/every delegation names a validation owner and allowed scope/i);
+    expect(instructions.orchestrator).toMatch(/reconcile all writer lanes before final validation/i);
+    expect(instructions.orchestrator).toMatch(/reuse still-valid evidence.*final state changed/is);
+    for (const name of ["designer", "fixer"]) {
+      expect(instructions[name]).toMatch(/run only validation assigned by the Orchestrator/i);
+      expect(instructions[name]).toMatch(/report validation results and skips accurately/i);
+    }
+    expect(instructions.designer).toMatch(/assigned validation should be user-visible/i);
+    expect(instructions.fixer).toMatch(/Performed:.*Result:/is);
+    expect(JSON.stringify(instructions)).not.toMatch(/task_result|Background Job Board|wait_for_user|wake scheduler|restart recovery|multiplexer/i);
   });
 
   it("adapts upstream routing and synthesis contracts without weakening Codex coordinator boundaries", () => {
@@ -166,6 +216,8 @@ describe("preset generation", () => {
     expect(orchestration).toMatch(/complete when/i);
     expect(orchestration).toMatch(/\.slim\/deepwork\//i);
     expect(orchestration).toMatch(/oracle.*review|review.*oracle/is);
+    expect(orchestration).toMatch(/at most two re-reviews/i);
+    expect(orchestration).toMatch(/review attempt.*re-review remaining/is);
     expect(orchestration).toMatch(/designer.*handoff|handoff.*designer/is);
     expect(orchestration).toMatch(/wait for every required lane/i);
     expect(orchestration).toMatch(/fork_turns\s*=\s*["']none["']/i);
@@ -248,6 +300,7 @@ describe("preset generation", () => {
       const root = join(process.cwd(), "presets", id);
       const files = (await readdir(join(root, "agents"))).sort();
       expect(files).toEqual(generated.roleOrder.map((name) => `${name}.toml`).sort());
+      for (const [name, content] of Object.entries(generated.rootProfiles)) expect(await readFile(join(root, `${name}.config.toml`), "utf8")).toBe(content);
       expect(await readFile(join(root, "config.snippet.toml"), "utf8")).toBe(generated.snippet);
       expect(await readFile(join(root, "manifest.json"), "utf8")).toBe(generated.manifest);
       for (const name of generated.roleOrder) expect(await readFile(join(root, "agents", `${name}.toml`), "utf8")).toBe(generated.agents[name]);
@@ -265,7 +318,7 @@ describe("CLI", () => {
     const code = await runCli(["list-presets"], { log: (line) => output.push(line), confirm: async () => false });
     expect(code).toBe(0);
     expect(output.join("\n")).toContain("openai-5.5");
-    expect(output.join("\n")).toContain("latest -> openai-5.6.2");
+    expect(output.join("\n")).toContain("latest -> openai-5.6.3");
   });
 
   it("validates both legacy and current role sets against their selected preset", async () => {

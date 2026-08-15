@@ -27,6 +27,7 @@ async function writeGenerated(id: string, output: string) {
     if (managedRoleNames.includes(name) && !active.has(name)) await unlink(join(agentsDirectory, file));
   }
   for (const [name, content] of Object.entries(generated.agents)) await writeFile(join(agentsDirectory, `${name}.toml`), content, "utf8");
+  for (const [name, content] of Object.entries(generated.rootProfiles)) await writeFile(join(root, `${name}.config.toml`), content, "utf8");
   await writeFile(join(root, "config.snippet.toml"), generated.snippet, "utf8");
   await writeFile(join(root, "manifest.json"), generated.manifest, "utf8");
   return root;
@@ -39,6 +40,7 @@ function generatedArtifacts(id: string, output: string) {
     root,
     artifacts: [
       ...generated.roleOrder.map((name) => ({ path: join(root, "agents", `${name}.toml`), content: generated.agents[name] })),
+      ...Object.entries(generated.rootProfiles).map(([name, content]) => ({ path: join(root, `${name}.config.toml`), content })),
       { path: join(root, "config.snippet.toml"), content: generated.snippet },
       { path: join(root, "manifest.json"), content: generated.manifest },
     ],

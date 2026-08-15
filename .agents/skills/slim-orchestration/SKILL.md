@@ -19,61 +19,42 @@ Route work only to these five built-in Slim specialists:
 
 Use the narrowest matching specialist. Keep deliberation with Council and execution here; custom roles and meta-coordinators remain outside this subtree.
 
-## 1. Open the execution ledger
+## 1. Frame the critical path
 
 - Confirm the objective, non-goals, constraints, Root approval boundary, and observable completion criteria.
-- Inspect `.gitignore` and keep `.slim/deepwork/` local. Add the ignore entry when needed.
-- Create `.slim/deepwork/<task-slug>.md` before substantial delegation.
-- Record the objective, evidence, open questions, phases, dependencies, lane owners, write ownership, phase gates, failures, recovery decisions, final verification, and unresolved risk.
+- Keep `.slim/deepwork/` ignored, and create `.slim/deepwork/<task-slug>.md` before substantial delegation.
+- Record evidence, open questions, dependency-ordered phases, owners, write ownership, phase gates, failures, recovery decisions, and unresolved risk.
+- Use `explorer` when ownership or call paths are unclear and `librarian` when current external contracts can change the implementation.
+- Give each phase one accountable owner, outputs, and a measurable gate. Route material unresolved direction choices to Root.
+- Request an `oracle` plan review before irreversible, security-sensitive, architectural, or cross-cutting work.
+- Obtain a `designer` handoff with intended behavior, states, and acceptance evidence before material visual or interaction work.
+- Before dispatch, give Root the phase order, specialist ownership, and each planned Oracle review with its reason.
 
-This stage is complete when the ledger exists, the assigned boundary is explicit, and progress can be resumed from the file without reconstructing prior work. Keep it current and continue reporting meaningful checkpoints to Root.
+This stage is complete when the ledger can resume the work, dependencies and ownership are explicit, and every gate distinguishes pass from fail.
 
-## 2. Map the critical path
+## 2. Dispatch single-writer lanes
 
-- Ask `explorer` to map the affected surface when ownership or call paths are unclear.
-- Ask `librarian` to verify current external contracts when versions, providers, APIs, or standards can change the implementation.
-- Convert the evidence into dependency-ordered phases. Give each phase inputs, one accountable owner, outputs, and a measurable phase gate.
-- Ask `oracle` to review the plan before irreversible, security-sensitive, architectural, or cross-cutting implementation.
-- Obtain a `designer` handoff for material visual or interaction work. Capture intended behavior, states, and acceptance evidence before implementation.
-- Assign implementation to `fixer`, or to `designer` for an explicitly visual or interaction-owned deliverable.
+- Run only independent lanes in parallel and use the smallest specialist set that covers the phase.
+- Default to `fork_turns="none"`. Send the objective, non-goals, evidence, owned files or responsibility, expected output, and required checks. A full-history fork cannot select another specialist type.
+- Tell writers they share the worktree, must preserve unrelated changes, and must accommodate concurrent edits. Keep a single writer for every overlapping file surface.
+- Track actual status and wait for every required lane before integration. Diagnose failed, timed-out, or unusable lanes before changing the prompt, scope, or specialist.
+- Keep the depth boundary explicit: Root is depth 0, Orchestrator depth 1, and specialists depth 2 with no further delegation.
 
-This stage is complete when every phase has enough evidence to execute, dependencies are ordered, ownership is non-overlapping, and each gate can distinguish pass from fail. Return material unresolved direction choices to Root.
+This stage is complete when every required lane is terminal and no owner or dependency remains unresolved.
 
-## 3. Dispatch single-writer lanes
+## 3. Pass each phase gate
 
-- Run independent lanes in parallel only when neither depends on the other's output.
-- Use the smallest specialist set that covers the current phase.
-- Default to `fork_turns="none"`. Send a self-contained assignment with objective, non-goals, evidence, owned files or responsibility, expected output, and required checks. A full-history fork inherits the current agent type, model, and effort and cannot select a different specialist type.
-- Tell writers that they share the worktree, must preserve unrelated changes, and must accommodate concurrent edits.
-- Keep a single writer for every overlapping file surface.
-- Track each spawned agent by its task name or agent identity and actual status. Wait for every required lane before integration.
-- Diagnose failed, timed-out, or unusable lanes before retrying; change the prompt, scope, or specialist to address that cause.
-- Keep the depth boundary explicit: Root is depth 0, Orchestrator is depth 1, and specialists are depth 2 and must not delegate further.
+- Inspect the actual diff or artifact, reconcile shared-worktree changes, and run focused checks that encode the phase intent.
+- Before each Oracle review, record confirmed research and relevant file references so Oracle uses accepted context instead of repeating discovery.
+- Request an Oracle review when the phase changes architecture, security boundaries, data contracts, or rollout risk.
+- Batch material actionable findings into one bounded remediation pass and run focused checks. Allow at most two re-reviews; use one only when remediation changes the reviewed risk or focused evidence cannot resolve the finding.
+- Label every Oracle prompt with the review attempt and re-review remaining count. Return exhausted gates and residual risk to Root.
+- Record results and advance only after the phase gate passes or Root accepts the documented exception.
 
-This stage is complete when every required lane is terminal, its output is available for inspection, and no required owner or dependency remains unresolved.
+The phase is complete when its gate passes or the ledger records Root's exception and residual risk. Repeat until every phase is gated.
 
-## 4. Pass the phase gate
+## 4. Close the subtree
 
-- Inspect the actual diff or artifact and reconcile shared-worktree changes.
-- Run the focused checks that encode the phase's intent.
-- Ask `oracle` for a second review when the phase changes architecture, security boundaries, data contracts, or rollout risk.
-- Each Oracle gate allows at most two re-reviews. Use one only when remediation materially changes the reviewed risk or focused evidence cannot resolve the finding; do not reopen accepted, unchanged findings.
-- Label every Oracle prompt with the review attempt and re-review remaining count. When the budget is exhausted, record the remaining risk and return the decision to Root.
-- Record evidence, failures, recovery decisions, and remaining risk in the ledger.
-- Advance the critical path only after the phase gate passes or Root explicitly accepts the documented exception.
+Return the implemented lanes, passed evidence, skipped or failed checks with reasons, unresolved risks or decisions, and whether the subtree meets its completion criteria.
 
-The phase is complete when its observable gate passes, or the ledger contains Root's explicit exception and its residual risk. Repeat stages 2-4 until every phase is gated.
-
-## 5. Close the subtree
-
-Return a concise integration report containing:
-
-- what was implemented and by which specialist lanes;
-- the evidence and checks that passed;
-- every skipped or failed check with the reason;
-- unresolved risks, disagreements, or decisions still requiring Root;
-- whether the assigned subtree satisfies its observable completion criteria.
-
-The subtree is complete when the ledger and report account for every phase, lane, check, exception, and unresolved risk.
-
-Keep the overall decision with Root: do not approve scope expansion, deploy, publish, make an external decision, or declare the user's whole task complete.
+The subtree is complete when the ledger and report account for every phase, lane, check, exception, and unresolved risk. Root retains scope, deployment, publication, external decisions, and overall completion.

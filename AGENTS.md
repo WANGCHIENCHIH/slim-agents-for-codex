@@ -139,7 +139,6 @@ When sources conflict, do not blend them:
 3. For decision rationale: `docs/adr/`.
 4. For operation, training, testing, database reference, review, and acceptance
    evidence: the corresponding `docs/` area.
-5. For historical context only: `docs/superpowers/` and archived review files.
 
 During migration, a capability may not yet have a main spec. Do not infer its
 accepted behavior from historical plans. Check verified runtime behavior and

@@ -38,4 +38,4 @@
 
 - [x] 4.1 Reconcile every checked task with implementation, CI, tag, Release, asset, and checksum evidence; leave any unproven claim unchecked.
 - [x] 4.2 Sync the accepted `curated-release-publication` capability into the main OpenSpec specifications.
-- [ ] 4.3 Archive the completed change and run strict validation against the resulting OpenSpec state.
+- [x] 4.3 Archive the completed change and run strict validation against the resulting OpenSpec state.

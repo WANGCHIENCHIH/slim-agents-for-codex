@@ -26,13 +26,28 @@ jobs:
         run: |
           if [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]]; then
             echo "tag=${INPUT_TAG}" >> "$GITHUB_OUTPUT"
+            echo "ref=refs/tags/${INPUT_TAG}" >> "$GITHUB_OUTPUT"
           else
             echo "tag=${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
+            echo "ref=${GITHUB_REF}" >> "$GITHUB_OUTPUT"
           fi
 
       - uses: actions/checkout@v6
         with:
-          ref: ${{ steps.release.outputs.tag }}
+          ref: ${{ steps.release.outputs.ref }}
+
+      - name: Resolve curated release notes
+        id: notes
+        env:
+          RELEASE_TAG: ${{ steps.release.outputs.tag }}
+        shell: bash
+        run: |
+          notes_file="docs/releases/${RELEASE_TAG}.md"
+          if [[ ! -f "$notes_file" ]]; then
+            echo "Missing curated release notes: $notes_file" >&2
+            exit 1
+          fi
+          echo "file=${notes_file}" >> "$GITHUB_OUTPUT"
 
       - uses: actions/setup-node@v6
         with:
@@ -67,42 +82,23 @@ jobs:
           smoke_root="$(mktemp -d)"
           npm install --prefix "$smoke_root/npm" "./$PACKAGE_FILE"
           cli="$smoke_root/npm/node_modules/slim-agents-for-codex/dist/cli.js"
-          node "$cli" list-presets | grep -F -- 'latest -> openai-5.6.2'
-          node "$cli" install --preset openai-5.6.2 \
+          recommended_preset="$(node -p 'require("./presets/aliases.json").recommended')"
+          node "$cli" list-presets | grep -F -- "recommended -> ${recommended_preset}"
+          node "$cli" install --preset "$recommended_preset" \
             --codex-home "$smoke_root/codex" \
             --skills-home "$smoke_root/skills" \
             --yes
-          node "$cli" validate --preset openai-5.6.2 \
+          node "$cli" validate --preset "$recommended_preset" \
             --codex-home "$smoke_root/codex" \
             --skills-home "$smoke_root/skills"
           test -f "$smoke_root/skills/slim-council/SKILL.md"
           test -f "$smoke_root/skills/slim-orchestration/SKILL.md"
 
-      - name: Write release notes
-        shell: bash
-        run: |
-          cat > release-notes.md <<'EOF'
-          ## Installation
-
-          Download the attached `.tgz`, then run:
-
-          ```bash
-          npm install --global ./slim-agents-for-codex-<version>.tgz
-          slim-agents-codex list-presets
-          slim-agents-codex install --preset openai-5.6.2 --scope global
-          ```
-
-          Existing installations should use `switch-preset` instead of `install`.
-
-          The package is distributed through GitHub and is not published to the npm registry.
-
-          The install command deploys the selected agent preset and both managed Slim Skills. See `README.md` or `README.zh-TW.md` for project-scoped and manual installation instructions.
-          EOF
-
       - name: Create or update GitHub Release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RELEASE_TAG: ${{ steps.release.outputs.tag }}
+          RELEASE_NOTES: ${{ steps.notes.outputs.file }}
           PACKAGE_FILE: ${{ steps.package.outputs.file }}
         shell: bash
         run: |
@@ -111,5 +107,5 @@ jobs:
             exit 1
           fi
           gh release create "$RELEASE_TAG" "$PACKAGE_FILE" "${PACKAGE_FILE}.sha256" \
-            --title "$RELEASE_TAG" --notes-file release-notes.md \
+            --title "$RELEASE_TAG" --notes-file "$RELEASE_NOTES" \
             --repo "$GITHUB_REPOSITORY"

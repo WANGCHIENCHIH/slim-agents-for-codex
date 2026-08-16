@@ -64,4 +64,3 @@ A successful formal release SHALL be created from a reviewed tag whose version m
 
 - **WHEN** the v0.4.0 release outputs are reviewed
 - **THEN** no npm-registry publication occurred and `.codex/agents/` is not claimed as attached-package content
-

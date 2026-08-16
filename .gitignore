@@ -4,3 +4,6 @@ dist/
 .npm-cache/
 .tmp/
 .slim/deepwork/
+.codegraph/
+CONTEXT.md
+docs/review/

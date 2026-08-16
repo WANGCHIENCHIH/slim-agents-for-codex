@@ -4,8 +4,7 @@ import { homedir } from "node:os";
 import { basename, dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createInterface } from "node:readline/promises";
-import { parse } from "smol-toml";
-import { installPreset, managedSkillNames, previewInstall, validateInstalledSkills } from "./core/installer.js";
+import { InstallRollbackError, assertRoleDocument, installPreset, managedSkillNames, previewInstall, validateInstalledPreset } from "./core/installer.js";
 import { aliases, generatePreset, managedRoleNames, presets, renderAliases } from "./core/presets.js";
 
 export interface CliIo { log(line: string): void; confirm(question: string): Promise<boolean> }
@@ -27,6 +26,7 @@ async function writeGenerated(id: string, output: string) {
     if (managedRoleNames.includes(name) && !active.has(name)) await unlink(join(agentsDirectory, file));
   }
   for (const [name, content] of Object.entries(generated.agents)) await writeFile(join(agentsDirectory, `${name}.toml`), content, "utf8");
+  for (const [name, content] of Object.entries(generated.rootProfiles)) await writeFile(join(root, `${name}.config.toml`), content, "utf8");
   await writeFile(join(root, "config.snippet.toml"), generated.snippet, "utf8");
   await writeFile(join(root, "manifest.json"), generated.manifest, "utf8");
   return root;
@@ -39,20 +39,11 @@ function generatedArtifacts(id: string, output: string) {
     root,
     artifacts: [
       ...generated.roleOrder.map((name) => ({ path: join(root, "agents", `${name}.toml`), content: generated.agents[name] })),
+      ...Object.entries(generated.rootProfiles).map(([name, content]) => ({ path: join(root, `${name}.config.toml`), content })),
       { path: join(root, "config.snippet.toml"), content: generated.snippet },
       { path: join(root, "manifest.json"), content: generated.manifest },
     ],
   };
-}
-
-function stable(value: unknown): unknown {
-  if (Array.isArray(value)) return value.map(stable);
-  if (!value || typeof value !== "object") return value;
-  return Object.fromEntries(Object.entries(value as Record<string, unknown>).sort(([left], [right]) => left.localeCompare(right)).map(([key, nested]) => [key, stable(nested)]));
-}
-
-function matchesSemantically(actual: unknown, expected: unknown) {
-  return JSON.stringify(stable(actual)) === JSON.stringify(stable(expected));
 }
 
 async function assertGeneratedArtifactsMatch(id: string, output: string) {
@@ -81,12 +72,6 @@ async function assertGeneratedArtifactsMatch(id: string, output: string) {
     }
     if (committed !== artifact.content) throw new Error(`Generated artifact drift: ${artifact.path}`);
   }
-}
-
-async function assertRoleDocument(name: string, expectedToml: string, actualTomlPath: string) {
-  const actual = parse(await readFile(actualTomlPath, "utf8"));
-  const expected = parse(expectedToml);
-  if (!matchesSemantically(actual, expected)) throw new Error(`Role semantic drift: ${name}`);
 }
 
 export async function runCli(args: string[], io: CliIo): Promise<number> {
@@ -131,22 +116,9 @@ export async function runCli(args: string[], io: CliIo): Promise<number> {
       const skillsHomeOption = valueAfter(args, "--skills-home");
       if (!skillsHomeOption) throw new Error("--skills-home is required with --codex-home so managed Skills are validated");
       const codexHome = resolve(codexHomeOption);
-      const configPath = join(codexHome, "config.toml");
-      const config = parse(await readFile(configPath, "utf8")) as Record<string, unknown>;
-      const agents = config.agents as Record<string, unknown> | undefined;
-      const configuredManagedRoles = managedRoleNames.filter((name) => agents?.[name] !== undefined).sort();
-      const expectedManagedRoles = [...generated.roleOrder].sort();
-      if (JSON.stringify(configuredManagedRoles) !== JSON.stringify(expectedManagedRoles)) throw new Error(`Installed managed roles do not match preset: ${generated.preset.id}`);
-      for (const name of generated.roleOrder) {
-        const role = agents?.[name] as Record<string, unknown> | undefined;
-        const configFile = role?.config_file;
-        if (typeof configFile !== "string") throw new Error(`Missing config_file for role: ${name}`);
-        if (configFile.replaceAll("\\", "/") !== `agents/${name}.toml`) throw new Error(`Invalid config_file for role: ${name}`);
-        await assertRoleDocument(name, generated.agents[name], resolve(dirname(configPath), configFile));
-      }
+      await validateInstalledPreset({ codexHome, skillsHome: resolve(skillsHomeOption), preset: generated.preset.id });
       io.log(`valid installation: ${codexHome} (${generated.roleOrder.length} roles)`);
       const skillsHome = resolve(skillsHomeOption);
-      await validateInstalledSkills(skillsHome);
       io.log(`valid skills: ${skillsHome} (${managedSkillNames.length} skills)`);
       return 0;
     }
@@ -176,16 +148,21 @@ export async function runCli(args: string[], io: CliIo): Promise<number> {
       io.log("cancelled; no files changed");
       return 2;
     }
-    const result = await installPreset(preview);
     try {
-      await runCli(["validate", "--codex-home", codexHome, "--skills-home", result.skillsHome, "--preset", result.preset], io);
+      const result = await installPreset(preview);
+      io.log(`valid installation: ${codexHome} (${generatePreset(result.preset).roleOrder.length} roles)`);
+      io.log(`valid skills: ${result.skillsHome} (${managedSkillNames.length} skills)`);
+      io.log(`installed ${result.preset} at ${result.target}`);
+      return 0;
     } catch (error) {
-      const message = error instanceof Error ? error.message : String(error);
-      const configRecovery = result.backupPath ? `Restore config from ${result.backupPath}` : `Remove newly created config ${preview.configPath}`;
-      throw new Error(`Post-install validation failed: ${message}. ${configRecovery} and restore managed agents or skills from ${result.archivePath}`);
+      if (!(error instanceof InstallRollbackError)) throw error;
+      io.log(`reason: ${error.reason}`);
+      io.log(`rollback ${error.rollback}`);
+      for (const failure of error.rollbackFailures) io.log(`rollback failure: ${failure.reason}`);
+      for (const path of error.recoveryArtifacts) io.log(`recovery: ${path}`);
+      if (error.rollback === "incomplete") io.log(`unresolved: ${error.unresolved.join(", ")}`);
+      return 1;
     }
-    io.log(`installed ${result.preset} at ${result.target}`);
-    return 0;
   }
   io.log(`unknown command: ${command}`);
   return 1;

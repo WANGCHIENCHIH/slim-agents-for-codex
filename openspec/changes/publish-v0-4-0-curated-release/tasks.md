@@ -25,15 +25,17 @@
 
 - [x] 3.1 Confirm the merged `main` commit contains package version 0.4.0, the approved note, and the release workflow; confirm tag and Release `v0.4.0` do not already exist.
 - [x] 3.2 Create annotated tag `v0.4.0` at the recorded merged commit and push only that tag.
-- [ ] 3.3 Wait for the tag-triggered release workflow and verify success, the exact approved English Release body, the `.tgz`, the `.sha256`, the tag target, and packed install/validate smoke evidence.
-- [ ] 3.4 Verify the formal release path did not publish to the npm registry and did not represent `.codex/agents/` as attached-package content.
+- [x] 3.3 Wait for the tag-triggered release workflow and verify success, the exact approved English Release body, the `.tgz`, the `.sha256`, the tag target, and packed install/validate smoke evidence.
+- [x] 3.4 Verify the formal release path did not publish to the npm registry and did not represent `.codex/agents/` as attached-package content.
 
 **Ticket 3 preflight evidence:** `main` commit `e0bc85bd1161da8e7f94cca3c583568d518ba68c` contains package version `0.4.0`, `docs/releases/v0.4.0.md` (SHA-256 `DC1B7179B12DABD5ACABD22C15F63F7E46DAB3E8AD4243BF4A148CBB4E9A65CB`), and the reviewed release workflow. Local and remote tag queries returned no `v0.4.0`, and GitHub reported no matching Release before publication. Annotated tag `v0.4.0` was then created at and pushed for exactly that merge commit.
+
+**Ticket 3 publication evidence:** Tag-triggered workflow run `31932047333` succeeded for `v0.4.0` at `e0bc85bd1161da8e7f94cca3c583568d518ba68c`; its tag resolution, curated-note resolution, tests, typecheck, build, snapshots, package build, packed install/validate smoke, and Release creation steps all succeeded. GitHub Release `v0.4.0` is public and non-prerelease, its body matches `docs/releases/v0.4.0.md`, and it contains only `slim-agents-for-codex-0.4.0.tgz` plus its `.sha256`. The tgz SHA-256 is `6b4f20d64ef32ff775c26bb3b834c3757fcba5407dc5a24b34379f6a9d701865`, matching the checksum asset. The npm registry has no `slim-agents-for-codex@0.4.0`, the release workflow contains no npm-publish step, and the attached tgz contains no `.codex/agents/` path.
 
 ## 4. Accept curated release publication as repository behavior
 
 **Blocked by:** Ticket 3 — Publish and verify v0.4.0.
 
-- [ ] 4.1 Reconcile every checked task with implementation, CI, tag, Release, asset, and checksum evidence; leave any unproven claim unchecked.
-- [ ] 4.2 Sync the accepted `curated-release-publication` capability into the main OpenSpec specifications.
+- [x] 4.1 Reconcile every checked task with implementation, CI, tag, Release, asset, and checksum evidence; leave any unproven claim unchecked.
+- [x] 4.2 Sync the accepted `curated-release-publication` capability into the main OpenSpec specifications.
 - [ ] 4.3 Archive the completed change and run strict validation against the resulting OpenSpec state.

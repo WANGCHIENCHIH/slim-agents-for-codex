@@ -26,13 +26,15 @@ jobs:
         run: |
           if [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]]; then
             echo "tag=${INPUT_TAG}" >> "$GITHUB_OUTPUT"
+            echo "ref=refs/tags/${INPUT_TAG}" >> "$GITHUB_OUTPUT"
           else
             echo "tag=${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
+            echo "ref=${GITHUB_REF}" >> "$GITHUB_OUTPUT"
           fi
 
       - uses: actions/checkout@v6
         with:
-          ref: ${{ steps.release.outputs.tag }}
+          ref: ${{ steps.release.outputs.ref }}
 
       - name: Resolve curated release notes
         id: notes

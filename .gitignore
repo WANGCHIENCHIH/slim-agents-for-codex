@@ -2,6 +2,7 @@ node_modules/
 dist/
 *.tgz
 .npm-cache/
+.uv-cache/
 .tmp/
 .slim/deepwork/
 .codegraph/

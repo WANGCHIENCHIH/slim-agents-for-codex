@@ -14,10 +14,10 @@
 **Blocked by:** Ticket 1 — Make formal releases explain user impact.
 
 - [x] 2.1 Review the fixed-point implementation against repository standards and this OpenSpec change, then run ponytail review and remove only justified redundancy.
-- [ ] 2.2 Commit only the approved release-note, workflow, and OpenSpec paths; push a scoped branch and open a PR to `main` without creating a v0.4.0 tag.
+- [x] 2.2 Commit only the approved release-note, workflow, and OpenSpec paths; push a scoped branch and open a PR to `main` without creating a v0.4.0 tag.
 - [ ] 2.3 Require all PR CI checks to pass, merge the reviewed PR, record the merged `main` commit, and verify that no v0.4.0 tag or GitHub Release exists yet.
 
-**Ticket 2 review evidence:** Fixed-point review against `origin/main` found no baseline smells. Spec review found that manual dispatch could select a branch or SHA; commit `67cbc63` now makes checkout resolve the input through `refs/tags/<tag>`, and re-review found no remaining spec blocker. Ponytail review returned `Lean already. Ship.` GitHub Actions parsing and PR CI remain required before 2.3 can be checked.
+**Ticket 2 review evidence:** Fixed-point review against `origin/main` found no baseline smells. Spec review found that manual dispatch could select a branch or SHA; commit `67cbc63` now makes checkout resolve the input through `refs/tags/<tag>`, and re-review found no remaining spec blocker. Ponytail review returned `Lean already. Ship.` Draft PR #5 targets `main` from `codex/publish-v0-4-0-curated-release`; no v0.4.0 tag was created. GitHub Actions parsing and PR CI remain required before 2.3 can be checked.
 
 ## 3. Publish and verify v0.4.0
 

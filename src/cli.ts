@@ -3,10 +3,8 @@ import { mkdir, readdir, readFile, unlink, writeFile } from "node:fs/promises";
 import { homedir } from "node:os";
 import { basename, dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { isDeepStrictEqual } from "node:util";
 import { createInterface } from "node:readline/promises";
-import { parse } from "smol-toml";
-import { InstallRollbackError, installPreset, managedSkillNames, previewInstall, validateInstalledPreset } from "./core/installer.js";
+import { InstallRollbackError, assertRoleDocument, installPreset, managedSkillNames, previewInstall, validateInstalledPreset } from "./core/installer.js";
 import { aliases, generatePreset, managedRoleNames, presets, renderAliases } from "./core/presets.js";
 
 export interface CliIo { log(line: string): void; confirm(question: string): Promise<boolean> }
@@ -74,12 +72,6 @@ async function assertGeneratedArtifactsMatch(id: string, output: string) {
     }
     if (committed !== artifact.content) throw new Error(`Generated artifact drift: ${artifact.path}`);
   }
-}
-
-async function assertRoleDocument(name: string, expectedToml: string, actualTomlPath: string) {
-  const actual = parse(await readFile(actualTomlPath, "utf8"));
-  const expected = parse(expectedToml);
-  if (!isDeepStrictEqual(actual, expected)) throw new Error(`Role semantic drift: ${name}`);
 }
 
 export async function runCli(args: string[], io: CliIo): Promise<number> {

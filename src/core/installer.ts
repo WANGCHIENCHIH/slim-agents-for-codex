@@ -266,7 +266,7 @@ export async function validateInstalledSkills(skillsHome: string): Promise<void>
   }
 }
 
-async function assertRoleDocument(name: string, expectedToml: string, actualTomlPath: string) {
+export async function assertRoleDocument(name: string, expectedToml: string, actualTomlPath: string) {
   const actual = parse(await readFile(actualTomlPath, "utf8"));
   const expected = parse(expectedToml);
   if (!isDeepStrictEqual(actual, expected)) throw new Error(`Role semantic drift: ${name}`);

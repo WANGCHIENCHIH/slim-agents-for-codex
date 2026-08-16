@@ -24,11 +24,11 @@
 **Blocked by:** Ticket 2 — Ship the reviewed v0.4.0 release preparation.
 
 - [x] 3.1 Confirm the merged `main` commit contains package version 0.4.0, the approved note, and the release workflow; confirm tag and Release `v0.4.0` do not already exist.
-- [ ] 3.2 Create annotated tag `v0.4.0` at the recorded merged commit and push only that tag.
+- [x] 3.2 Create annotated tag `v0.4.0` at the recorded merged commit and push only that tag.
 - [ ] 3.3 Wait for the tag-triggered release workflow and verify success, the exact approved English Release body, the `.tgz`, the `.sha256`, the tag target, and packed install/validate smoke evidence.
 - [ ] 3.4 Verify the formal release path did not publish to the npm registry and did not represent `.codex/agents/` as attached-package content.
 
-**Ticket 3 preflight evidence:** `main` commit `e0bc85bd1161da8e7f94cca3c583568d518ba68c` contains package version `0.4.0`, `docs/releases/v0.4.0.md` (SHA-256 `DC1B7179B12DABD5ACABD22C15F63F7E46DAB3E8AD4243BF4A148CBB4E9A65CB`), and the reviewed release workflow. Local and remote tag queries returned no `v0.4.0`, and GitHub reported no matching Release before publication.
+**Ticket 3 preflight evidence:** `main` commit `e0bc85bd1161da8e7f94cca3c583568d518ba68c` contains package version `0.4.0`, `docs/releases/v0.4.0.md` (SHA-256 `DC1B7179B12DABD5ACABD22C15F63F7E46DAB3E8AD4243BF4A148CBB4E9A65CB`), and the reviewed release workflow. Local and remote tag queries returned no `v0.4.0`, and GitHub reported no matching Release before publication. Annotated tag `v0.4.0` was then created at and pushed for exactly that merge commit.
 
 ## 4. Accept curated release publication as repository behavior
 

@@ -37,7 +37,7 @@ The exact generated configuration SHALL be identified by the combination of Pack
 - **THEN** it contains generated snapshot directories only for the supported unsuffixed Preset IDs
 
 ### Requirement: Supported presets share the Current Role Contract
-Every supported Preset ID in a Package Version SHALL generate the same Current Role Contract of exactly seven managed roles. Role names, descriptions, instructions, sandbox policy, role order, and role-specific policy SHALL be identical across supported model generations; only model and effort mappings MAY differ.
+Every supported Preset ID in a Package Version SHALL generate the same Current Role Contract of exactly seven managed roles. Role names, descriptions, instructions, sandbox policy, role order, lifecycle supervision policy, and other role-specific policy SHALL be identical across supported model generations; only model and effort mappings MAY differ.
 
 #### Scenario: GPT-5.5 and GPT-5.6 outputs are compared
 - **WHEN** `openai-5.5` and `openai-5.6` are generated from the same Package Version
@@ -45,11 +45,26 @@ Every supported Preset ID in a Package Version SHALL generate the same Current R
 
 #### Scenario: Current policy is rendered
 - **WHEN** either supported Preset ID is generated
-- **THEN** role-specific MCP guidance and optional Skill routing come from the Current Role Contract without behavior selected by a suffix Preset ID
+- **THEN** role-specific MCP guidance, optional Skill routing, and lifecycle supervision policy come from the Current Role Contract without behavior selected by a suffix Preset ID
 
 #### Scenario: Existing eight-role installation is switched
 - **WHEN** a user switches an existing managed eight-role installation to a supported unsuffixed Preset ID
 - **THEN** the retired managed Observer role is archived and removed from the active config and agent discovery path while unrelated custom roles remain unchanged
+
+#### Scenario: Same-generation lifecycle maintenance is released
+- **WHEN** the Current Role Contract adopts Codex-native specialist lifecycle supervision without changing model generations
+- **THEN** both supported unsuffixed Preset IDs receive the same lifecycle policy under a new Package Version
+
+### Requirement: Generated manifests identify reviewed upstream provenance
+Every supported preset manifest SHALL identify the same reviewed oh-my-opencode-slim release and full commit used as the audit provenance for the Current Role Contract. Provenance metadata MUST NOT select preset behavior.
+
+#### Scenario: Version 2.2.15 provenance is rendered
+- **WHEN** either supported preset is generated for this change
+- **THEN** its manifest identifies upstream version `2.2.15` and commit `dafee9849fbae6fecaa51c5f406083cad4dfd08b`
+
+#### Scenario: Supported manifests are compared
+- **WHEN** the `openai-5.5` and `openai-5.6` manifests are compared within the same Package Version
+- **THEN** their upstream version and commit are identical and neither value changes the selected model mapping
 
 ### Requirement: Retired suffix Preset IDs fail before mutation
 Commands that accept a Preset ID MUST reject `openai-5.5.1` and `openai-5.6.1` through `openai-5.6.4` before writing files. The error MUST identify the retired ID, recommend the corresponding unsuffixed ID, and explain that an exact historical configuration requires its historical Package Version or Git tag.

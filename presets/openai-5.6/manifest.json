@@ -1,11 +1,11 @@
 {
-  "packageVersion": "0.4.0",
+  "packageVersion": "0.4.1",
   "presetId": "openai-5.6",
   "adapter": "oh-my-opencode-slim",
   "adapterSchemaVersion": 2,
   "source": "alvinunreal/oh-my-opencode-slim",
-  "upstreamVersion": "2.2.14",
-  "upstreamCommit": "150eaf5d755c63bdfbf53d509fcff9df37662e42",
+  "upstreamVersion": "2.2.15",
+  "upstreamCommit": "dafee9849fbae6fecaa51c5f406083cad4dfd08b",
   "created": "2026-07-12",
   "status": "supported",
   "snapshotFormatVersion": 1

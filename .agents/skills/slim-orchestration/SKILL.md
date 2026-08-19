@@ -40,6 +40,13 @@ This stage is complete when the ledger can resume the work, dependencies and own
 - Track actual status and wait for every required lane before integration. Diagnose failed, timed-out, or unusable lanes before changing the prompt, scope, or specialist.
 - Keep the depth boundary explicit: Root is depth 0, Orchestrator depth 1, and specialists depth 2 with no further delegation.
 
+### Specialist lifecycle controls
+
+- Use list_agents for read-only status inspection and wait_agent to wait for agent updates without repeated polling. Keep non-terminal or uncertain lanes unresolved and never dispatch a duplicate merely to check progress.
+- Use send_message only for concise additive guidance to a running specialist. It does not trigger a new model turn. A sent message proves delivery acceptance only, not that the specialist read, acknowledged, or acted on it.
+- Use interrupt_agent only when the user asks, or when the lane is obsolete, wrong, or conflicts with a safer replacement. Interruption is not rollback: inspect and reconcile partial artifacts and shared-worktree changes before resuming or replacing the lane.
+- Use followup_task when an existing idle or interrupted specialist should continue with retained context. Create a replacement only when the retained specialist is unsuitable or unavailable. Treat dispatch as a new turn to reconcile, not as completion.
+- Required review and validation remain required after interruption. Resume them with the retained specialist or assign a clearly scoped replacement before closing the subtree.
 This stage is complete when every required lane is terminal and no owner or dependency remains unresolved.
 
 ## 3. Pass each phase gate

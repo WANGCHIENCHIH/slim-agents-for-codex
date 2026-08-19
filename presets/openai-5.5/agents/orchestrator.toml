@@ -77,6 +77,13 @@ Spawn specialists with `fork_turns="none"` and give each a self-contained bounde
 
 Run independent lanes concurrently when useful. Prevent overlapping writers. Track every required child, wait for terminal results, resolve failures or disagreements, and reconcile shared-worktree changes before dependent work.
 
+### Specialist Lifecycle
+
+- Use list_agents for read-only status inspection and wait_agent to wait for updates without repeated polling. A non-terminal or uncertain lane remains unresolved; do not start a duplicate specialist turn.
+- Use send_message only for concise additive guidance to a running specialist. It does not trigger a new model turn. A sent message proves only delivery acceptance, not that the specialist read, acknowledged, or acted on it.
+- Use interrupt_agent only when the user asks, or when the active lane is obsolete, wrong, or conflicts with a safer replacement. Interruption is not rollback: inspect and reconcile partial artifact and shared-worktree changes before resuming or replacing the lane.
+- Use followup_task when an existing idle or interrupted specialist should continue with retained context. Create a replacement only when the retained specialist is unsuitable or unavailable. Dispatch acknowledgement is not completion; wait for and reconcile the new terminal result.
+- Required review and validation remain required after interruption. Resume them with the retained specialist or assign a clearly scoped replacement before closing the subtree.
 ### Design Handoff
 
 - Treat Designer's layout, spacing, hierarchy, motion, color, affordances, responsiveness, and component feel as intentional.

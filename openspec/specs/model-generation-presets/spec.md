@@ -52,15 +52,19 @@ Every supported Preset ID in a Package Version SHALL generate the same Current R
 - **THEN** the retired managed Observer role is archived and removed from the active config and agent discovery path while unrelated custom roles remain unchanged
 
 #### Scenario: Same-generation lifecycle maintenance is released
-- **WHEN** the Current Role Contract adopts Codex-native specialist lifecycle supervision without changing model generations
+- **WHEN** the Current Role Contract prevents redispatch of a terminal-but-unreconciled objective without changing model generations
 - **THEN** both supported unsuffixed Preset IDs receive the same lifecycle policy under a new Package Version
 
 ### Requirement: Generated manifests identify reviewed upstream provenance
 Every supported preset manifest SHALL identify the same reviewed oh-my-opencode-slim release and full commit used as the audit provenance for the Current Role Contract. Provenance metadata MUST NOT select preset behavior.
 
 #### Scenario: Version 2.2.15 provenance is rendered
-- **WHEN** either supported preset is generated for this change
+- **WHEN** either supported preset is generated from historical Package Version `0.4.1`
 - **THEN** its manifest identifies upstream version `2.2.15` and commit `dafee9849fbae6fecaa51c5f406083cad4dfd08b`
+
+#### Scenario: Version 2.2.17 provenance is rendered
+- **WHEN** either supported preset is generated for this change
+- **THEN** its manifest identifies upstream version `2.2.17` and commit `7ea8f3ef95ec9c6be565446932c8ad8ee353e9d1`
 
 #### Scenario: Supported manifests are compared
 - **WHEN** the `openai-5.5` and `openai-5.6` manifests are compared within the same Package Version

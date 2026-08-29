@@ -19,4 +19,22 @@
 - [x] 2.2 將 Package Version 更新為 `0.4.2`，同步 generator 與 concise role-source provenance，並以 focused contract tests 驗證 exact output identity 未新增 selector 或 dependency。
 - [x] 2.3 透過既有 generator 重產 `openai-5.5` 與 `openai-5.6` committed snapshots，並以 snapshot check 驗證兩個 manifests 與 lifecycle-aware agent outputs 和 generator 一致。
 - [x] 2.4 執行完整 tests、typecheck、build、snapshot check、package dry run、`git diff --check` 與 strict OpenSpec validation，逐項記錄 passed、failed 或 skipped evidence。
-- [ ] 2.5 依 originating specs 完成 code review 與 over-engineering review，修正必要 findings，並確認最終 diff 未移植 proposal 所列的 OpenCode-only runtime 功能。
+
+**Evidence (2026-08-29):**
+
+- `npm.cmd test`: passed — 3 test files, 54 tests。
+- `npm.cmd run typecheck`: passed。
+- `npm.cmd run build`: passed。
+- `npm.cmd run snapshots`: passed — `openai-5.5`、`openai-5.6` 與 `aliases.json` 均符合 generator。
+- `npm.cmd run pack:check`: passed — dry-run package `slim-agents-for-codex@0.4.2`，55 entries。
+- `git diff --check`: passed。
+- `openspec validate "port-omos-2-2-17-reconciliation-guard" --strict`: passed。
+
+- [x] 2.5 依 originating specs 完成 code review 與 over-engineering review，修正必要 findings，並確認最終 diff 未移植 proposal 所列的 OpenCode-only runtime 功能。
+
+**Review evidence (2026-08-29):**
+
+- Standards axis: passed — 無 documented-standard violation 或 baseline smell。
+- Spec axis: passed — task 2.4 evidence P2 已修正並通過 targeted re-review，無其他 finding。
+- Ponytail review: `Lean already. Ship.`
+- OpenCode-only runtime scope search: passed — implementation diff 未包含 task-session、Background Job Board、tool-loop、TUI、tmux、smartfetch、provider 或 objective normalization 實作。

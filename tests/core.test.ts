@@ -137,6 +137,9 @@ describe("preset generation", () => {
     expect(orchestrator).toMatch(/followup_task.*idle|interrupted.*retained context/is);
     expect(orchestrator).toMatch(/replacement.*only.*retained specialist.*unsuitable.*unavailable/is);
     expect(orchestrator).toMatch(/review.*validation.*remain|required.*interrupted/is);
+    expect(orchestrator).toMatch(/terminal result.*findings.*validation evidence.*shared-worktree effects.*reconciled/is);
+    expect(orchestrator).toMatch(/do not dispatch.*same approved objective.*before.*reconciliation/is);
+    expect(orchestrator).toMatch(/after reconciliation.*followup_task.*replacement.*approved work remains/is);
     expect(orchestrator).not.toMatch(/task_status|task_message|task_cancel|task_revive|Background Job Board/i);
   });
   it("lets the latest orchestrator use CodeGraph and Oracle use ponytail-review when installed", () => {
@@ -214,6 +217,9 @@ describe("preset generation", () => {
     expect(orchestration).toMatch(/followup_task.*idle|interrupted.*retained context/is);
     expect(orchestration).toMatch(/replacement.*only.*retained specialist.*unsuitable.*unavailable/is);
     expect(orchestration).toMatch(/review.*validation.*remain|required.*interrupted/is);
+    expect(orchestration).toMatch(/terminal result.*findings.*validation evidence.*shared-worktree effects.*reconciled/is);
+    expect(orchestration).toMatch(/do not dispatch.*same approved objective.*before.*reconciliation/is);
+    expect(orchestration).toMatch(/after reconciliation.*followup_task.*replacement.*approved work remains/is);
     expect(orchestration).not.toMatch(/task_status|task_message|task_cancel|task_revive|Background Job Board/i);
   });
   it("keeps orchestration execution and council deliberation in separate skills", async () => {
@@ -314,13 +320,13 @@ describe("preset generation", () => {
     }
   });
 
-  it("renders reviewed 2.2.15 provenance without changing model mappings", () => {
+  it("renders reviewed 2.2.17 provenance without changing model mappings", () => {
     const gpt55 = generatePreset("openai-5.5");
     const gpt56 = generatePreset("openai-5.6");
     const expectedProvenance = {
       source: "alvinunreal/oh-my-opencode-slim",
-      upstreamVersion: "2.2.15",
-      upstreamCommit: "dafee9849fbae6fecaa51c5f406083cad4dfd08b",
+      upstreamVersion: "2.2.17",
+      upstreamCommit: "7ea8f3ef95ec9c6be565446932c8ad8ee353e9d1",
     };
 
     expect(JSON.parse(gpt55.manifest)).toMatchObject(expectedProvenance);

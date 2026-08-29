@@ -6,5 +6,6 @@ dist/
 .tmp/
 .slim/deepwork/
 .codegraph/
+.agents/skills/openspec-*/
 CONTEXT.md
 docs/review/

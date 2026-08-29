@@ -353,6 +353,23 @@ describe("safe installation", () => {
     );
   });
 
+  it("installs and post-validates a BOM config without changing its line endings", async () => {
+    const home = await mkdtemp(join(tmpdir(), "slim-codex-bom-cli-"));
+    const skillsHome = join(home, "user-skills");
+    const configPath = join(home, "config.toml");
+    await writeFile(configPath, "\uFEFF[agents]\r\nmax_threads = 6\r\nmax_depth = 1\r\n", "utf8");
+
+    const code = await runCli(["install", "--preset", "openai-5.6", "--codex-home", home, "--skills-home", skillsHome, "--yes"], {
+      log: () => undefined,
+      confirm: async () => false,
+    });
+
+    expect(code).toBe(0);
+    const installed = await readFile(configPath, "utf8");
+    expect(installed.startsWith("\uFEFF")).toBe(true);
+    expect(installed.replaceAll("\r\n", "")).not.toContain("\n");
+  });
+
   it("previews without writing and preserves unrelated config on apply", async () => {
     const home = await mkdtemp(join(tmpdir(), "slim-codex-"));
     await writeFile(join(home, "config.toml"), 'model = "existing"\r\n\r\n[agents]\r\nmax_threads = 6\r\nmax_depth = 1\r\n', "utf8");

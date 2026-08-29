@@ -266,8 +266,10 @@ export async function validateInstalledSkills(skillsHome: string): Promise<void>
   }
 }
 
+const parseTomlFile = async (path: string) => parse((await readFile(path, "utf8")).replace(/^\uFEFF/, ""));
+
 export async function assertRoleDocument(name: string, expectedToml: string, actualTomlPath: string) {
-  const actual = parse(await readFile(actualTomlPath, "utf8"));
+  const actual = await parseTomlFile(actualTomlPath);
   const expected = parse(expectedToml);
   if (!isDeepStrictEqual(actual, expected)) throw new Error(`Role semantic drift: ${name}`);
 }
@@ -275,7 +277,7 @@ export async function assertRoleDocument(name: string, expectedToml: string, act
 export async function validateInstalledPreset({ codexHome, skillsHome, preset }: InstalledPresetValidationRequest): Promise<void> {
   const generated = generatePreset(preset);
   const configPath = join(codexHome, "config.toml");
-  const config = parse(await readFile(configPath, "utf8")) as Record<string, unknown>;
+  const config = await parseTomlFile(configPath) as Record<string, unknown>;
   const agents = config.agents as Record<string, unknown> | undefined;
   const configuredManagedRoles = managedRoleNames.filter((name) => agents?.[name] !== undefined).sort();
   const expectedManagedRoles = [...generated.roleOrder].sort();

@@ -142,6 +142,17 @@ describe("preset generation", () => {
     expect(orchestrator).toMatch(/after reconciliation.*followup_task.*replacement.*approved work remains/is);
     expect(orchestrator).not.toMatch(/task_status|task_message|task_cancel|task_revive|Background Job Board/i);
   });
+  it("requires evidence reconciliation for empty specialist results in both orchestration entrypoints", async () => {
+    const orchestrator = (parse(generatePreset("openai-5.6").agents.orchestrator) as { developer_instructions: string }).developer_instructions;
+    const skill = await readFile(join(packagedSkillsHome, "slim-orchestration", "SKILL.md"), "utf8");
+    for (const instructions of [orchestrator, skill]) {
+      expect(instructions).toMatch(/empty or unusable.*inspect.*artifacts.*validation evidence/is);
+      expect(instructions).toMatch(/evidence.*satisfies.*acceptance criteria.*without repeating/is);
+      expect(instructions).toMatch(/otherwise.*unresolved.*followup_task.*missing/is);
+      expect(instructions).toMatch(/empty.*alone.*neither.*completion.*redispatch/is);
+    }
+  });
+
   it("lets the latest orchestrator use CodeGraph and Oracle use ponytail-review when installed", () => {
     const generated = generatePreset("latest");
     const orchestrator = (parse(generated.agents.orchestrator) as { developer_instructions: string }).developer_instructions;
@@ -320,13 +331,13 @@ describe("preset generation", () => {
     }
   });
 
-  it("renders reviewed 2.2.17 provenance without changing model mappings", () => {
+  it("renders reviewed 2.2.18 provenance without changing model mappings", () => {
     const gpt55 = generatePreset("openai-5.5");
     const gpt56 = generatePreset("openai-5.6");
     const expectedProvenance = {
       source: "alvinunreal/oh-my-opencode-slim",
-      upstreamVersion: "2.2.17",
-      upstreamCommit: "7ea8f3ef95ec9c6be565446932c8ad8ee353e9d1",
+      upstreamVersion: "2.2.18",
+      upstreamCommit: "1da3f0d9cf5eef38a2a1fb98ba7af70fd9858a7a",
     };
 
     expect(JSON.parse(gpt55.manifest)).toMatchObject(expectedProvenance);

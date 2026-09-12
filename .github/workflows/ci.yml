@@ -19,3 +19,5 @@ jobs:
       - run: npm run build
       - run: npm run snapshots
       - run: npm run pack:check
+      - name: Smoke-test packed agent and Skill installation
+        run: npm run pack:smoke

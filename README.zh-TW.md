@@ -96,9 +96,10 @@ npm test
 npm run typecheck
 npm run build
 npm pack --dry-run
+npm run pack:smoke
 ```
 
-需要 Node.js 20 或更新版本。
+需要 Node.js 20 或更新版本。建置後執行 `pack:smoke`，會打包目前 checkout、安裝到暫存目錄，並驗證 recommended preset 與兩個受管 Skills。CI 會在 push 與 pull request 執行；release 使用相同指令加上 `-- path/to/package.tgz`，驗證實際要發布的封裝檔。此檢查不代表已驗證 Codex 模型存取或代理執行行為。
 
 ## 維護狀態
 

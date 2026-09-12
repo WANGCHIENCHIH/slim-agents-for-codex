@@ -48,6 +48,18 @@ The release workflow SHALL resolve the recommended Preset ID from the tagged pac
 - **WHEN** a future tagged package changes the recommended alias
 - **THEN** release smoke validation follows the new alias without requiring a revision-suffixed preset literal in the workflow
 
+### Requirement: Pull requests exercise the packed installation path
+
+CI SHALL 在 push 與 pull request 實際打包、安裝至隔離的暫存目錄，並以封裝內的 CLI 驗證 recommended preset 與兩個受管 Skills。CI 與 release SHALL 共用此驗證入口；release MUST 驗證即將發布的同一個封裝檔，任一步驟失敗 MUST 阻止後續發布。
+
+#### Scenario: Pull request changes packaged content
+- **WHEN** pull request 執行 CI
+- **THEN** CI 使用 `npm run pack:smoke` 驗證實際封裝的安裝結果，而非只檢查 dry-run 檔案清單
+
+#### Scenario: Release archive is supplied
+- **WHEN** release 將已建立的 `.tgz` 傳入相同驗證入口
+- **THEN** 該入口驗證所提供的封裝檔，不重新打包取代發布產物
+
 ### Requirement: Successful formal release publishes verified assets
 
 A successful formal release SHALL be created from a reviewed tag whose version matches the package version. It SHALL contain the curated body, the packed `.tgz`, and the corresponding SHA-256 file. The workflow SHALL refuse to overwrite an existing Release for the same tag and SHALL NOT publish the package to the npm registry.

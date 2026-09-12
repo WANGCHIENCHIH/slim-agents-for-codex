@@ -9,7 +9,7 @@ const verificationAssignment = `## Verification
 - Report validation results and skips accurately.`;
 
 // Current portable contract reviewed from alvinunreal/oh-my-opencode-slim
-// v2.2.17 at commit 7ea8f3ef95ec9c6be565446932c8ad8ee353e9d1.
+// v2.2.18 at commit 1da3f0d9cf5eef38a2a1fb98ba7af70fd9858a7a.
 export const currentRoleContract: RoleContract = {
   roleOrder: ["orchestrator", "oracle", "librarian", "explorer", "designer", "fixer", "council"],
   roles: {

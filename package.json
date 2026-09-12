@@ -1,6 +1,6 @@
 {
   "name": "slim-agents-for-codex",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "description": "Deterministic oh-my-opencode-slim agent presets for Codex",
   "private": true,
   "type": "module",
@@ -22,7 +22,8 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run",
     "snapshots": "node dist/cli.js convert --all --output presets --check",
-    "pack:check": "npm pack --dry-run --json"
+    "pack:check": "npm pack --dry-run --json",
+    "pack:smoke": "node scripts/smoke-package.mjs"
   },
   "dependencies": { "smol-toml": "1.7.0" },
   "devDependencies": {

@@ -88,9 +88,10 @@ npm test
 npm run typecheck
 npm run build
 npm pack --dry-run
+npm run pack:smoke
 ```
 
-Requires Node.js 20 or newer.
+Requires Node.js 20 or newer. After building, `pack:smoke` packs the checkout, installs it into a temporary directory, and validates the recommended preset and both managed Skills. CI runs it on pushes and pull requests; release validation uses the same command with `-- path/to/package.tgz` to check the exact release archive. This does not verify live Codex model access or agent behavior.
 
 ## Maintenance status
 

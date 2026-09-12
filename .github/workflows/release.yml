@@ -78,21 +78,7 @@ jobs:
         env:
           PACKAGE_FILE: ${{ steps.package.outputs.file }}
         shell: bash
-        run: |
-          smoke_root="$(mktemp -d)"
-          npm install --prefix "$smoke_root/npm" "./$PACKAGE_FILE"
-          cli="$smoke_root/npm/node_modules/slim-agents-for-codex/dist/cli.js"
-          recommended_preset="$(node -p 'require("./presets/aliases.json").recommended')"
-          node "$cli" list-presets | grep -F -- "recommended -> ${recommended_preset}"
-          node "$cli" install --preset "$recommended_preset" \
-            --codex-home "$smoke_root/codex" \
-            --skills-home "$smoke_root/skills" \
-            --yes
-          node "$cli" validate --preset "$recommended_preset" \
-            --codex-home "$smoke_root/codex" \
-            --skills-home "$smoke_root/skills"
-          test -f "$smoke_root/skills/slim-council/SKILL.md"
-          test -f "$smoke_root/skills/slim-orchestration/SKILL.md"
+        run: npm run pack:smoke -- "$PACKAGE_FILE"
 
       - name: Create or update GitHub Release
         env:

@@ -25,6 +25,15 @@ The Orchestrator SHALL use Codex's read-only agent status and event-driven wait 
 - **WHEN** the Orchestrator has reconciled the terminal result and the approved objective still requires work
 - **THEN** the Orchestrator MAY continue the retained specialist or dispatch a clearly scoped replacement according to the existing lifecycle controls
 
+#### Scenario: Terminal reply is empty but evidence is sufficient
+- **WHEN** 專家已終止且回報為空或無法使用，但實際產物、工作目錄變更與驗證證據足以滿足該任務的驗收條件
+- **THEN** Orchestrator SHALL 核對並結束該工作分支，不重做已完成的工作
+
+#### Scenario: Terminal reply is empty and evidence is insufficient
+- **WHEN** 專家已終止且回報為空或無法使用，核對實際產物與驗證證據後仍無法確認驗收條件
+- **THEN** Orchestrator SHALL 保留未完成狀態，使用 `followup_task` 請原專家只補充缺少的回報、證據或工作；替換專家仍遵循既有生命週期規則
+- **AND** 空白回報本身 MUST NOT 被視為完成或重新派送同一工作的充分理由
+
 ### Requirement: Live messages use conservative acknowledgement semantics
 The Orchestrator SHALL use `send_message` for a concise, non-triggering communication to an existing specialist when the current objective remains valid. Successful delivery SHALL mean only that the message was accepted for delivery; it MUST NOT be reported as proof that the specialist read, acknowledged, or acted on it.
 

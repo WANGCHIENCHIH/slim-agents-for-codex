@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { mkdtempSync, readFileSync, rmSync } from "node:fs";
+import { mkdtempSync, readFileSync, rmSync, symlinkSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -21,7 +21,9 @@ try {
   const prefix = join(smokeRoot, "npm");
   npm(["install", "--prefix", prefix, "--ignore-scripts", "--no-audit", "--no-fund", "--package-lock=false", archive]);
   const installed = join(prefix, "node_modules", "slim-agents-for-codex");
-  const cli = join(installed, "dist", "cli.js");
+  const linked = join(smokeRoot, "linked-package");
+  symlinkSync(installed, linked, "junction");
+  const cli = join(linked, "dist", "cli.js");
   const { recommended } = JSON.parse(readFileSync(join(installed, "presets", "aliases.json"), "utf8"));
   assert.equal(typeof recommended, "string");
   const listed = run([cli, "list-presets"], { stdio: ["ignore", "pipe", "inherit"] });

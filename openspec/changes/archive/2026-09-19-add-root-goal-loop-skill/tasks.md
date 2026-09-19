@@ -1,6 +1,6 @@
 # Tasks
 
-目前結果：Skill、安裝路徑與中英文使用說明已完成並驗證；delta 已同步至 main specs，Standards／Spec 審查通過並已封存。下一步為已授權的限定範圍 commit、push、跨平台 CI 與 `v0.4.4` GitHub Release；不修改全域安裝。
+目前結果：Skill、安裝路徑與中英文使用說明已完成；規格已同步並封存，Standards／Spec 審查通過。版本提交 `d88d817` 已推送，六組跨平台 CI 全部通過，`v0.4.4` 已正式發布並驗證公開下載產物。已授權交付工作完成；全域安裝未變更。
 
 ## 1. 可安裝的 Root 目標入口
 
@@ -29,3 +29,10 @@
 - 2026-09-19：遠端 `main` 與本機基底同為 `453857f`，最後正式發布為 `v0.4.0`，`v0.4.4` 尚未存在。Release note 已涵蓋累積修正並使用有效的 `v0.4.0...v0.4.4` 比較範圍。
 - 最新候選重新通過 56 tests、typecheck、build、snapshots；實際 `0.4.4.tgz` 以 linked CLI 通過 pack smoke，驗證七個角色及三個 Skills。候選 SHA-256：`4659e0a43536e7fc284307e87d2a733c264259e4339eba51c6b4ab26c188aa6f`；正式發布封裝由 tag workflow 另外建置及驗證。
 - 發布提交只涵蓋本次上游適配、goal-loop 與文件；保留使用者既有 `AGENTS.md`、`openspec/config.yaml` 及 `docs/agents/delivery-workflow.md` 修改。
+
+## Release evidence
+
+- 發布提交：`d88d8174d056b21ab52fcc7ab12f8334c7ef4e04`；annotated tag `v0.4.4` 指向同一提交。
+- [跨平台 CI](https://github.com/WANGCHIENCHIH/slim-agents-for-codex/actions/runs/35442997158)：Windows／Linux／macOS × Node 20／22 六組全部成功，包含測試、型別、建置、snapshot 與封裝安裝 smoke。
+- [Release workflow](https://github.com/WANGCHIENCHIH/slim-agents-for-codex/actions/runs/35443088920) 成功；[正式 Release](https://github.com/WANGCHIENCHIH/slim-agents-for-codex/releases/tag/v0.4.4) 於 `2026-09-19T12:31:26Z` 發布，非 draft／prerelease，附帶 `.tgz` 與 `.tgz.sha256`。
+- 公開下載的 `slim-agents-for-codex-0.4.4.tgz` SHA-256 為 `4659e0a43536e7fc284307e87d2a733c264259e4339eba51c6b4ab26c188aa6f`，與附帶 checksum 及本機候選相同。下載後再執行 `pack:smoke -- <published.tgz>` 通過，實際驗證七個角色與三個 Skills。

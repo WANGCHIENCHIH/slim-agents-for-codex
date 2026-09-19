@@ -41,7 +41,7 @@ The release workflow SHALL resolve the recommended Preset ID from the tagged pac
 #### Scenario: Recommended alias is current
 
 - **WHEN** the release package declares a recommended Preset ID
-- **THEN** the packed CLI installs and validates that canonical preset together with both managed Slim Skills
+- **THEN** the packed CLI installs and validates that canonical preset together with all three managed Slim Skills: `slim-council`, `slim-goal-loop`, and `slim-orchestration`
 
 #### Scenario: Recommended generation changes later
 
@@ -50,7 +50,7 @@ The release workflow SHALL resolve the recommended Preset ID from the tagged pac
 
 ### Requirement: Pull requests exercise the packed installation path
 
-CI SHALL 在 push 與 pull request 實際打包、安裝至隔離的暫存目錄，並以封裝內的 CLI 驗證 recommended preset 與兩個受管 Skills。CI 與 release SHALL 共用此驗證入口；release MUST 驗證即將發布的同一個封裝檔，任一步驟失敗 MUST 阻止後續發布。
+CI SHALL 在 push 與 pull request 實際打包、安裝至隔離的暫存目錄，並以封裝內的 CLI 驗證 recommended preset 與全部三個受管 Skills。CI 與 release SHALL 共用此驗證入口；release MUST 驗證即將發布的同一個封裝檔，任一步驟失敗 MUST 阻止後續發布。
 
 #### Scenario: Pull request changes packaged content
 - **WHEN** pull request 執行 CI

@@ -55,6 +55,21 @@ Every supported Preset ID in a Package Version SHALL generate the same Current R
 - **WHEN** the Current Role Contract prevents redispatch of a terminal-but-unreconciled objective without changing model generations
 - **THEN** both supported unsuffixed Preset IDs receive the same lifecycle policy under a new Package Version
 
+### Requirement: Council output honors host checkpoint templates
+Council 的生成角色提示與受管理的 `slim-council` Skill SHALL 將三段報告格式限定於一般 Council synthesis。當宿主明確要求依指定模板產生 session checkpoint 或 compaction summary 時，Council SHALL 遵守宿主模板；此格式例外 MUST NOT 改變唯讀、審議或 Root 權限邊界。
+
+#### Scenario: Normal Council synthesis is returned
+- **WHEN** Council 回傳一般審議結論
+- **THEN** 報告包含且僅包含 `Council Response`、`Perspective Details` 與 `Council Summary` 三個頂層區段
+
+#### Scenario: Host requests a checkpoint template
+- **WHEN** 宿主要求以指定模板產生 session checkpoint 或 compaction summary
+- **THEN** Council 遵守該模板，不額外套用一般 Council 報告的三段格式
+
+#### Scenario: Both Council entrypoints are inspected
+- **WHEN** 檢查任一支援 Preset 的 Council 提示與封裝的 `slim-council` Skill
+- **THEN** 兩者均包含相同的宿主摘要格式例外，且保留一般審議與權限規則
+
 ### Requirement: Generated manifests identify reviewed upstream provenance
 Every supported preset manifest SHALL identify the same reviewed oh-my-opencode-slim release and full commit used as the audit provenance for the Current Role Contract. Provenance metadata MUST NOT select preset behavior.
 
@@ -63,8 +78,12 @@ Every supported preset manifest SHALL identify the same reviewed oh-my-opencode-
 - **THEN** its manifest identifies upstream version `2.2.15` and commit `dafee9849fbae6fecaa51c5f406083cad4dfd08b`
 
 #### Scenario: Version 2.2.17 provenance is rendered
-- **WHEN** either supported preset is generated for this change
+- **WHEN** either supported preset is generated from historical Package Version `0.4.2`
 - **THEN** its manifest identifies upstream version `2.2.17` and commit `7ea8f3ef95ec9c6be565446932c8ad8ee353e9d1`
+
+#### Scenario: Version 2.2.21 provenance is rendered
+- **WHEN** 從 Package Version `0.4.4` 生成任一支援 Preset
+- **THEN** manifest 標示已審閱的 upstream version `2.2.21` 與 commit `f34d7ae22af0985bec257d72d0b6213f2aed3e48`，不改變模型與 effort 映射
 
 #### Scenario: Supported manifests are compared
 - **WHEN** the `openai-5.5` and `openai-5.6` manifests are compared within the same Package Version

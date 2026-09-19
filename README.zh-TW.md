@@ -12,10 +12,10 @@
 
 ### 安裝 GitHub Release 套件
 
-從對應的 GitHub Release 下載 `slim-agents-for-codex-0.4.0.tgz`，然後執行：
+從對應的 GitHub Release 下載 `slim-agents-for-codex-0.4.4.tgz`，然後執行：
 
 ```bash
-npm install --global ./slim-agents-for-codex-0.4.0.tgz
+npm install --global ./slim-agents-for-codex-0.4.4.tgz
 slim-agents-codex list-presets
 slim-agents-codex install --preset openai-5.6 --scope global
 ```
@@ -32,7 +32,7 @@ node dist/cli.js convert --preset openai-5.6 --output generated
 node dist/cli.js install --preset openai-5.6
 ```
 
-`install` 寫入前會顯示實際解析出的 Preset ID、設定檔路徑、Skill 路徑與備份路徑，並要求確認；它會同時安裝選定的 agent preset 與兩個受管 Slim Skills。`--scope global` 使用 `CODEX_HOME`（或 `~/.codex`）及 `$HOME/.agents/skills`，`--scope project` 使用目前專案的 `.codex` 及 `.agents/skills`；明確提供的 `--codex-home PATH`、`--skills-home PATH` 會覆寫對應目標。只有在明確需要非互動式安裝時才使用 `--yes`。
+`install` 寫入前會顯示實際解析出的 Preset ID、設定檔路徑、Skill 路徑與備份路徑，並要求確認；它會同時安裝選定的 agent preset 與三個受管 Slim Skills。`--scope global` 使用 `CODEX_HOME`（或 `~/.codex`）及 `$HOME/.agents/skills`，`--scope project` 使用目前專案的 `.codex` 及 `.agents/skills`；明確提供的 `--codex-home PATH`、`--skills-home PATH` 會覆寫對應目標。只有在明確需要非互動式安裝時才使用 `--yes`。
 
 ## 手動安裝
 
@@ -41,7 +41,7 @@ GitHub 原始碼與 `.tgz` 套件都包含 `presets/<id>/agents/`、`config.snip
 1. 全域安裝時，將選定 preset 的全部 TOML 複製到 `CODEX_HOME/agents/`；專案安裝時，複製到 `<project>/.codex/agents/`。兩個受支援 preset 都包含套件目前的七角色 Current Role Contract；精確的歷史設定應由對應的歷史 Package Version 或 Git tag 取得。
 2. 備份對應的 `CODEX_HOME/config.toml` 或 `<project>/.codex/config.toml`。
 3. 將該版本的 `config.snippet.toml` 合併進對應的 `config.toml`。兩種 scope 都使用 `config_file = "agents/<role>.toml"`，並依 [Codex Configuration Reference](https://learn.chatgpt.com/docs/config-file/config-reference) 的規則，由宣告角色的 config 檔所在位置解析。
-4. 將 `slim-council`、`slim-orchestration` 複製到全域 `$HOME/.agents/skills/` 或專案 `<project>/.agents/skills/`。
+4. 將 `slim-council`、`slim-goal-loop`、`slim-orchestration` 複製到全域 `$HOME/.agents/skills/` 或專案 `<project>/.agents/skills/`。
 5. 若要使用 Root profile，將選定的 `.config.toml` 複製到 `CODEX_HOME`，再以 `codex --profile orchestrator` 或 `codex --profile council` 啟動。
 6. 保留原始 UTF-8 編碼、BOM 狀態與換行格式。
 7. 重新開啟 Codex 工作。
@@ -71,7 +71,37 @@ Council 與 Orchestrator 不會互相呼叫。`agents.max_depth = 2` 時，它�
 
 Council 專用 read-only custom-agent TOML、model 繼承政策、批次模型更新腳本與 parent permission 限制請參考 [Council expert agents](docs/council-expert-agents.md)。
 
-原始碼 checkout 會自動提供兩個 workflow：`.agents/skills/slim-orchestration/` 負責五個 specialist 的執行編排，`.agents/skills/slim-council/` 負責按任務組成專家議會。Release package 會包含兩個目錄，`install`、`switch-preset` 會把它們部署到選定的 Skill scope；仍可選擇手動複製。安裝後請開啟新的 Codex 工作。
+原始碼 checkout 提供三個 workflow：`.agents/skills/slim-orchestration/` 負責五個 specialist 的執行編排，`.agents/skills/slim-council/` 負責按任務組成專家議會，`.agents/skills/slim-goal-loop/` 讓 Root 協調目標直到驗收。Release package 會包含三個目錄，`install`、`switch-preset` 會把它們部署到選定的 Skill scope；仍可選擇手動複製。安裝後請開啟新的 Codex 工作。
+
+### 使用 Slim Goal Loop
+
+1. 依照[從原始碼執行](#從原始碼執行)，或使用包含 `slim-goal-loop` 的 Release package，安裝或更新 agents 與三個 Skills。未包含此 Skill 的舊套件需要更新；原始碼 checkout 已提供 `.agents/skills/slim-goal-loop/`。
+2. 在目標專案開啟新的 Codex 工作，使用一般 Root，也就是未套用受限 `council` 或 `orchestrator` Root profile 的主代理，並保留已安裝的子代理角色。
+3. 將下列內容貼到 **Codex 訊息輸入框**，填入目標與可核對的驗收條件後送出。這是 Skill 呼叫方式，不是終端機指令；範圍限制可視需要填寫。
+
+```text
+$slim-goal-loop
+目標：[希望完成的結果]
+驗收條件：
+1. [可以透過檔案、指令輸出或操作流程確認的結果]
+2. [另一項必要結果]
+範圍限制：[可修改的檔案、不處理的項目，或需要核准的動作]
+```
+
+例如，要補齊本專案的使用說明：
+
+```text
+$slim-goal-loop
+目標：在英文與繁體中文 README 加入這個 Skill 的使用說明。
+驗收條件：
+1. 兩份 README 都說明使用前提、指令貼上的位置，以及驗收條件的寫法。
+2. 兩份文件都有可直接複製的範例，且描述的行為與限制一致。
+範圍限制：只更新 README.md 與 README.zh-TW.md，保留既有修改；不要 commit 或發布。
+```
+
+Root 會逐項核對交付結果，仍有驗收缺口就繼續已授權工作。Council 在重大決策或風險需要審議時提供建議，Orchestrator 處理需要編排的執行工作。例行文件更新或小型修正可依既有編排規則由 Root 直接處理，因此每次使用不一定都會呼叫兩個協調代理。
+
+若找不到 Skill，先確認它的目錄已安裝到選定的專案或全域 Skill 位置，再開啟新的 Codex 工作。若因決策或權限暫停，在同一個工作補上要求的資訊即可。工作中斷後，可要求從既有任務紀錄繼續同一目標，重新核對未完成條件。此 Skill 無法在宿主停止後自行喚醒，也不會額外授權 commit、發布或部署。
 
 需要新增 `openai-5.7` 或後續版本時，請參考[新增模型預設維護指南](docs/adding-a-preset.zh-TW.md)。
 
@@ -86,7 +116,7 @@ Council 專用 read-only custom-agent TOML、model 繼承政策、批次模型�
 - `install --preset ID [--scope global|project] [--codex-home DIR] [--skills-home DIR] [--yes]`
 - `switch-preset --preset ID [--scope global|project] [--codex-home DIR] [--skills-home DIR] [--yes]`
 
-`convert --check` 不會寫檔；只要產生的 agent TOML、`config.snippet.toml`、manifest 或 aliases 與已提交 snapshot 不同就會失敗。`validate --preset ID` 會把解析後的角色語意與指定 generator source 精確比較；`validate --codex-home DIR` 也會從該目錄的 `config.toml` 解析已安裝的 `agents/<role>.toml`，並要求提供 `--skills-home DIR`，避免靜默跳過套件內受管 Skills 的精確驗證。可攜式角色檔會把經審核的 MCP denylist 放在 `developer_instructions`，不產生局部 `mcp_servers` table，因為 standalone parsing 與 parent transport merge 會讓 partial 或 dummy transport 失效。`switch-preset` 會先備份 config，再變更 live agents 或 Skills；它也會把既有受管角色檔案與受管 Skills 封存到 `agent-presets/slim-agents-for-codex/`，移除 Observer 等已停用受管角色，只替換兩個受管 Slim Skills，保留無關的自訂角色與 Skills，最後再驗證安裝結果。這些檢查不代表使用者帳號一定具備指定模型權限或硬性的 MCP 隔離。變更 agent 設定後，請開啟新的 Codex 工作。
+`convert --check` 不會寫檔；只要產生的 agent TOML、`config.snippet.toml`、manifest 或 aliases 與已提交 snapshot 不同就會失敗。`validate --preset ID` 會把解析後的角色語意與指定 generator source 精確比較；`validate --codex-home DIR` 也會從該目錄的 `config.toml` 解析已安裝的 `agents/<role>.toml`，並要求提供 `--skills-home DIR`，避免靜默跳過套件內受管 Skills 的精確驗證。可攜式角色檔會把經審核的 MCP denylist 放在 `developer_instructions`，不產生局部 `mcp_servers` table，因為 standalone parsing 與 parent transport merge 會讓 partial 或 dummy transport 失效。`switch-preset` 會先備份 config，再變更 live agents 或 Skills；它也會把既有受管角色檔案與受管 Skills 封存到 `agent-presets/slim-agents-for-codex/`，移除 Observer 等已停用受管角色，只替換三個受管 Slim Skills，保留無關的自訂角色與 Skills，最後再驗證安裝結果。這些檢查不代表使用者帳號一定具備指定模型權限或硬性的 MCP 隔離。變更 agent 設定後，請開啟新的 Codex 工作。
 
 ## 開發
 
@@ -99,7 +129,7 @@ npm pack --dry-run
 npm run pack:smoke
 ```
 
-需要 Node.js 20 或更新版本。建置後執行 `pack:smoke`，會打包目前 checkout、安裝到暫存目錄，並驗證 recommended preset 與兩個受管 Skills。CI 會在 push 與 pull request 執行；release 使用相同指令加上 `-- path/to/package.tgz`，驗證實際要發布的封裝檔。此檢查不代表已驗證 Codex 模型存取或代理執行行為。
+需要 Node.js 20 或更新版本。建置後執行 `pack:smoke`，會打包目前 checkout、安裝到暫存目錄，並驗證 recommended preset 與三個受管 Skills。CI 會在 push 與 pull request 執行；release 使用相同指令加上 `-- path/to/package.tgz`，驗證實際要發布的封裝檔。此檢查不代表已驗證 Codex 模型存取或代理執行行為。
 
 ## 維護狀態
 

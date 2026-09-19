@@ -209,6 +209,16 @@ describe("preset generation", () => {
     expect(prompt).not.toMatch(/provider diversity|council_session|councillor/i);
   });
 
+  it("excepts host checkpoint templates from normal Council reports in both entrypoints", async () => {
+    const council = (parse(generatePreset("openai-5.6").agents.council) as { developer_instructions: string }).developer_instructions;
+    const skill = await readFile(join(packagedSkillsHome, "slim-council", "SKILL.md"), "utf8");
+    for (const instructions of [council, skill]) {
+      expect(instructions).toMatch(/if the host requests a session checkpoint or compaction summary in a specific template, follow that template exactly instead of the Council report format/i);
+      expect(instructions).toMatch(/for normal Council synthesis, return (?:only|exactly).*Council Response.*Perspective Details.*Council Summary/is);
+      expect(instructions).not.toMatch(/^Return (?:only|exactly)/m);
+    }
+  });
+
   it("gives council portable preferred methods without hard-coded skill paths", () => {
     const prompt = generatePreset("openai-5.6").roles.council.instructions;
     for (const skill of ["grilling", "grill-with-docs", "deep-research", "brainstorming", "doc-coauthoring"]) expect(prompt).toContain(`$${skill}`);
@@ -331,13 +341,13 @@ describe("preset generation", () => {
     }
   });
 
-  it("renders reviewed 2.2.18 provenance without changing model mappings", () => {
+  it("renders reviewed 2.2.21 provenance without changing model mappings", () => {
     const gpt55 = generatePreset("openai-5.5");
     const gpt56 = generatePreset("openai-5.6");
     const expectedProvenance = {
       source: "alvinunreal/oh-my-opencode-slim",
-      upstreamVersion: "2.2.18",
-      upstreamCommit: "1da3f0d9cf5eef38a2a1fb98ba7af70fd9858a7a",
+      upstreamVersion: "2.2.21",
+      upstreamCommit: "f34d7ae22af0985bec257d72d0b6213f2aed3e48",
     };
 
     expect(JSON.parse(gpt55.manifest)).toMatchObject(expectedProvenance);

@@ -163,6 +163,7 @@ describe("safe installation", () => {
     expect(await readFile(unrelatedAgent, "utf8")).toBe('name = "backend-advisor"\n');
     expect(await readFile(councilSkill, "utf8")).toBe("old council\n");
     expect(await readFile(orchestrationSkill, "utf8")).toBe("old orchestration\n");
+    await expect(access(join(skillsHome, "slim-goal-loop"))).rejects.toThrow();
     expect(await readFile(unrelatedSkill, "utf8")).toBe("unrelated\n");
     await expect(access(join(home, "agents", "orchestrator.toml"))).rejects.toThrow();
     await expect(access(join(skillsHome, "slim-council", "SKILL.md"))).resolves.toBeUndefined();
@@ -343,7 +344,7 @@ describe("safe installation", () => {
     expect(output).toContain("backup: none (new config)");
     expect(output).toContain(`skills: ${skillsHome}`);
     expect(output).toContain(`valid installation: ${home} (7 roles)`);
-    expect(output).toContain(`valid skills: ${skillsHome} (2 skills)`);
+    expect(output).toContain(`valid skills: ${skillsHome} (3 skills)`);
     expect(output).toContain(`installed openai-5.6 at ${join(home, "agents")}`);
     expect(await readFile(join(skillsHome, "slim-council", "SKILL.md"), "utf8")).toBe(
       await readFile(join(process.cwd(), ".agents", "skills", "slim-council", "SKILL.md"), "utf8"),
@@ -351,6 +352,11 @@ describe("safe installation", () => {
     expect(await readFile(join(skillsHome, "slim-orchestration", "agents", "openai.yaml"), "utf8")).toBe(
       await readFile(join(process.cwd(), ".agents", "skills", "slim-orchestration", "agents", "openai.yaml"), "utf8"),
     );
+    for (const file of ["SKILL.md", join("agents", "openai.yaml")]) {
+      expect(await readFile(join(skillsHome, "slim-goal-loop", file), "utf8")).toBe(
+        await readFile(join(process.cwd(), ".agents", "skills", "slim-goal-loop", file), "utf8"),
+      );
+    }
   });
 
   it("installs and post-validates a BOM config without changing its line endings", async () => {
@@ -420,7 +426,7 @@ describe("safe installation", () => {
 
     expect(code).toBe(0);
     expect(output).toContain(`valid installation: ${home} (7 roles)`);
-    expect(output).toContain(`valid skills: ${skillsHome} (2 skills)`);
+    expect(output).toContain(`valid skills: ${skillsHome} (3 skills)`);
     expect(await readFile(join(home, "config.toml"), "utf8")).not.toContain("[agents.observer]");
   });
 
@@ -519,7 +525,7 @@ describe("safe installation", () => {
     await expect(access(join(home, "agents", "observer.toml"))).rejects.toThrow();
   });
 
-  it("archives replaced managed Skills and preserves unrelated Skills during a switch", async () => {
+  it("upgrades two managed Skills to three and preserves archived and unrelated content", async () => {
     const home = await mkdtemp(join(tmpdir(), "slim-switch-skills-"));
     const skillsHome = join(home, "skills");
     await writeFile(join(home, "config.toml"), "[agents]\nmax_threads = 6\nmax_depth = 1\n", "utf8");
@@ -527,6 +533,7 @@ describe("safe installation", () => {
       log: () => undefined,
       confirm: async () => false,
     });
+    await rm(join(skillsHome, "slim-goal-loop"), { recursive: true });
     await writeFile(join(skillsHome, "slim-council", "local-note.txt"), "preserve in archive\n", "utf8");
     await mkdir(join(skillsHome, "unrelated-skill"));
     await writeFile(join(skillsHome, "unrelated-skill", "SKILL.md"), "unrelated\n", "utf8");
@@ -534,6 +541,13 @@ describe("safe installation", () => {
     const preview = await previewInstall({ codexHome: home, skillsHome, preset: "openai-5.6", mode: "switch" });
     expect(preview.existingManagedSkills).toEqual(["slim-council", "slim-orchestration"]);
     await installPreset(preview);
+    await expect(runCli(["validate", "--preset", "openai-5.6", "--codex-home", home, "--skills-home", skillsHome], {
+      log: () => undefined,
+      confirm: async () => false,
+    })).resolves.toBe(0);
+    expect(await readFile(join(skillsHome, "slim-goal-loop", "SKILL.md"), "utf8")).toBe(
+      await readFile(join(process.cwd(), ".agents", "skills", "slim-goal-loop", "SKILL.md"), "utf8"),
+    );
 
     expect(await readFile(join(preview.archivePath, "skills", "slim-council", "local-note.txt"), "utf8")).toBe("preserve in archive\n");
     await expect(access(join(skillsHome, "slim-council", "local-note.txt"))).rejects.toThrow();

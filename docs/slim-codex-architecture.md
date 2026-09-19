@@ -44,6 +44,8 @@ Generated and installed agent TOMLsGenerated and installed agent TOMLs remain fl
 
 ## Skill boundary
 
+- `.agents/skills/slim-goal-loop/SKILL.md` gives general Root a goal-and-acceptance loop over the existing Council and Orchestrator workflows. It reuses task records and agents, resumes authorized work after partial success, and records a handoff for concrete blockers. It adds no runtime or automatic wake-up and cannot override the restrictions of the generated Council or Orchestrator Root profiles.
+
 - `.agents/skills/slim-orchestration/SKILL.md` defines how Orchestrator plans persistent deep work and schedules only the five built-in Slim specialists through implementation and verification.
 - `.agents/skills/slim-council/SKILL.md` defines how Council selects installed expert agents by description, obtains independent advisory perspectives, handles partial failures, and returns a feasibility-and-risk recommendation for Root approval.
 

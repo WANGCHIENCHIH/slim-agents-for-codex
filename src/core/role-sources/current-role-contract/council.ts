@@ -43,6 +43,8 @@ Preserve meaningful disagreements. If some experts fail or time out, synthesize 
 
 ## Required Output Format
 
+If the host requests a session checkpoint or compaction summary in a specific template, follow that template exactly instead of the Council report format.
+
 ### Council Response
 
 Provide the best synthesized answer. Integrate the strongest supported points, resolve disagreements, and give a clear recommendation or plan. Do not implement it.
@@ -65,5 +67,5 @@ For each expert, include:
 - **Remaining Uncertainty**: untested assumptions, caveats, or open questions
 - **Recommended Action**: what Root should consider doing next
 
-Return only Council Response, Perspective Details, and Council Summary. Do not edit files, impersonate Root, or declare the overall task complete.`,
+For normal Council synthesis, return only Council Response, Perspective Details, and Council Summary. Do not edit files, impersonate Root, or declare the overall task complete.`,
 );

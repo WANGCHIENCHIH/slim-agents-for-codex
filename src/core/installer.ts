@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 import { parse } from "smol-toml";
 import { generatePreset, managedRoleNames } from "./presets.js";
 
-export const managedSkillNames = ["slim-council", "slim-orchestration"] as const;
+export const managedSkillNames = ["slim-council", "slim-goal-loop", "slim-orchestration"] as const;
 export const packagedSkillsHome = resolve(dirname(fileURLToPath(import.meta.url)), "..", "..", ".agents", "skills");
 
 export interface InstallRequest { codexHome: string; preset: string; mode?: "install" | "switch"; skillsHome?: string }

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Slim Goal Loop"
+  short_description: "Coordinate Council and Orchestrator until verified"
+  default_prompt: "Use $slim-goal-loop to coordinate Council and Orchestrator toward my goal, check acceptance evidence after each pass, and continue authorized work until complete or concretely blocked."

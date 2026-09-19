@@ -31,11 +31,11 @@ try {
   const targets = ["--preset", recommended, "--codex-home", join(smokeRoot, "codex"), "--skills-home", join(smokeRoot, "skills")];
   run([cli, "install", ...targets, "--yes"]);
   run([cli, "validate", ...targets]);
-  for (const skill of ["slim-council", "slim-orchestration"]) {
+  for (const skill of ["slim-council", "slim-goal-loop", "slim-orchestration"]) {
     assert.equal(readFileSync(join(smokeRoot, "skills", skill, "SKILL.md"), "utf8"),
       readFileSync(join(installed, ".agents", "skills", skill, "SKILL.md"), "utf8"));
   }
-  console.log(`Packed installation verified: ${recommended}, agents and both Skills`);
+  console.log(`Packed installation verified: ${recommended}, agents and all three Skills`);
 } finally {
   assert.equal(dirname(smokeRoot), resolve(tmpdir()));
   rmSync(smokeRoot, { recursive: true, force: true });

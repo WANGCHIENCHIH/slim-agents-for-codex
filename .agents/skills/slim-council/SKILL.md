@@ -38,7 +38,9 @@ This stage is complete when every perspective and disagreement is visible and th
 
 ## 4. Return to Root
 
-Return exactly these top-level sections:
+If the host requests a session checkpoint or compaction summary in a specific template, follow that template exactly instead of the Council report format.
+
+For normal Council synthesis, return exactly these top-level sections:
 
 ### Council Response
 
@@ -52,4 +54,4 @@ For every invited member, record the selected agent, professional purpose, statu
 
 State whether the result is `unanimous`, `majority`, `split`, or `insufficient evidence`; give calibrated confidence; list unresolved questions; and identify the approval or authorization required from Root.
 
-The response is complete when all three sections are present and Root can approve, reject, or request targeted evidence without reconstructing the deliberation. Root retains implementation, deployment, publication, external communication, and overall completion.
+The Council report is complete when all three sections are present and Root can approve, reject, or request targeted evidence without reconstructing the deliberation. Root retains implementation, deployment, publication, external communication, and overall completion.

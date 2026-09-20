@@ -1,6 +1,6 @@
 ---
 name: slim-orchestration
-description: Run a gated critical path for large, high-risk, multi-phase Codex execution through the five built-in Slim specialists. Use for cross-cutting changes, unsafe-to-partially-ship migrations, or sustained coordination that needs persistent state, dependency ordering, specialist handoffs, and phase verification. Route routine multi-file changes, simple fixes, and quick documentation work directly.
+description: Coordinate Root-approved implementation that needs dependent phases, multiple workstreams, or migration gates. Use the five Slim specialists for bounded ownership, handoffs, and verification.
 ---
 
 # Slim Orchestration
@@ -17,7 +17,7 @@ Route work only to these five built-in Slim specialists:
 - `designer`: define or implement visual and interaction work when design judgment is material.
 - `fixer`: implement scoped changes and run proportionate verification.
 
-Use the narrowest matching specialist. Keep deliberation with Council and execution here; custom roles and meta-coordinators remain outside this subtree.
+Use the narrowest matching specialist. Explorer, Librarian, and Oracle gather evidence or review; Designer and Fixer implement. Return review findings to the relevant writer for correction, then verify the changed result. Keep deliberation with Council and execution here; custom roles and meta-coordinators remain outside this subtree.
 
 ## 1. Frame the critical path
 

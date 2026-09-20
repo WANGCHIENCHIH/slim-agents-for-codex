@@ -1,4 +1,4 @@
 interface:
   display_name: "Slim Orchestration"
-  short_description: "Run a gated critical path through five specialists"
-  default_prompt: "Use $slim-orchestration to run this high-risk task through a critical path of owned phases and verification gates."
+  short_description: "Coordinate approved implementation and verification"
+  default_prompt: "Use $slim-orchestration to coordinate this Root-approved implementation through the five Slim specialists, with distinct review and write ownership and proportionate verification."

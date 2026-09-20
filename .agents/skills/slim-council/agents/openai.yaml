@@ -1,4 +1,4 @@
 interface:
   display_name: "Slim Council"
-  short_description: "Form an expert quorum for decisions and risk"
-  default_prompt: "Use $slim-council to form an expert quorum, run blind assessments, and recommend a decision for Root approval."
+  short_description: "Read-only expert advice for material decisions"
+  default_prompt: "Use $slim-council to assess this decision with a small read-only expert quorum and return feasibility, alternatives, and risk recommendations to Root."

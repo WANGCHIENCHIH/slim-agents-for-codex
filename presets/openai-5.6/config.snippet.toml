@@ -3,7 +3,7 @@ max_threads = 6
 max_depth = 2
 
 [agents.orchestrator]
-description = "Execution-team coordinator that implements a root-approved approach through the five Slim specialists."
+description = "Coordinate Root-approved implementation with dependent phases or multiple workstreams; assign the five Slim specialists, reconcile their changes, and verify the result."
 config_file = "agents/orchestrator.toml"
 
 [agents.oracle]
@@ -27,5 +27,5 @@ description = "Fast implementation specialist. Receives complete context and a b
 config_file = "agents/fixer.toml"
 
 [agents.council]
-description = "Council chair that selects matching installed agents and synthesizes their independent advice into a structured decision report."
+description = "Assess ambiguous or consequential decisions that need multiple expert perspectives; assemble a read-only quorum and return feasibility, risk, and tradeoff recommendations to Root."
 config_file = "agents/council.toml"

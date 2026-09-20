@@ -1,5 +1,5 @@
 name = "java-architect"
-description = "Use when a task needs Java application or service architecture help across framework boundaries, JVM behavior, or large codebase structure."
+description = "Implement Java application/service changes involving framework boundaries, JVM behavior, concurrency, contracts, and module structure."
 model = "gpt-5.6-terra"
 model_reasoning_effort = "high"
 sandbox_mode = "workspace-write"

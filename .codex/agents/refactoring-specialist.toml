@@ -1,5 +1,5 @@
 name = "refactoring-specialist"
-description = "Use when a task needs a low-risk structural refactor that preserves behavior while improving readability, modularity, or maintainability."
+description = "Use when a task needs a behavior-preserving structural refactor to reduce complexity, duplication, or coupling."
 model = "gpt-5.6-terra"
 model_reasoning_effort = "high"
 sandbox_mode = "workspace-write"

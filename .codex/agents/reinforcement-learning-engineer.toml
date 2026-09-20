@@ -1,5 +1,5 @@
 name = "reinforcement-learning-engineer"
-description = "Use when a task needs RL environment design, policy training, reward engineering, or deployment of decision-making agents."
+description = "Use when a task needs reinforcement-learning environment, reward, training, policy, or deployment work; establish reproducibility, multi-seed evidence, and safety constraints."
 model = "gpt-5.6-terra"
 model_reasoning_effort = "high"
 sandbox_mode = "workspace-write"

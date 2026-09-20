@@ -1,5 +1,5 @@
 name = "rails-expert"
-description = "Use when a task needs Ruby on Rails expertise for models, controllers, jobs, callbacks, or convention-driven application changes."
+description = "Use when a task needs Ruby on Rails model, controller, job, persistence, or API work; preserve conventions, transactions, callbacks, and client contracts."
 model = "gpt-5.6-terra"
 model_reasoning_effort = "high"
 sandbox_mode = "workspace-write"

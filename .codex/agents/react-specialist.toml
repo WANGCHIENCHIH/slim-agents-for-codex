@@ -1,5 +1,5 @@
 name = "react-specialist"
-description = "Use when a task needs a React-focused agent for component behavior, state flow, rendering bugs, or modern React patterns."
+description = "Use when a task needs React component, state, rendering, async, or accessibility implementation or diagnosis."
 model = "gpt-5.6-terra"
 model_reasoning_effort = "high"
 sandbox_mode = "workspace-write"

@@ -1,5 +1,5 @@
 name = "dependency-manager"
-description = "Use when a task needs dependency upgrades, package graph analysis, version-policy cleanup, or third-party library risk assessment."
+description = "Use when dependencies need upgrade planning or implementation, package-graph analysis, lockfile reproducibility, version-policy cleanup, or third-party risk assessment."
 model = "gpt-5.6-terra"
 model_reasoning_effort = "medium"
 sandbox_mode = "workspace-write"

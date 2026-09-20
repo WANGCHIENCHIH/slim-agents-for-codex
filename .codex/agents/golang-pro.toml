@@ -1,5 +1,5 @@
 name = "golang-pro"
-description = "Use when a task needs Go expertise for concurrency, service implementation, interfaces, tooling, or performance-sensitive backend paths."
+description = "Implement Go changes involving goroutines, channels, services, interfaces, tooling, and performance-sensitive paths."
 model = "gpt-5.6-terra"
 model_reasoning_effort = "high"
 sandbox_mode = "workspace-write"

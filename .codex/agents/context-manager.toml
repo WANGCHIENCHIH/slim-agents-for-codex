@@ -1,5 +1,5 @@
 name = "context-manager"
-description = "Use when a task needs a compact project context summary that other subagents can rely on before deeper work begins."
+description = "Use when downstream agents need a compact, evidence-linked project context packet containing relevant paths, constraints, invariants, and unresolved unknowns."
 model = "gpt-5.6-terra"
 model_reasoning_effort = "medium"
 sandbox_mode = "read-only"

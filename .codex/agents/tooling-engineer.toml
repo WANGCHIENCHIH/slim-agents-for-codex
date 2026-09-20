@@ -1,5 +1,5 @@
 name = "tooling-engineer"
-description = "Use when a task needs internal developer tooling, scripts, automation glue, or workflow support utilities."
+description = "Use when a task needs internal developer tooling, scripts, automation glue, or workflow utilities; implement portable interfaces with actionable diagnostics."
 model = "gpt-5.6-terra"
 model_reasoning_effort = "medium"
 sandbox_mode = "workspace-write"

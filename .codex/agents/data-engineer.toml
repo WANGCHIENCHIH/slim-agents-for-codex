@@ -1,5 +1,5 @@
 name = "data-engineer"
-description = "Use when a task needs ETL, ingestion, transformation, warehouse, or data-pipeline implementation and debugging."
+description = "Use for ETL, ingestion, transformation, warehouse, or pipeline implementation and debugging where schema, replay, quality, and downstream contracts matter."
 model = "gpt-5.6-terra"
 model_reasoning_effort = "high"
 sandbox_mode = "workspace-write"

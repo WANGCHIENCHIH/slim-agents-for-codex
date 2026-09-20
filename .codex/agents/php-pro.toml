@@ -1,5 +1,5 @@
 name = "php-pro"
-description = "Use when a task needs PHP expertise for application logic, framework integration, runtime debugging, or server-side code evolution."
+description = "Implement PHP application/framework changes involving request validation, database transactions, autoloading, runtime compatibility, and server-side behavior."
 model = "gpt-5.6-terra"
 model_reasoning_effort = "high"
 sandbox_mode = "workspace-write"

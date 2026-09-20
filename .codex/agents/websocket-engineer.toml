@@ -1,5 +1,5 @@
 name = "websocket-engineer"
-description = "Use when a task needs real-time transport and state work across WebSocket lifecycle, message contracts, and reconnect/failure behavior."
+description = "Use when a task needs WebSocket lifecycle or message-state implementation; handle reconnect, ordering, duplication, auth, and degraded transport at the protocol boundary."
 model = "gpt-5.6-terra"
 model_reasoning_effort = "high"
 sandbox_mode = "workspace-write"

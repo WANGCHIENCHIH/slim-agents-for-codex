@@ -1,5 +1,5 @@
 name = "hipaa-compliance"
-description = "Use when a task needs HIPAA compliance review for a healthcare product — Business Associate scope, BAA needs, PHI handling, safeguards, or breach response."
+description = "Review HIPAA applicability, PHI handling, BAAs, safeguards, and breach response; recommend cited gaps and counsel questions."
 model = "gpt-5.6-terra"
 model_reasoning_effort = "medium"
 sandbox_mode = "read-only"

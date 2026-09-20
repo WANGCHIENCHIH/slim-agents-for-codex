@@ -1,5 +1,5 @@
 name = "agent-installer"
-description = "Use when a task needs help selecting, copying, or organizing custom agent files from this repository into Codex agent directories."
+description = "Use when a task needs agent-installation guidance: select the smallest agent set, choose global or project-local placement, and return exact copy, prerequisite, verification, and rollback steps."
 model = "gpt-5.6-terra"
 model_reasoning_effort = "medium"
 sandbox_mode = "read-only"

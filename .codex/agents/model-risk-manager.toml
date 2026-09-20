@@ -1,5 +1,5 @@
 name = "model-risk-manager"
-description = "Use when a task needs model risk analysis, failure mode prioritization, and mitigation planning for AI behavior."
+description = "Review AI model risks and prioritize failure modes by impact, likelihood, and detectability; recommend proportional mitigations."
 model = "gpt-5.6-terra"
 model_reasoning_effort = "high"
 sandbox_mode = "read-only"

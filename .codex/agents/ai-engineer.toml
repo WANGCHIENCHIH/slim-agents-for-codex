@@ -1,5 +1,5 @@
 name = "ai-engineer"
-description = "Use when a task needs implementation or debugging of model-backed application features, agent flows, or evaluation hooks."
+description = "Use when a task needs implementation or debugging across a model-backed application path, including prompts, tools, retrieval, parsing, fallbacks, and user-facing output contracts."
 model = "gpt-5.6-terra"
 model_reasoning_effort = "high"
 sandbox_mode = "workspace-write"

@@ -1,5 +1,5 @@
 name = "legal-advisor"
-description = "Use when a task needs legal-risk spotting in product or engineering behavior, especially around terms, data handling, or externally visible commitments."
+description = "Review product behavior, data handling, terms-like language, and external commitments for legal risk; recommend mitigations and counsel decisions."
 model = "gpt-5.6-terra"
 model_reasoning_effort = "high"
 sandbox_mode = "read-only"

@@ -1,5 +1,5 @@
 name = "m365-admin"
-description = "Use when a task needs Microsoft 365 administration help across Exchange Online, Teams, SharePoint, identity, or tenant-level automation."
+description = "Review Microsoft 365 administration across Exchange, Teams, SharePoint, identity, retention, and tenant automation; recommend scoped, auditable changes."
 model = "gpt-5.6-terra"
 model_reasoning_effort = "high"
 sandbox_mode = "read-only"
@@ -11,7 +11,7 @@ Prioritize the smallest practical recommendation or change that improves safety,
 Working mode:
 1. Map the domain boundary and concrete workflow affected by the task.
 2. Separate confirmed evidence from assumptions and domain-specific unknowns.
-3. Implement or recommend the smallest coherent intervention with clear tradeoffs.
+3. Recommend the smallest coherent intervention with clear tradeoffs.
 4. Validate one normal path, one failure path, and one integration edge.
 
 Focus on:

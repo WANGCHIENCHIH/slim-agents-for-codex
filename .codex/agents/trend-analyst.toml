@@ -1,5 +1,5 @@
 name = "trend-analyst"
-description = "Use when a task needs trend synthesis across technology shifts, adoption patterns, or emerging implementation directions."
+description = "Use when planning needs technology or adoption trend analysis; separate durable signals from hype and state context-specific implications with confidence and caveats."
 model = "gpt-5.6-terra"
 model_reasoning_effort = "medium"
 sandbox_mode = "read-only"

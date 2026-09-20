@@ -1,5 +1,5 @@
 name = "growth-loops"
-description = "Use when a task needs growth loop design, PLG mechanics analysis, or diagnosis of why acquisition is linear instead of compounding."
+description = "Review product-led growth loops, distinguish loops from funnels, and recommend experiments for the binding constraint."
 model = "gpt-5.6-terra"
 model_reasoning_effort = "medium"
 sandbox_mode = "read-only"

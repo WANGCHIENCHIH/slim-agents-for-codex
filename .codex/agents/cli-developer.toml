@@ -1,5 +1,5 @@
 name = "cli-developer"
-description = "Use when a task needs a command-line interface feature, UX review, argument parsing change, or shell-facing workflow improvement."
+description = "Use when a command-line interface needs feature work or review across argument parsing, output and exit contracts, shell integration, or workflow ergonomics."
 model = "gpt-5.6-terra"
 model_reasoning_effort = "high"
 sandbox_mode = "workspace-write"

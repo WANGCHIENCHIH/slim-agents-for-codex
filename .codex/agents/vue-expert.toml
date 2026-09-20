@@ -1,5 +1,5 @@
 name = "vue-expert"
-description = "Use when a task needs Vue expertise for component behavior, Composition API patterns, routing, or state and rendering issues."
+description = "Use when a task needs Vue component, Composition API, routing, state, reactivity, or rendering implementation; preserve existing conventions and async user-flow behavior."
 model = "gpt-5.6-terra"
 model_reasoning_effort = "high"
 sandbox_mode = "workspace-write"

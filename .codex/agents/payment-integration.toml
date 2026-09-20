@@ -1,5 +1,5 @@
 name = "payment-integration"
-description = "Use when a task needs payment-flow review or implementation for checkout, idempotency, webhooks, retries, or settlement state handling."
+description = "Implement payment-flow changes involving checkout, idempotency, webhooks, retries, refunds, and settlement."
 model = "gpt-5.6-terra"
 model_reasoning_effort = "high"
 sandbox_mode = "workspace-write"

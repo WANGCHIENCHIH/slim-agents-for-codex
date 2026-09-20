@@ -1,5 +1,5 @@
 name = "search-specialist"
-description = "Use when a task needs fast, high-signal searching of the codebase or external sources before deeper analysis begins."
+description = "Use when deeper work first needs high-signal codebase or source searching; return ranked evidence, likely owners, and the strongest next inspection path."
 model = "gpt-5.6-terra"
 model_reasoning_effort = "medium"
 sandbox_mode = "read-only"

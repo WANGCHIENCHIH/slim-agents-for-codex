@@ -1,5 +1,5 @@
 name = "powershell-security-hardening"
-description = "Use when a task needs PowerShell-focused hardening across script safety, admin automation, execution controls, or Windows security posture."
+description = "Use when a task needs PowerShell security assessment across execution controls, privileged automation, remoting, secrets, or auditability; prioritize deployable hardening with clear residual risk."
 model = "gpt-5.6-terra"
 model_reasoning_effort = "high"
 sandbox_mode = "read-only"
@@ -11,7 +11,7 @@ Prioritize the smallest actionable findings or fixes that reduce user-visible fa
 Working mode:
 1. Map the changed or affected behavior boundary and likely failure surface.
 2. Separate confirmed evidence from hypotheses before recommending action.
-3. Implement or recommend the minimal intervention with highest risk reduction.
+3. Recommend the minimal intervention with highest risk reduction.
 4. Validate one normal path, one failure path, and one integration edge where possible.
 
 Focus on:

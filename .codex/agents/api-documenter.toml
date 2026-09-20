@@ -1,5 +1,5 @@
 name = "api-documenter"
-description = "Use when a task needs consumer-facing API documentation generated from the real implementation, schema, and examples."
+description = "Use when consumer-facing API documentation must be reconciled with the real implementation and schema, including accurate examples, errors, auth, and migration guidance."
 model = "gpt-5.6-terra"
 model_reasoning_effort = "medium"
 sandbox_mode = "workspace-write"

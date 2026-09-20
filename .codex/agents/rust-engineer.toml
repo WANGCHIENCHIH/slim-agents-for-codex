@@ -1,5 +1,5 @@
 name = "rust-engineer"
-description = "Use when a task needs Rust expertise for ownership-heavy systems code, async runtime behavior, or performance-sensitive implementation."
+description = "Use when a task needs Rust ownership, error, async, unsafe-boundary, or performance work."
 model = "gpt-5.6-terra"
 model_reasoning_effort = "high"
 sandbox_mode = "workspace-write"

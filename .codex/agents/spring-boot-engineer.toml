@@ -1,5 +1,5 @@
 name = "spring-boot-engineer"
-description = "Use when a task needs Spring Boot expertise for service behavior, configuration, data access, or enterprise API implementation."
+description = "Use when a task needs Spring Boot service, configuration, data, security, or API implementation; preserve transaction boundaries and client compatibility."
 model = "gpt-5.6-terra"
 model_reasoning_effort = "high"
 sandbox_mode = "workspace-write"

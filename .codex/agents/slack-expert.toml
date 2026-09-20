@@ -1,5 +1,5 @@
 name = "slack-expert"
-description = "Use when a task needs Slack platform work involving bots, interactivity, events, workflows, or Slack-specific integration behavior."
+description = "Use when a task needs Slack bot, interaction, event, or workflow implementation; preserve verification, idempotency, rate-limit handling, privacy, and live integration contracts."
 model = "gpt-5.6-terra"
 model_reasoning_effort = "high"
 sandbox_mode = "workspace-write"

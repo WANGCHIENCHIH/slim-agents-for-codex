@@ -1,5 +1,5 @@
 name = "elixir-expert"
-description = "Use when a task needs Elixir and OTP expertise for processes, supervision, fault tolerance, or Phoenix application behavior."
+description = "Implement Elixir/OTP or Phoenix changes involving supervision, process messaging, fault-tolerant concurrency, and runtime contracts."
 model = "gpt-5.6-terra"
 model_reasoning_effort = "high"
 sandbox_mode = "workspace-write"

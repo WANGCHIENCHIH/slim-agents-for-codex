@@ -1,5 +1,5 @@
 name = "business-analyst"
-description = "Use when a task needs requirements clarified, scope normalized, or acceptance criteria extracted from messy inputs before engineering work starts."
+description = "Use when messy input needs its business objective, scope, constraints, dependencies, and testable acceptance criteria turned into an implementation-ready brief."
 model = "gpt-5.6-terra"
 model_reasoning_effort = "high"
 sandbox_mode = "read-only"

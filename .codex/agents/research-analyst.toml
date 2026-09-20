@@ -1,5 +1,5 @@
 name = "research-analyst"
-description = "Use when a task needs a structured investigation of a technical topic, implementation approach, or design question."
+description = "Use when a technical topic or design question needs structured evidence review; return confidence-rated findings, a justified recommendation, or explicit unknowns."
 model = "gpt-5.6-terra"
 model_reasoning_effort = "high"
 sandbox_mode = "read-only"

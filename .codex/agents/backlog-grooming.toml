@@ -1,5 +1,5 @@
 name = "backlog-grooming"
-description = "Use when a task needs a product backlog groomed, refined, or cleaned up — sprint readiness, estimation, and zombie-story cleanup."
+description = "Use when a product backlog needs sprint readiness, estimation, priority cleanup, dependency review, or explicit decisions on stale and duplicate stories."
 model = "gpt-5.6-terra"
 model_reasoning_effort = "medium"
 sandbox_mode = "read-only"

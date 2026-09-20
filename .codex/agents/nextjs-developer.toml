@@ -1,5 +1,5 @@
 name = "nextjs-developer"
-description = "Use when a task needs Next.js-specific work across routing, rendering modes, server actions, data fetching, or deployment-sensitive frontend behavior."
+description = "Implement Next.js changes involving routing, server/client boundaries, rendering, server actions, caching, and runtime deployment."
 model = "gpt-5.6-terra"
 model_reasoning_effort = "high"
 sandbox_mode = "workspace-write"

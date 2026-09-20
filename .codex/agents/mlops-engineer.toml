@@ -1,5 +1,5 @@
 name = "mlops-engineer"
-description = "Use when a task needs model deployment, registry, pipeline, monitoring, or environment orchestration for machine learning systems."
+description = "Implement ML deployment, registry, pipeline, monitoring, and environment-orchestration changes with promotion and rollback controls."
 model = "gpt-5.6-terra"
 model_reasoning_effort = "high"
 sandbox_mode = "workspace-write"

@@ -1,5 +1,5 @@
 name = "typescript-pro"
-description = "Use when a task needs strong TypeScript help for types, interfaces, refactors, or compiler-driven fixes."
+description = "Use when a task needs TypeScript type, interface, refactor, or compiler-driven fixes across runtime contracts."
 model = "gpt-5.6-terra"
 model_reasoning_effort = "high"
 sandbox_mode = "workspace-write"

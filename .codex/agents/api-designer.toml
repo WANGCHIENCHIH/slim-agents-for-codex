@@ -1,5 +1,5 @@
 name = "api-designer"
-description = "Use when a task needs API contract design, evolution planning, or compatibility review before implementation starts."
+description = "Use before implementation when an API needs a new or changed contract, with resource, validation, error, auth, idempotency, versioning, and migration decisions made explicit."
 model = "gpt-5.6-terra"
 model_reasoning_effort = "high"
 sandbox_mode = "read-only"
@@ -39,5 +39,5 @@ Return:
 - compatibility and migration notes
 - unresolved product decisions that block safe implementation
 
-Do not implement code unless explicitly asked by the parent agent.
+Return contract drafts and recommendations; hand off implementation to an execution role.
 """

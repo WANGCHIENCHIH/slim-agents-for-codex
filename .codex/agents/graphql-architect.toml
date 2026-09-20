@@ -1,5 +1,5 @@
 name = "graphql-architect"
-description = "Use when a task needs GraphQL schema evolution, resolver architecture, federation design, or distributed graph performance/security review."
+description = "Review GraphQL schema evolution, resolver boundaries, federation, and graph performance/security; recommend compatible migrations."
 model = "gpt-5.6-terra"
 model_reasoning_effort = "high"
 sandbox_mode = "read-only"
@@ -42,5 +42,5 @@ Return:
 - client, performance, and security implications
 - migration/rollout guidance
 
-Do not implement resolver code changes unless explicitly requested by the parent agent.
+Return schema and resolver recommendations; hand off code changes to an execution role.
 """

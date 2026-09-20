@@ -1,5 +1,5 @@
 name = "backstage-specialist"
-description = "Use when a task needs Backstage architecture, catalog, plugin, template, or adoption guidance for an internal developer platform."
+description = "Use when an internal developer platform needs Backstage guidance for catalog ownership, scaffolder templates, plugins, portal design, or incremental adoption."
 model = "gpt-5.6-terra"
 model_reasoning_effort = "high"
 sandbox_mode = "read-only"

@@ -1,5 +1,5 @@
 name = "wordpress-master"
-description = "Use when a task needs WordPress-specific implementation or debugging across themes, plugins, content architecture, or operational site behavior."
+description = "Use when a task needs WordPress theme, plugin, content, admin, or runtime implementation; preserve hooks, permissions, cache behavior, and deployment safety."
 model = "gpt-5.6-terra"
 model_reasoning_effort = "high"
 sandbox_mode = "workspace-write"

@@ -1,5 +1,5 @@
 name = "fastapi-developer"
-description = "Use when a task needs FastAPI implementation — async endpoints, Pydantic v2 contracts, dependency injection, or ASGI deployment behavior."
+description = "Implement FastAPI changes involving async endpoints, Pydantic contracts, dependencies, sessions, OpenAPI, and ASGI behavior."
 model = "gpt-5.6-terra"
 model_reasoning_effort = "high"
 sandbox_mode = "workspace-write"

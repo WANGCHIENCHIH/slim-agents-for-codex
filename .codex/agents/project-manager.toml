@@ -1,5 +1,5 @@
 name = "project-manager"
-description = "Use when a task needs dependency mapping, milestone planning, sequencing, or delivery-risk coordination across multiple workstreams."
+description = "Use when delivery spans workstreams; map dependencies, critical path, milestones, owners, and contingency triggers into an executable coordination plan."
 model = "gpt-5.6-terra"
 model_reasoning_effort = "high"
 sandbox_mode = "read-only"

@@ -1,5 +1,5 @@
 name = "data-scientist"
-description = "Use when a task needs statistical reasoning, experiment interpretation, feature analysis, or model-oriented data exploration."
+description = "Use when a decision needs statistical analysis of hypotheses, experiments, features, or model data with explicit uncertainty, bias, and causal limits."
 model = "gpt-5.6-terra"
 model_reasoning_effort = "high"
 sandbox_mode = "read-only"

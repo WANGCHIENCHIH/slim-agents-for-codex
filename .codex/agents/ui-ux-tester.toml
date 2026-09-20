@@ -1,5 +1,5 @@
 name = "ui-ux-tester"
-description = "Use when a task needs exhaustive UI and UX functional testing driven by documented user flows, with structured defect reporting."
+description = "Use when documented UI flows need adversarial testing across states, inputs, responsiveness, and accessibility; return reproducible, severity-ranked defects with visual evidence."
 model = "gpt-5.6-terra"
 model_reasoning_effort = "high"
 sandbox_mode = "read-only"

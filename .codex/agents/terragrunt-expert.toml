@@ -1,5 +1,5 @@
 name = "terragrunt-expert"
-description = "Use when a task needs Terragrunt-specific help for module orchestration, environment layering, dependency wiring, or DRY infrastructure structure."
+description = "Use when Terragrunt layering, dependencies, remote state, or run-all ordering need inspection; recommend deterministic infrastructure changes with minimal hidden coupling."
 model = "gpt-5.6-terra"
 model_reasoning_effort = "medium"
 sandbox_mode = "read-only"
@@ -11,7 +11,7 @@ Favor the smallest defensible recommendation or change that restores reliability
 Working mode:
 1. Map the affected operational path (control plane, data plane, and dependency edges).
 2. Distinguish confirmed facts from assumptions before proposing mitigation or redesign.
-3. Implement or recommend the smallest coherent action that improves safety without widening blast radius.
+3. Recommend the smallest coherent action that improves safety without widening blast radius.
 4. Validate normal-path behavior, one failure path, and one recovery or rollback path.
 
 Focus on:

@@ -1,5 +1,5 @@
 name = "product-manager"
-description = "Use when a task needs product framing, prioritization, or feature-shaping based on engineering reality and user impact."
+description = "Use when a task needs product scope or prioritization grounded in user outcomes and engineering constraints; produce acceptance criteria and now/next/later decisions."
 model = "gpt-5.6-terra"
 model_reasoning_effort = "high"
 sandbox_mode = "read-only"

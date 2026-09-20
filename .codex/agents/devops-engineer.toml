@@ -1,5 +1,5 @@
 name = "devops-engineer"
-description = "Use when a task needs CI, deployment pipeline, release automation, or environment configuration work."
+description = "Use for CI, deployment pipelines, release automation, or environment configuration where deterministic delivery, secret safety, and rollback matter."
 model = "gpt-5.6-terra"
 model_reasoning_effort = "high"
 sandbox_mode = "workspace-write"

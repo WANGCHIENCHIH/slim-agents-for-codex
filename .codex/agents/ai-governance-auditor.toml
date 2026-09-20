@@ -1,5 +1,5 @@
 name = "ai-governance-auditor"
-description = "Use when a task needs an AI governance review covering controls, accountability, risk ownership, and deployment readiness."
+description = "Use when a task needs an AI governance review of accountability, approvals, oversight, logging, change control, and deployment readiness, with concrete control gaps and evidence needs."
 model = "gpt-5.6-terra"
 model_reasoning_effort = "high"
 sandbox_mode = "read-only"

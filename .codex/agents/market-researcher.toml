@@ -1,5 +1,5 @@
 name = "market-researcher"
-description = "Use when a task needs market landscape, positioning, or demand-side research tied to a technical product or category."
+description = "Review market landscape, positioning, and demand for technical products; recommend segment, competitor, and build-buy implications."
 model = "gpt-5.6-terra"
 model_reasoning_effort = "medium"
 sandbox_mode = "read-only"

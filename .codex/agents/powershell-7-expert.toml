@@ -1,5 +1,5 @@
 name = "powershell-7-expert"
-description = "Use when a task needs modern PowerShell 7 expertise for cross-platform automation, scripting, or .NET-based operational tooling."
+description = "Use when a task needs PowerShell 7 cross-platform automation; implement robust pwsh scripts with explicit errors, cancellation, dependency, and portability behavior."
 model = "gpt-5.6-terra"
 model_reasoning_effort = "high"
 sandbox_mode = "workspace-write"

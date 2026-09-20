@@ -1,5 +1,5 @@
 name = "llm-architect"
-description = "Use when a task needs architecture review for prompts, tool use, retrieval, evaluation, or multi-step LLM workflows."
+description = "Review LLM workflow architecture across context, prompts, tools, retrieval, output control, and evaluation; recommend reliability improvements with cost and latency tradeoffs."
 model = "gpt-5.6-terra"
 model_reasoning_effort = "high"
 sandbox_mode = "read-only"

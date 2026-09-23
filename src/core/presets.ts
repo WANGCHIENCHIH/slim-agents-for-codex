@@ -34,27 +34,6 @@ const retiredPresets: Record<string, string> = {
   "openai-5.6.4": "openai-5.6",
 };
 
-const rootProfileInstructions = {
-  orchestrator: `You are the primary Root Orchestrator.
-
-Always load and follow \`$slim-orchestration\` as the governing workflow.
-Interpret references to Root in that skill as the user/owner approval boundary.
-Because you are the primary agent, you own the final user response and overall
-completion decision, but material product decisions remain with the user.
-
-Do not spawn another orchestrator or council.
-For routine work, follow the skill's instruction to execute directly.`,
-  council: `You are the primary Root Council chair.
-
-Always load and follow \`$slim-council\` as the governing workflow.
-Interpret references to Root in that skill as the user/owner.
-Return the Council report directly to the user.
-
-Remain advisory-only: do not edit or implement.
-Do not spawn orchestrator, council, or another meta-coordinator.
-The user retains every approval and execution decision.`,
-} as const;
-
 export function resolvePreset(idOrAlias: string): Preset {
   const id = (aliases as Record<string, string>)[idOrAlias] ?? idOrAlias;
   const replacement = retiredPresets[id];
@@ -85,11 +64,6 @@ export function generatePreset(idOrAlias: string) {
     const mcpPolicy = deniedMcps.length > 0 ? `\n\nMCP denylist: ${deniedMcps.join(", ")}. Do not use these MCP servers in this role.` : "";
     agents[name] = `name = ${quote(current.name)}\ndescription = ${quote(current.description)}\nmodel = ${quote(model.model)}\nmodel_reasoning_effort = ${quote(model.effort)}\nsandbox_mode = ${quote(current.sandbox)}\ndeveloper_instructions = ${multiline(current.instructions + mcpPolicy)}\n`;
   }
-  const rootProfiles = Object.fromEntries(Object.entries(rootProfileInstructions).map(([name, instructions]) => {
-    const model = preset.models[name];
-    const effort = name === "council" ? "medium" : model.effort;
-    return [name, `model = ${quote(model.model)}\nmodel_reasoning_effort = ${quote(effort)}\nsandbox_mode = ${quote(currentRoleContract.roles[name].sandbox)}\ndeveloper_instructions = ${multiline(instructions)}\n`];
-  })) as Record<keyof typeof rootProfileInstructions, string>;
   const snippet = `[agents]\nmax_threads = 6\nmax_depth = 2\n\n` + currentRoleContract.roleOrder.map((name) => `[agents.${name}]\ndescription = ${quote(currentRoleContract.roles[name].description)}\nconfig_file = ${quote(`agents/${name}.toml`)}\n`).join("\n");
   const manifest = renderJson({
     packageVersion: packageJson.version,
@@ -103,5 +77,5 @@ export function generatePreset(idOrAlias: string) {
     status: preset.status,
     snapshotFormatVersion: preset.snapshotFormatVersion,
   });
-  return { preset, roles: currentRoleContract.roles, roleOrder: [...currentRoleContract.roleOrder], agents, rootProfiles, snippet, manifest };
+  return { preset, roles: currentRoleContract.roles, roleOrder: [...currentRoleContract.roleOrder], agents, snippet, manifest };
 }

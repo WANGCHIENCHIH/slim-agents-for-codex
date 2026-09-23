@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { mkdtempSync, readFileSync, rmSync, symlinkSync } from "node:fs";
+import { mkdtempSync, readdirSync, readFileSync, rmSync, symlinkSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -24,6 +24,9 @@ try {
   const linked = join(smokeRoot, "linked-package");
   symlinkSync(installed, linked, "junction");
   const cli = join(linked, "dist", "cli.js");
+  for (const preset of readdirSync(join(installed, "presets"), { withFileTypes: true }).filter((entry) => entry.isDirectory())) {
+    assert.deepEqual(readdirSync(join(installed, "presets", preset.name)).sort(), ["agents", "config.snippet.toml", "manifest.json"]);
+  }
   const { recommended } = JSON.parse(readFileSync(join(installed, "presets", "aliases.json"), "utf8"));
   assert.equal(typeof recommended, "string");
   const listed = run([cli, "list-presets"], { stdio: ["ignore", "pipe", "inherit"] });

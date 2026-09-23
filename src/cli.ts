@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { realpathSync } from "node:fs";
-import { mkdir, readdir, readFile, unlink, writeFile } from "node:fs/promises";
+import { mkdir, readdir, readFile, rm, unlink, writeFile } from "node:fs/promises";
 import { homedir } from "node:os";
 import { basename, dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -9,6 +9,8 @@ import { InstallRollbackError, assertRoleDocument, installPreset, managedSkillNa
 import { aliases, generatePreset, managedRoleNames, presets, renderAliases } from "./core/presets.js";
 
 export interface CliIo { log(line: string): void; confirm(question: string): Promise<boolean> }
+
+const retiredRootProfiles = ["council.config.toml", "orchestrator.config.toml"];
 
 const valueAfter = (args: string[], option: string, fallback?: string) => {
   const index = args.indexOf(option);
@@ -20,6 +22,7 @@ async function writeGenerated(id: string, output: string) {
   const root = join(output, generated.preset.id);
   const agentsDirectory = join(root, "agents");
   await mkdir(agentsDirectory, { recursive: true });
+  for (const file of retiredRootProfiles) await rm(join(root, file), { force: true });
   const active = new Set(generated.roleOrder);
   for (const file of await readdir(agentsDirectory)) {
     if (!file.endsWith(".toml")) continue;
@@ -27,7 +30,6 @@ async function writeGenerated(id: string, output: string) {
     if (managedRoleNames.includes(name) && !active.has(name)) await unlink(join(agentsDirectory, file));
   }
   for (const [name, content] of Object.entries(generated.agents)) await writeFile(join(agentsDirectory, `${name}.toml`), content, "utf8");
-  for (const [name, content] of Object.entries(generated.rootProfiles)) await writeFile(join(root, `${name}.config.toml`), content, "utf8");
   await writeFile(join(root, "config.snippet.toml"), generated.snippet, "utf8");
   await writeFile(join(root, "manifest.json"), generated.manifest, "utf8");
   return root;
@@ -40,7 +42,6 @@ function generatedArtifacts(id: string, output: string) {
     root,
     artifacts: [
       ...generated.roleOrder.map((name) => ({ path: join(root, "agents", `${name}.toml`), content: generated.agents[name] })),
-      ...Object.entries(generated.rootProfiles).map(([name, content]) => ({ path: join(root, `${name}.config.toml`), content })),
       { path: join(root, "config.snippet.toml"), content: generated.snippet },
       { path: join(root, "manifest.json"), content: generated.manifest },
     ],
@@ -63,6 +64,10 @@ async function assertGeneratedArtifactsMatch(id: string, output: string) {
     .map((path) => basename(path))
     .sort();
   if (JSON.stringify(actualAgentFiles) !== JSON.stringify(expectedAgentFiles)) throw new Error(`Agent files do not match preset snapshot: ${id}`);
+  const rootFiles = await readdir(generated.root);
+  for (const file of retiredRootProfiles) {
+    if (rootFiles.includes(file)) throw new Error(`Retired Root profile: ${join(generated.root, file)}. Run convert without --check to remove it.`);
+  }
   for (const artifact of generated.artifacts) {
     let committed: string;
     try {

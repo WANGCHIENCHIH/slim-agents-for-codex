@@ -12,19 +12,19 @@ This project is distributed through GitHub rather than the npm registry.
 
 ### Install a GitHub Release package
 
-Download `slim-agents-for-codex-0.4.4.tgz` from the matching GitHub Release, then run:
+Download [slim-agents-for-codex-0.4.5.tgz](https://github.com/WANGCHIENCHIH/slim-agents-for-codex/releases/download/v0.4.5/slim-agents-for-codex-0.4.5.tgz) from the matching GitHub Release, then run:
 
 ```bash
-npm install --global ./slim-agents-for-codex-0.4.4.tgz
+npm install --global ./slim-agents-for-codex-0.4.5.tgz
 slim-agents-codex list-presets
-slim-agents-codex install --preset openai-5.6 --scope global
+slim-agents-codex install --preset openai-6 --scope global
 ```
 
-If a previous release is already installed, use `slim-agents-codex switch-preset --preset openai-5.6 --scope global` instead. The switch archives the managed agents and Skills it replaces before post-validating the new installation.
+If a previous release is already installed, use `slim-agents-codex switch-preset --preset openai-6 --scope global` instead. The switch archives the managed agents and Skills it replaces before post-validating the new installation.
 
 ### Run from a source checkout
 
-GPT-6 support is available in this checkout; the `0.4.4` release above does not include `openai-6`.
+The `0.4.5` release and this checkout support GPT-6 through `openai-6`.
 
 ```bash
 npm ci
@@ -40,7 +40,7 @@ For an existing installation, use `node dist/cli.js switch-preset --preset opena
 
 ## Manual installation
 
-Every npm package and source checkout includes ready-to-copy files under `presets/<id>/agents/`, `config.snippet.toml`, the two generated Root profiles (`orchestrator.config.toml` and `council.config.toml`), and `.agents/skills/`. Copy every agent TOML from the selected preset into `CODEX_HOME/agents/` for a global installation or `<project>/.codex/agents/` for a project installation, then merge the snippet into the matching `config.toml`. To use a generated Root profile, copy it to `CODEX_HOME` and start Codex with `--profile orchestrator` or `--profile council`. Copy `slim-council`, `slim-goal-loop`, and `slim-orchestration` into `$HOME/.agents/skills/` globally or `<project>/.agents/skills/` for one repository. All supported presets contain the package's Current Role Contract of seven roles. Exact historical configurations belong to their historical package version or Git tag. In both scopes, `config_file = "agents/<role>.toml"` resolves relative to the config file that declares the role, as specified by the [Codex Configuration Reference](https://learn.chatgpt.com/docs/config-file/config-reference). Preserve UTF-8 encoding, BOM state, and line endings, and make backups first.
+Every release package and source checkout includes ready-to-copy files under `presets/<id>/agents/`, `config.snippet.toml`, and `.agents/skills/`. Copy every agent TOML from the selected preset into `CODEX_HOME/agents/` for a global installation or `<project>/.codex/agents/` for a project installation, then merge the snippet into the matching `config.toml`. Copy `slim-council`, `slim-goal-loop`, and `slim-orchestration` into `$HOME/.agents/skills/` globally or `<project>/.agents/skills/` for one repository. All supported presets contain the package's Current Role Contract of seven roles. Exact historical configurations belong to their historical package version or Git tag. In both scopes, `config_file = "agents/<role>.toml"` resolves relative to the config file that declares the role, as specified by the [Codex Configuration Reference](https://learn.chatgpt.com/docs/config-file/config-reference). Preserve UTF-8 encoding, BOM state, and line endings, and make backups first.
 
 The CLI follows the same layout. Use `--scope global` for the global location or `--scope project` from a project root; use `--codex-home DIR` only when an explicit location is needed.
 
@@ -54,7 +54,7 @@ The exact output identity is `(Package Version, Preset ID)`. Same-generation pro
 
 ## Coordination model
 
-The root Codex agent owns the user request and final verification. Council and Orchestrator are peer child coordinators:
+Use a general Root Codex agent with `$slim-goal-loop` for goal work. Root owns the user request and final verification; the Skill coordinates Council and Orchestrator as peer child agents when their workflows are useful:
 
 - `council` identifies the expertise needed, selects matching installed custom agents by description, and asks those direct child experts for independent feasibility, risk, and solution perspectives.
 - `orchestrator` receives an agreed approach and implements it through the five fixed Slim specialists: `oracle`, `librarian`, `explorer`, `designer`, and `fixer`.
@@ -72,7 +72,7 @@ The source checkout exposes three workflows: `.agents/skills/slim-orchestration/
 ### Use Slim Goal Loop
 
 1. Use the [source checkout](#run-from-a-source-checkout), or a release package that contains `slim-goal-loop`, to install or update the agents and all three Skills. Older packages without this Skill must be updated; the source checkout includes it at `.agents/skills/slim-goal-loop/`.
-2. Open a new Codex task in the target project with a general Root agent: the normal main agent, without the restricted `council` or `orchestrator` Root profile. Keep the installed child roles available.
+2. Open a new Codex task in the target project with a general Root agent. Keep the installed child roles available.
 3. Paste the following into the **Codex message input**, fill in the goal and observable acceptance criteria, and send it. This is a Skill invocation, not a terminal command. Scope constraints are optional.
 
 ```text

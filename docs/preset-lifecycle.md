@@ -14,7 +14,7 @@ A Preset ID identifies one supported OpenAI model generation. The current source
 | fixer | gpt-6-luna | high |
 | council | gpt-6-astra | high |
 
-The generated Root profiles use `gpt-6-sol/high` for Orchestrator and `gpt-6-astra/medium` for Council. Role instructions and permissions remain shared across model generations. Adding a preset does not reinstall or modify existing agents; `install` and `switch-preset` apply a selected preset to an installation.
+The table lists the GPT-6 mappings for the seven retained child agents. A general Root uses `$slim-goal-loop` to coordinate Council advice and Orchestrator execution. Role instructions and permissions remain shared across model generations. Adding a preset does not reinstall or modify existing agents; `install` and `switch-preset` apply a selected preset to an installation.
 
 ## Version history
 

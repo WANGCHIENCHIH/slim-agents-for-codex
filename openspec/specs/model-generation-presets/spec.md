@@ -26,7 +26,7 @@ The exact generated configuration SHALL be identified by the combination of Pack
 
 #### Scenario: Exact current configuration is reproduced
 - **WHEN** the same Preset ID is generated twice from the same Package Version
-- **THEN** the generated agent files, primary profiles, configuration snippet, manifest, and aliases are byte-identical
+- **THEN** the generated agent files, configuration snippet, manifest, and aliases are byte-identical
 
 #### Scenario: Historical configuration is requested
 - **WHEN** a user needs the exact output formerly published under a suffix Preset ID
@@ -157,7 +157,7 @@ The change SHALL be accepted through public CLI behavior rather than tests coupl
 
 ### Requirement: GPT-6 preset preserves reviewed role mappings
 
-`openai-6` SHALL 使用以下模型與 effort，保留 GPT-5.6 的角色行為、權限與 Root profile effort。既有 `openai-5.5`、`openai-5.6` 映射 MUST 保持不變。
+`openai-6` SHALL 使用以下模型與 effort，保留 GPT-5.6 的角色行為與權限。既有 `openai-5.5`、`openai-5.6` 映射 MUST 保持不變。
 
 | Role | Model | Effort |
 | --- | --- | --- |
@@ -174,9 +174,25 @@ The change SHALL be accepted through public CLI behavior rather than tests coupl
 - **THEN** 七個角色採用表列的精確 model 與 effort，不自動替換模型
 
 #### Scenario: GPT-6 Root profiles are generated
-- **WHEN** 使用者產生 `openai-6` 的 Root profiles
-- **THEN** orchestrator 使用 `gpt-6-sol/high`，council 使用 `gpt-6-astra/medium`，並保留原本權限與指示
+- **WHEN** 使用者依舊版流程產生 `openai-6`，期待取得 Root profiles
+- **THEN** 新版不再提供兩個 Root profiles；協調工作使用一般 Root 與 `slim-goal-loop`，兩個 child agents 維持表列映射
 
 #### Scenario: Existing model generation is explicitly selected
 - **WHEN** 使用者明確選擇 `openai-5.5` 或 `openai-5.6`
 - **THEN** 仍能產生、安裝與驗證該世代的既有映射
+
+### Requirement: Generated presets omit retired Root chairs
+
+所有支援的 presets SHALL 停止產生或封裝 `council.config.toml` 與 `orchestrator.config.toml`，同時保留七個 child agents 及三個受管理 Skills。重新產生所選 preset 時 SHALL 清除該輸出根目錄中的兩個舊檔案並保留無關檔案；唯讀檢查 MUST 拒絕殘留的 Root profiles 而不修改檔案。
+
+#### Scenario: Fresh generation and packaging
+- **WHEN** 使用者產生任一支援 preset 或安裝發布的封裝
+- **THEN** preset 不含兩個 Root profile 檔案，Council、Orchestrator 代理與三個 Skills 仍可使用
+
+#### Scenario: Existing generated directory is reused
+- **WHEN** 使用者重新產生含有舊 Root profile 檔案的所選 preset 目錄
+- **THEN** 移除該目錄的兩個舊 profile，保留自訂 TOML 與 child agents
+
+#### Scenario: Read-only check finds a retired profile
+- **WHEN** 使用者對含有任一舊 Root profile 的 preset 執行 `convert --check`
+- **THEN** CLI 回報錯誤，目錄內容保持不變

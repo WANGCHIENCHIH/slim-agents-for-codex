@@ -1,14 +1,14 @@
 # Slim Codex architecture
 
-The current source exposes three model-generation presets backed by one seven-role Current Role Contract.
+The current source exposes three model-generation presets backed by one seven-role Current Role Contract. Run goal work from a general Root Codex agent with `$slim-goal-loop`; it coordinates the retained Council and Orchestrator child agents.
 
 ## Runtime graph
 
 ```text
-Root Codex agent
-├── Council
+General Root Codex agent (uses $slim-goal-loop)
+├── Council (advice when needed)
 │   └── task-specific installed expert agents
-└── Orchestrator
+└── Orchestrator (execution when needed)
     ├── Oracle
     ├── Librarian
     ├── Explorer
@@ -16,7 +16,7 @@ Root Codex agent
     └── Fixer
 ```
 
-Root acts as the board or client. It owns the user request, chooses when deliberation is needed, approves a Council recommendation before handing it to Orchestrator, verifies the final result, and answers the user. Root may pre-authorize bounded low-risk reversible work, but high-risk, irreversible, or external actions require explicit approval after Council reports.
+Root owns the user request, decides when to seek Council advice or use Orchestrator, approves any handoff, verifies the final result, and answers the user. Root may pre-authorize bounded low-risk reversible work, but high-risk, irreversible, or external actions require explicit approval after Council reports. Council and Orchestrator remain child agents; the package no longer generates restricted Root profiles for either coordinator.
 
 Council and Orchestrator are peer child coordinators. Council is the advisory and decision layer: it identifies the expertise required for an assigned question and selects matching installed agents by their descriptions. Its direct child experts act as council members and return independent feasibility, risk, and solution perspectives. Council preserves disagreements and synthesizes advice; it does not edit files or call Orchestrator.
 
@@ -44,7 +44,7 @@ Generated and installed agent TOMLsGenerated and installed agent TOMLs remain fl
 
 ## Skill boundary
 
-- `.agents/skills/slim-goal-loop/SKILL.md` gives general Root a goal-and-acceptance loop over the existing Council and Orchestrator workflows. It reuses task records and agents, resumes authorized work after partial success, and records a handoff for concrete blockers. It adds no runtime or automatic wake-up and cannot override the restrictions of the generated Council or Orchestrator Root profiles.
+- `.agents/skills/slim-goal-loop/SKILL.md` gives general Root a goal-and-acceptance loop over the retained Council and Orchestrator child agents. It reuses task records and agents, resumes authorized work after partial success, and records a handoff for concrete blockers. It adds no runtime or automatic wake-up.
 
 - `.agents/skills/slim-orchestration/SKILL.md` defines how Orchestrator plans persistent deep work and schedules only the five built-in Slim specialists through implementation and verification.
 - `.agents/skills/slim-council/SKILL.md` defines how Council selects installed expert agents by description, obtains independent advisory perspectives, handles partial failures, and returns a feasibility-and-risk recommendation for Root approval.

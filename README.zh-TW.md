@@ -12,19 +12,19 @@
 
 ### 安裝 GitHub Release 套件
 
-從對應的 GitHub Release 下載 `slim-agents-for-codex-0.4.4.tgz`，然後執行：
+從對應的 GitHub Release 下載 [slim-agents-for-codex-0.4.5.tgz](https://github.com/WANGCHIENCHIH/slim-agents-for-codex/releases/download/v0.4.5/slim-agents-for-codex-0.4.5.tgz)，然後執行：
 
 ```bash
-npm install --global ./slim-agents-for-codex-0.4.4.tgz
+npm install --global ./slim-agents-for-codex-0.4.5.tgz
 slim-agents-codex list-presets
-slim-agents-codex install --preset openai-5.6 --scope global
+slim-agents-codex install --preset openai-6 --scope global
 ```
 
-如果已安裝先前版本，請改用 `slim-agents-codex switch-preset --preset openai-5.6 --scope global`。切換時會先封存即將被替換的受管 agents 與 Skills，再對新安裝執行 post-validation。
+如果已安裝先前版本，請改用 `slim-agents-codex switch-preset --preset openai-6 --scope global`。切換時會先封存即將被替換的受管 agents 與 Skills，再對新安裝執行 post-validation。
 
 ### 從原始碼執行
 
-目前 checkout 已支援 GPT-6；上面的 `0.4.4` release 尚未包含 `openai-6`。
+`0.4.5` release 與目前 checkout 都透過 `openai-6` 支援 GPT-6。
 
 ```bash
 npm ci
@@ -40,15 +40,14 @@ node dist/cli.js install --preset openai-6
 
 ## 手動安裝
 
-GitHub 原始碼與 `.tgz` 套件都包含 `presets/<id>/agents/`、`config.snippet.toml`，以及產生出的 `orchestrator.config.toml`、`council.config.toml` Root profiles，因此不一定要使用 CLI。
+GitHub 原始碼與 `.tgz` 套件都包含 `presets/<id>/agents/`、`config.snippet.toml` 與 `.agents/skills/`，因此不一定要使用 CLI。
 
 1. 全域安裝時，將選定 preset 的全部 TOML 複製到 `CODEX_HOME/agents/`；專案安裝時，複製到 `<project>/.codex/agents/`。所有受支援 preset 都包含套件目前的七角色 Current Role Contract；精確的歷史設定應由對應的歷史 Package Version 或 Git tag 取得。
 2. 備份對應的 `CODEX_HOME/config.toml` 或 `<project>/.codex/config.toml`。
 3. 將該版本的 `config.snippet.toml` 合併進對應的 `config.toml`。兩種 scope 都使用 `config_file = "agents/<role>.toml"`，並依 [Codex Configuration Reference](https://learn.chatgpt.com/docs/config-file/config-reference) 的規則，由宣告角色的 config 檔所在位置解析。
 4. 將 `slim-council`、`slim-goal-loop`、`slim-orchestration` 複製到全域 `$HOME/.agents/skills/` 或專案 `<project>/.agents/skills/`。
-5. 若要使用 Root profile，將選定的 `.config.toml` 複製到 `CODEX_HOME`，再以 `codex --profile orchestrator` 或 `codex --profile council` 啟動。
-6. 保留原始 UTF-8 編碼、BOM 狀態與換行格式。
-7. 重新開啟 Codex 工作。
+5. 保留原始 UTF-8 編碼、BOM 狀態與換行格式。
+6. 重新開啟 Codex 工作。
 
 CLI 也使用相同布局。全域位置使用 `--scope global`，在專案根目錄使用 `--scope project`；只有需要明確指定其他位置時才使用 `--codex-home DIR`。
 
@@ -62,7 +61,7 @@ CLI 也使用相同布局。全域位置使用 `--scope global`，在專案根�
 
 ## 協調架構
 
-Root Codex agent 負責使用者需求與最終驗證；Council 與 Orchestrator 是同層的子協調代理：
+請以一般 Root Codex agent 執行工作，並使用 `$slim-goal-loop` 協調目標與驗收。Root 負責使用者需求與最終驗證；Skill 會視需要使用 Council 與 Orchestrator 這兩個同層子代理：
 
 - `council` 判斷需要哪些專業，依已安裝 custom agent 的 description 選出議員，讓這些直接子代理分別研究可行性、風險與解法。
 - `orchestrator` 接收已選定方案，透過五個固定 Slim specialist 實作：`oracle`、`librarian`、`explorer`、`designer`、`fixer`。
@@ -80,7 +79,7 @@ Council 專用 read-only custom-agent TOML、model 繼承政策、批次模型�
 ### 使用 Slim Goal Loop
 
 1. 依照[從原始碼執行](#從原始碼執行)，或使用包含 `slim-goal-loop` 的 Release package，安裝或更新 agents 與三個 Skills。未包含此 Skill 的舊套件需要更新；原始碼 checkout 已提供 `.agents/skills/slim-goal-loop/`。
-2. 在目標專案開啟新的 Codex 工作，使用一般 Root，也就是未套用受限 `council` 或 `orchestrator` Root profile 的主代理，並保留已安裝的子代理角色。
+2. 在目標專案以一般 Root 開啟新的 Codex 工作，並保留已安裝的子代理角色。
 3. 將下列內容貼到 **Codex 訊息輸入框**，填入目標與可核對的驗收條件後送出。這是 Skill 呼叫方式，不是終端機指令；範圍限制可視需要填寫。
 
 ```text

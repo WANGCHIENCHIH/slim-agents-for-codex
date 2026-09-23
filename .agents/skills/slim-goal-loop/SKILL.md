@@ -10,7 +10,7 @@ Run this workflow as the general Root agent. Keep final decisions and acceptance
 ## Establish the goal
 
 1. Read the applicable project instructions and existing task state. Capture the goal, observable acceptance criteria, scope, exclusions, and existing authorization. Infer settled details from evidence; ask only about material unresolved choices and continue independent authorized work.
-2. Check that the current role permits both coordinators and that their tools and Skills are available. Read [slim-council](../slim-council/SKILL.md) and [slim-orchestration](../slim-orchestration/SKILL.md) before using their workflows. A restricted Council or Orchestrator Root profile cannot run this combined workflow: report the limitation and direct the user to a general Root task; do not override its restrictions or claim missing capabilities ran.
+2. Check that the current role permits both coordinators and that their tools and Skills are available. Read [slim-council](../slim-council/SKILL.md) and [slim-orchestration](../slim-orchestration/SKILL.md) before using their workflows. If host permissions or missing capabilities prevent coordination, report the limitation and the available entry point; preserve those restrictions and distinguish unavailable work from completed work.
 3. Reuse the project's task record and any existing Orchestrator `.slim/deepwork/<task-slug>.md` ledger. Keep acceptance evidence, decisions, agent IDs, failed attempts, and the next action current; do not create a duplicate tracking system.
 
 ## Coordinate each pass

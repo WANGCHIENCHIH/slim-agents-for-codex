@@ -49,17 +49,6 @@ describe("preset generation", () => {
     expect(gpt56.agents).not.toHaveProperty("councillor");
   });
 
-  it("generates primary orchestrator and council profiles with their Root defaults", () => {
-    const generated = generatePreset("openai-5.6");
-    const orchestrator = parse(generated.rootProfiles.orchestrator) as Record<string, unknown>;
-    const council = parse(generated.rootProfiles.council) as Record<string, unknown>;
-
-    expect(orchestrator).toMatchObject({ model: "gpt-5.6-terra", model_reasoning_effort: "high", sandbox_mode: "workspace-write" });
-    expect(orchestrator.developer_instructions).toMatch(/primary Root Orchestrator.*\$slim-orchestration.*Do not spawn another orchestrator or council/is);
-    expect(council).toMatchObject({ model: "gpt-5.6-sol", model_reasoning_effort: "medium", sandbox_mode: "read-only" });
-    expect(council.developer_instructions).toMatch(/primary Root Council chair.*\$slim-council.*advisory-only/is);
-  });
-
   it("uses the current model and effort mappings for each generation", () => {
     expect(resolvePreset("openai-5.5").models).toEqual({
       orchestrator: { model: "gpt-5.5", effort: "medium" },
@@ -364,7 +353,6 @@ describe("preset generation", () => {
       const root = join(process.cwd(), "presets", id);
       const files = (await readdir(join(root, "agents"))).sort();
       expect(files).toEqual(generated.roleOrder.map((name) => `${name}.toml`).sort());
-      for (const [name, content] of Object.entries(generated.rootProfiles)) expect(await readFile(join(root, `${name}.config.toml`), "utf8")).toBe(content);
       expect(await readFile(join(root, "config.snippet.toml"), "utf8")).toBe(generated.snippet);
       expect(await readFile(join(root, "manifest.json"), "utf8")).toBe(generated.manifest);
       for (const name of generated.roleOrder) expect(await readFile(join(root, "agents", `${name}.toml`), "utf8")).toBe(generated.agents[name]);
@@ -377,7 +365,7 @@ describe("preset generation", () => {
 });
 
 describe("CLI", () => {
-  it("generates GPT-6 role mappings and Root profiles through the public CLI", async () => {
+  it("generates GPT-6 child roles without Root chair profiles through the public CLI", async () => {
     const outputRoot = await mkdtemp(join(tmpdir(), "slim-gpt6-convert-"));
     const io = { log: () => undefined, confirm: async () => false };
     expect(await runCli(["convert", "--preset", "openai-6", "--output", outputRoot], io)).toBe(0);
@@ -394,8 +382,7 @@ describe("CLI", () => {
     for (const [name, [model, effort]] of Object.entries(expected)) {
       expect(parse(await readFile(join(root, "agents", `${name}.toml`), "utf8"))).toMatchObject({ model, model_reasoning_effort: effort });
     }
-    expect(parse(await readFile(join(root, "orchestrator.config.toml"), "utf8"))).toMatchObject({ model: "gpt-6-sol", model_reasoning_effort: "high" });
-    expect(parse(await readFile(join(root, "council.config.toml"), "utf8"))).toMatchObject({ model: "gpt-6-astra", model_reasoning_effort: "medium" });
+    expect((await readdir(root)).sort()).toEqual(["agents", "config.snippet.toml", "manifest.json"]);
     for (const selection of [[], ["--preset", "latest"], ["--preset", "recommended"]]) {
       const checked: string[] = [];
       expect(await runCli(["convert", ...selection, "--output", outputRoot, "--check"], { ...io, log: (line) => checked.push(line) })).toBe(0);
@@ -442,6 +429,7 @@ describe("CLI", () => {
 
     expect(await runCli(["convert", "--all", "--output", outputRoot], { log: (line) => generated.push(line), confirm: async () => false })).toBe(0);
     expect(await readdir(outputRoot)).toEqual(["aliases.json", "openai-5.5", "openai-5.6", "openai-6"]);
+    for (const id of Object.keys(presets)) expect((await readdir(join(outputRoot, id))).sort()).toEqual(["agents", "config.snippet.toml", "manifest.json"]);
     expect(await runCli(["convert", "--all", "--output", outputRoot, "--check"], { log: (line) => checked.push(line), confirm: async () => false })).toBe(0);
     expect(generated).toHaveLength(3);
     expect(checked).toHaveLength(4);
@@ -500,6 +488,25 @@ describe("CLI", () => {
 
     await expect(runCli(["convert", "--preset", "openai-5.6", "--output", outputRoot, "--check"], { log: () => undefined, confirm: async () => false })).rejects.toThrow(/agent files|observer|snapshot/i);
     expect(await readFile(staleObserver, "utf8")).toBe('name = "observer"\n');
+  });
+
+  it.each(["council.config.toml", "orchestrator.config.toml"])("convert checks and removes retired %s while preserving custom configuration", async (profile) => {
+    const outputRoot = await mkdtemp(join(tmpdir(), "slim-retired-chair-"));
+    const root = join(outputRoot, "openai-6");
+    const io = { log: () => undefined, confirm: async () => false };
+    const args = ["convert", "--preset", "openai-6", "--output", outputRoot];
+    await runCli(args, io);
+    const retired = join(root, profile);
+    const custom = join(root, "custom.config.toml");
+    await writeFile(retired, "# old chair\n", "utf8");
+    await writeFile(custom, "# user configuration\n", "utf8");
+
+    await expect(runCli([...args, "--check"], io)).rejects.toThrow(/retired Root profile/i);
+    expect(await readFile(retired, "utf8")).toBe("# old chair\n");
+    expect(await runCli(args, io)).toBe(0);
+    await expect(readFile(retired, "utf8")).rejects.toMatchObject({ code: "ENOENT" });
+    expect(await readFile(custom, "utf8")).toBe("# user configuration\n");
+    expect(await runCli([...args, "--check"], io)).toBe(0);
   });
 
   it("convert generation removes stale managed roles but preserves unrelated TOMLs", async () => {

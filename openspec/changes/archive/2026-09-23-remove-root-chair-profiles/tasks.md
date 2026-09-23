@@ -1,6 +1,6 @@
 # Tasks
 
-目前狀態：實作、文件、審查與規格同步完成；待提交、推送與發布 `v0.4.5`。基準 `a5e6fdc`，保留既有 AGENTS.md、openspec/config.yaml、docs/agents/delivery-workflow.md 修改。
+目前狀態：實作、文件、審查、規格同步與封存完成；`v0.4.5` 已從提交 `f4b1b6cd477c8f1e9d5f2e6a484210527e7eba0f` 發布，下載封裝的 checksum 與安裝驗證通過。基準 `a5e6fdc`，保留既有 AGENTS.md、openspec/config.yaml、docs/agents/delivery-workflow.md 修改。
 
 ## 1. Implementation
 
@@ -23,4 +23,7 @@
 
 ## Release tracking
 
-本紀錄的提交完成實作與封存後，依使用者授權發布 v0.4.5。遠端 CI、Release workflow、下載封裝 checksum 與安裝驗證尚待完成；發布證據於完成後補入本紀錄。
+- [Release v0.4.5](https://github.com/WANGCHIENCHIH/slim-agents-for-codex/releases/tag/v0.4.5) 已於 2026-09-23 發布；遠端 annotated tag 解參照為 `f4b1b6cd477c8f1e9d5f2e6a484210527e7eba0f`，與受審查提交一致。
+- [main CI](https://github.com/WANGCHIENCHIH/slim-agents-for-codex/actions/runs/35805258471)、[tag CI](https://github.com/WANGCHIENCHIH/slim-agents-for-codex/actions/runs/35805367305) 與 [Release workflow](https://github.com/WANGCHIENCHIH/slim-agents-for-codex/actions/runs/35805367455) 均成功；CI 涵蓋 Windows、Ubuntu、macOS 與 Node 20／22。
+- Release body 與已提交的 `docs/releases/v0.4.5.md` 相同，assets 為 `.tgz` 與對應 `.sha256`。下載封裝的 SHA-256：`80426027645f6658e6acb382e27e3d90d64fcd5f38a9dd5372d5d61dfcc7d546`，與發布 checksum 相同。
+- 對下載的 `slim-agents-for-codex-0.4.5.tgz` 執行 `npm run pack:smoke -- <archive>` 成功：確認所有 presets 無兩個 Root profiles，`openai-6` 七個 agents 與三個 Skills 實際安裝及公開驗證成功。

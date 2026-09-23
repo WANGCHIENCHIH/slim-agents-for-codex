@@ -1,6 +1,6 @@
 name = "legal-advisor"
 description = "Review product behavior, data handling, terms-like language, and external commitments for legal risk; recommend mitigations and counsel decisions."
-model = "gpt-5.6-terra"
+model = "gpt-6-sol"
 model_reasoning_effort = "high"
 sandbox_mode = "read-only"
 developer_instructions = """

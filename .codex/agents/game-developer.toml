@@ -1,6 +1,6 @@
 name = "game-developer"
 description = "Implement game changes involving gameplay state, frame-time loops, input, assets, networking, or progression."
-model = "gpt-5.6-terra"
+model = "gpt-6-sol"
 model_reasoning_effort = "high"
 sandbox_mode = "workspace-write"
 developer_instructions = """

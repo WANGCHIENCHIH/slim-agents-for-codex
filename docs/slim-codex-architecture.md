@@ -1,6 +1,6 @@
 # Slim Codex architecture
 
-The current package exposes two model-generation presets backed by one seven-role Current Role Contract.
+The current source exposes three model-generation presets backed by one seven-role Current Role Contract.
 
 ## Runtime graph
 
@@ -34,7 +34,7 @@ Every coordinator-to-specialist spawn uses `fork_turns="none"` with a self-conta
 
 `src/core/role-sources/current-role-contract/` owns the complete current seven-role behavior: role order, names, descriptions, instructions, sandbox choices, MCP guidance, and optional Skill routing. Historical contracts remain in historical packages and Git tags rather than an inheritance chain in the current source.
 
-`src/core/presets.ts` owns the supported model-generation mappings and aliases. `openai-5.5` and `openai-5.6` share the Current Role Contract; only their model and effort mappings differ. The exact generated identity is `(Package Version, Preset ID)`, recorded in each manifest. Current upstream audit provenance is metadata only and never selects behavior.
+`src/core/presets.ts` owns the supported model-generation mappings and aliases. `openai-5.5`, `openai-5.6`, and `openai-6` share the Current Role Contract; only their model and effort mappings differ. `latest` and `recommended` select `openai-6`. The exact generated identity is `(Package Version, Preset ID)`, recorded in each manifest. Current upstream audit provenance is metadata only and never selects behavior.
 
 Codex parses every standalone agent TOML as a complete config layer before merging it into a spawned session. Portable generated roles therefore keep their reviewed MCP denylist as behavioral `developer_instructions` and emit no role-local MCP tables. Hard per-role MCP enforcement requires installation-specific complete transports or a future Codex-native denylist mechanism.
 

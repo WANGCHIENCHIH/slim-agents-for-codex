@@ -1,6 +1,6 @@
 name = "data-analyst"
 description = "Use when existing analytics need metric validation, trend or segment interpretation, confounder checks, and decision guidance under uncertainty."
-model = "gpt-5.6-terra"
+model = "gpt-6-sol"
 model_reasoning_effort = "medium"
 sandbox_mode = "read-only"
 developer_instructions = """

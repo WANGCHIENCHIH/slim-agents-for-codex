@@ -330,22 +330,24 @@ describe("safe installation", () => {
     await expect(access(`${configPath}.tmp-${process.pid}`)).rejects.toThrow();
   });
 
-  it("installs and post-validates a fresh Codex home through the CLI", async () => {
+  it("installs and validates GPT-6 by default through the CLI", async () => {
     const home = await mkdtemp(join(tmpdir(), "slim-codex-fresh-cli-"));
     const skillsHome = join(home, "user-skills");
     const output: string[] = [];
 
-    const code = await runCli(["install", "--preset", "openai-5.6", "--codex-home", home, "--skills-home", skillsHome, "--yes"], {
+    const code = await runCli(["install", "--codex-home", home, "--skills-home", skillsHome, "--yes"], {
       log: (line) => output.push(line),
       confirm: async () => false,
     });
 
     expect(code).toBe(0);
     expect(output).toContain("backup: none (new config)");
+    expect(output).toContain("preset: latest -> openai-6");
     expect(output).toContain(`skills: ${skillsHome}`);
     expect(output).toContain(`valid installation: ${home} (7 roles)`);
     expect(output).toContain(`valid skills: ${skillsHome} (3 skills)`);
-    expect(output).toContain(`installed openai-5.6 at ${join(home, "agents")}`);
+    expect(output).toContain(`installed openai-6 at ${join(home, "agents")}`);
+    expect(await runCli(["validate", "--codex-home", home, "--skills-home", skillsHome], { log: () => undefined, confirm: async () => false })).toBe(0);
     expect(await readFile(join(skillsHome, "slim-council", "SKILL.md"), "utf8")).toBe(
       await readFile(join(process.cwd(), ".agents", "skills", "slim-council", "SKILL.md"), "utf8"),
     );
@@ -506,19 +508,21 @@ describe("safe installation", () => {
     expect(await readFile(join(home, "agents", "orchestrator.toml"), "utf8")).toContain('name = "orchestrator"');
   });
 
-  it("routes switch-preset through switch mode and post-validates the selected preset", async () => {
+  it("switches from GPT-5.6 to GPT-6 by default and post-validates the installation", async () => {
     const home = await mkdtemp(join(tmpdir(), "slim-switch-cli-"));
     const skillsHome = join(home, "skills");
     await writeFile(join(home, "config.toml"), "[agents]\nmax_threads = 6\nmax_depth = 1\n", "utf8");
     await installPreset(await previewInstall({ codexHome: home, preset: "openai-5.6" }));
     const output: string[] = [];
 
-    const code = await runCli(["switch-preset", "--preset", "openai-5.6", "--codex-home", home, "--skills-home", skillsHome, "--yes"], {
+    const code = await runCli(["switch-preset", "--codex-home", home, "--skills-home", skillsHome, "--yes"], {
       log: (line) => output.push(line),
       confirm: async () => false,
     });
 
     expect(code).toBe(0);
+    expect(output).toContain("preset: latest -> openai-6");
+    expect(output).toContain(`installed openai-6 at ${join(home, "agents")}`);
     expect(output).toContain(`valid installation: ${home} (7 roles)`);
     expect(output.some((line) => line.startsWith("archive: "))).toBe(true);
     expect(await readFile(join(home, "config.toml"), "utf8")).not.toContain("[agents.observer]");

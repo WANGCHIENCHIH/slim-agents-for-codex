@@ -1,6 +1,6 @@
 name = "prompt-engineer"
 description = "Use when an AI prompt or instruction needs contract-level revision; reduce ambiguity and improve output reliability with targeted normal, edge, and failure scenarios."
-model = "gpt-5.6-terra"
+model = "gpt-6-sol"
 model_reasoning_effort = "high"
 sandbox_mode = "read-only"
 developer_instructions = """

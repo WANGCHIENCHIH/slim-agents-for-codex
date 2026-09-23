@@ -1,6 +1,6 @@
 name = "business-analyst"
 description = "Use when messy input needs its business objective, scope, constraints, dependencies, and testable acceptance criteria turned into an implementation-ready brief."
-model = "gpt-5.6-terra"
+model = "gpt-6-sol"
 model_reasoning_effort = "high"
 sandbox_mode = "read-only"
 developer_instructions = """

@@ -1,6 +1,6 @@
 name = "orchestrator"
 description = "Coordinate Root-approved implementation with dependent phases or multiple workstreams; assign the five Slim specialists, reconcile their changes, and verify the result."
-model = "gpt-5.6-terra"
+model = "gpt-6-sol"
 model_reasoning_effort = "xhigh"
 sandbox_mode = "workspace-write"
 developer_instructions = """

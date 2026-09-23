@@ -1,6 +1,6 @@
 name = "frontend-developer"
 description = "Implement scoped frontend features or fix reproduced UI bugs involving component state, async rendering, API contracts, and accessibility."
-model = "gpt-5.6-terra"
+model = "gpt-6-sol"
 model_reasoning_effort = "high"
 sandbox_mode = "workspace-write"
 developer_instructions = """

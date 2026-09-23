@@ -1,6 +1,6 @@
 name = "javascript-pro"
 description = "Implement JavaScript browser or Node changes involving async behavior, module boundaries, input validation, and runtime compatibility."
-model = "gpt-5.6-terra"
+model = "gpt-6-sol"
 model_reasoning_effort = "high"
 sandbox_mode = "workspace-write"
 developer_instructions = """

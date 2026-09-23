@@ -1,6 +1,6 @@
 name = "cpp-pro"
 description = "Use for C++ work involving ownership and lifetime, concurrency, ABI compatibility, performance-sensitive paths, or systems integration, with a safe scoped fix."
-model = "gpt-5.6-terra"
+model = "gpt-6-sol"
 model_reasoning_effort = "high"
 sandbox_mode = "workspace-write"
 developer_instructions = """

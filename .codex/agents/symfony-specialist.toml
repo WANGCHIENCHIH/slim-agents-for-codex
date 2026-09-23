@@ -1,6 +1,6 @@
 name = "symfony-specialist"
 description = "Use when a task needs Symfony routing, services, Doctrine, validation, security, or environment implementation; preserve framework conventions and transaction behavior."
-model = "gpt-5.6-terra"
+model = "gpt-6-sol"
 model_reasoning_effort = "high"
 sandbox_mode = "workspace-write"
 developer_instructions = """

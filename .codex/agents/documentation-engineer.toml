@@ -1,6 +1,6 @@
 name = "documentation-engineer"
 description = "Write implementation-grounded technical documentation, release notes, migration guidance, onboarding, and troubleshooting for developers, operators, and integrators."
-model = "gpt-5.6-terra"
+model = "gpt-6-sol"
 model_reasoning_effort = "medium"
 sandbox_mode = "workspace-write"
 developer_instructions = """

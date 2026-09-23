@@ -1,6 +1,6 @@
 name = "context-manager"
 description = "Use when downstream agents need a compact, evidence-linked project context packet containing relevant paths, constraints, invariants, and unresolved unknowns."
-model = "gpt-5.6-terra"
+model = "gpt-6-sol"
 model_reasoning_effort = "medium"
 sandbox_mode = "read-only"
 developer_instructions = """

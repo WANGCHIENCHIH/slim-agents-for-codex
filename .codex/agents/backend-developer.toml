@@ -1,6 +1,6 @@
 name = "backend-developer"
 description = "Use when the owning backend path is known and needs implementation or repair across validation, domain logic, persistence, authorization, or failure handling."
-model = "gpt-5.6-terra"
+model = "gpt-6-sol"
 model_reasoning_effort = "high"
 sandbox_mode = "workspace-write"
 developer_instructions = """

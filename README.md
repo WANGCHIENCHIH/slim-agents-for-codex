@@ -24,19 +24,23 @@ If a previous release is already installed, use `slim-agents-codex switch-preset
 
 ### Run from a source checkout
 
+GPT-6 support is available in this checkout; the `0.4.4` release above does not include `openai-6`.
+
 ```bash
 npm ci
 npm run build
 node dist/cli.js list-presets
-node dist/cli.js convert --preset openai-5.6 --output generated
-node dist/cli.js install --preset openai-5.6
+node dist/cli.js convert --preset openai-6 --output generated
+node dist/cli.js install --preset openai-6
 ```
+
+For an existing installation, use `node dist/cli.js switch-preset --preset openai-6` instead of `install` to archive and replace its managed agents and Skills.
 
 `install` previews the resolved Preset ID, config path, Skill path, and backup path before asking for confirmation. It installs both the selected agent preset and the three managed Slim Skills. Use `--scope global` for `CODEX_HOME` (or `~/.codex`) plus `$HOME/.agents/skills`, and `--scope project` for the current project's `.codex` plus `.agents/skills`. Explicit `--codex-home PATH` and `--skills-home PATH` options override those targets. Use `--yes` only for explicit non-interactive installation.
 
 ## Manual installation
 
-Every npm package and source checkout includes ready-to-copy files under `presets/<id>/agents/`, `config.snippet.toml`, the two generated Root profiles (`orchestrator.config.toml` and `council.config.toml`), and `.agents/skills/`. Copy every agent TOML from the selected preset into `CODEX_HOME/agents/` for a global installation or `<project>/.codex/agents/` for a project installation, then merge the snippet into the matching `config.toml`. To use a generated Root profile, copy it to `CODEX_HOME` and start Codex with `--profile orchestrator` or `--profile council`. Copy `slim-council`, `slim-goal-loop`, and `slim-orchestration` into `$HOME/.agents/skills/` globally or `<project>/.agents/skills/` for one repository. Both supported presets contain the package's Current Role Contract of seven roles. Exact historical configurations belong to their historical package version or Git tag. In both scopes, `config_file = "agents/<role>.toml"` resolves relative to the config file that declares the role, as specified by the [Codex Configuration Reference](https://learn.chatgpt.com/docs/config-file/config-reference). Preserve UTF-8 encoding, BOM state, and line endings, and make backups first.
+Every npm package and source checkout includes ready-to-copy files under `presets/<id>/agents/`, `config.snippet.toml`, the two generated Root profiles (`orchestrator.config.toml` and `council.config.toml`), and `.agents/skills/`. Copy every agent TOML from the selected preset into `CODEX_HOME/agents/` for a global installation or `<project>/.codex/agents/` for a project installation, then merge the snippet into the matching `config.toml`. To use a generated Root profile, copy it to `CODEX_HOME` and start Codex with `--profile orchestrator` or `--profile council`. Copy `slim-council`, `slim-goal-loop`, and `slim-orchestration` into `$HOME/.agents/skills/` globally or `<project>/.agents/skills/` for one repository. All supported presets contain the package's Current Role Contract of seven roles. Exact historical configurations belong to their historical package version or Git tag. In both scopes, `config_file = "agents/<role>.toml"` resolves relative to the config file that declares the role, as specified by the [Codex Configuration Reference](https://learn.chatgpt.com/docs/config-file/config-reference). Preserve UTF-8 encoding, BOM state, and line endings, and make backups first.
 
 The CLI follows the same layout. Use `--scope global` for the global location or `--scope project` from a project root; use `--codex-home DIR` only when an explicit location is needed.
 
@@ -44,7 +48,7 @@ Do not place inactive legacy presets under `CODEX_HOME/agents/`: Codex recursive
 
 ## Preset lifecycle
 
-The latest package supports only `openai-5.5` and `openai-5.6`, each naming an OpenAI model generation. Both generate the same seven-role Current Role Contract; only model and effort mappings differ. `latest` and `recommended` resolve to `openai-5.6`.
+The current source supports `openai-5.5`, `openai-5.6`, and `openai-6`, each naming an OpenAI model generation. All generate the same seven-role Current Role Contract; only model and effort mappings differ. `latest`, `recommended`, and commands without `--preset` use `openai-6`. See [Preset lifecycle](docs/preset-lifecycle.md) for the GPT-6 role mappings.
 
 The exact output identity is `(Package Version, Preset ID)`. Same-generation prompt, policy, role, model, or effort maintenance changes the Package Version without adding a suffix ID. Retired IDs `openai-5.5.1` and `openai-5.6.1` through `openai-5.6.4` fail before writes and direct users to the unsuffixed ID or the corresponding historical package/tag. There is no automatic model fallback.
 
@@ -95,7 +99,7 @@ Root checks the delivered work against each criterion and continues authorized w
 
 If the Skill is unavailable, check that its folder is installed in the selected project or global Skill location, then open a new Codex task. If work pauses for a decision or permission, provide the requested input in the same task. To resume interrupted work, ask it to continue the same goal from the existing task record and recheck unfinished criteria. The Skill cannot wake a stopped host automatically or grant permission to commit, publish, or deploy.
 
-To add `openai-5.7` or a later generation, follow the [Adding a model preset maintenance guide](docs/adding-a-preset.md).
+To add another model generation, follow the [Adding a model preset maintenance guide](docs/adding-a-preset.md).
 
 ## Commands
 

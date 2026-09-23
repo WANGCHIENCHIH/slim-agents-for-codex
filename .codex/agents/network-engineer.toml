@@ -1,6 +1,6 @@
 name = "network-engineer"
 description = "Review network paths, service connectivity, DNS/TLS, load balancers, and firewall boundaries; recommend least-risk fixes and rollback checks."
-model = "gpt-5.6-terra"
+model = "gpt-6-sol"
 model_reasoning_effort = "high"
 sandbox_mode = "read-only"
 developer_instructions = """

@@ -20,9 +20,10 @@ const mapping = (pairs: Record<string, [string, Effort]>): Preset["models"] => O
 export const presets: Record<string, Preset> = {
   "openai-5.5": { id: "openai-5.5", adapter: "oh-my-opencode-slim", adapterSchemaVersion: 2, source: "alvinunreal/oh-my-opencode-slim", created: "2026-07-12", status: "supported", snapshotFormatVersion: 1, models: mapping({ orchestrator: ["gpt-5.5", "medium"], oracle: ["gpt-5.5", "high"], librarian: ["gpt-5.4-mini", "low"], explorer: ["gpt-5.4-mini", "low"], designer: ["gpt-5.4-mini", "medium"], fixer: ["gpt-5.5", "low"], council: ["gpt-5.5", "high"] }) },
   "openai-5.6": { id: "openai-5.6", adapter: "oh-my-opencode-slim", adapterSchemaVersion: 2, source: "alvinunreal/oh-my-opencode-slim", created: "2026-07-12", status: "supported", snapshotFormatVersion: 1, models: mapping({ orchestrator: ["gpt-5.6-terra", "high"], oracle: ["gpt-5.6-sol", "high"], librarian: ["gpt-5.6-luna", "low"], explorer: ["gpt-5.6-luna", "low"], designer: ["gpt-5.6-luna", "medium"], fixer: ["gpt-5.6-luna", "high"], council: ["gpt-5.6-sol", "high"] }) },
+  "openai-6": { id: "openai-6", adapter: "oh-my-opencode-slim", adapterSchemaVersion: 2, source: "alvinunreal/oh-my-opencode-slim", created: "2026-09-23", status: "supported", snapshotFormatVersion: 1, models: mapping({ orchestrator: ["gpt-6-sol", "high"], oracle: ["gpt-6-astra", "high"], librarian: ["gpt-6-luna", "low"], explorer: ["gpt-6-luna", "low"], designer: ["gpt-6-luna", "medium"], fixer: ["gpt-6-luna", "high"], council: ["gpt-6-astra", "high"] }) },
 };
 
-export const aliases = { latest: "openai-5.6", recommended: "openai-5.6" } as const;
+export const aliases = { latest: "openai-6", recommended: "openai-6" } as const;
 export const managedRoleNames = [...currentRoleContract.roleOrder, "observer"];
 
 const retiredPresets: Record<string, string> = {
@@ -96,8 +97,8 @@ export function generatePreset(idOrAlias: string) {
     adapter: preset.adapter,
     adapterSchemaVersion: preset.adapterSchemaVersion,
     source: preset.source,
-    upstreamVersion: "2.2.21",
-    upstreamCommit: "f34d7ae22af0985bec257d72d0b6213f2aed3e48",
+    upstreamVersion: "2.2.22",
+    upstreamCommit: "3685293ae6896deca1d85a14a38ba47510a50add",
     created: preset.created,
     status: preset.status,
     snapshotFormatVersion: preset.snapshotFormatVersion,

@@ -1,6 +1,6 @@
 name = "chaos-engineer"
 description = "Use when a system needs resilience analysis or fault-injection planning for dependency failure, degradation, recovery, or controlled blast-radius testing."
-model = "gpt-5.6-terra"
+model = "gpt-6-sol"
 model_reasoning_effort = "high"
 sandbox_mode = "read-only"
 developer_instructions = """

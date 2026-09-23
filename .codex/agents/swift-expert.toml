@@ -1,6 +1,6 @@
 name = "swift-expert"
 description = "Use when a task needs Swift iOS or macOS implementation across async flows, UI state, APIs, or lifecycle; preserve platform conventions and concurrency safety."
-model = "gpt-5.6-terra"
+model = "gpt-6-sol"
 model_reasoning_effort = "high"
 sandbox_mode = "workspace-write"
 developer_instructions = """

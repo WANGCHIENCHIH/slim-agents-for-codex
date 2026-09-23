@@ -1,6 +1,6 @@
 name = "postgres-pro"
 description = "Use when a task needs PostgreSQL analysis of queries, schemas, locking, planner behavior, or operations; recommend targeted improvements with migration and rollback safety."
-model = "gpt-5.6-terra"
+model = "gpt-6-sol"
 model_reasoning_effort = "high"
 sandbox_mode = "read-only"
 developer_instructions = """

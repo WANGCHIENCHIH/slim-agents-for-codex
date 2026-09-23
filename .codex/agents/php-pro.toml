@@ -1,6 +1,6 @@
 name = "php-pro"
 description = "Implement PHP application/framework changes involving request validation, database transactions, autoloading, runtime compatibility, and server-side behavior."
-model = "gpt-5.6-terra"
+model = "gpt-6-sol"
 model_reasoning_effort = "high"
 sandbox_mode = "workspace-write"
 developer_instructions = """

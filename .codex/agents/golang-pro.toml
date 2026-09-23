@@ -1,6 +1,6 @@
 name = "golang-pro"
 description = "Implement Go changes involving goroutines, channels, services, interfaces, tooling, and performance-sensitive paths."
-model = "gpt-5.6-terra"
+model = "gpt-6-sol"
 model_reasoning_effort = "high"
 sandbox_mode = "workspace-write"
 developer_instructions = """

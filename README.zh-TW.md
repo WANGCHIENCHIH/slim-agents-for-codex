@@ -24,13 +24,17 @@ slim-agents-codex install --preset openai-5.6 --scope global
 
 ### 從原始碼執行
 
+目前 checkout 已支援 GPT-6；上面的 `0.4.4` release 尚未包含 `openai-6`。
+
 ```bash
 npm ci
 npm run build
 node dist/cli.js list-presets
-node dist/cli.js convert --preset openai-5.6 --output generated
-node dist/cli.js install --preset openai-5.6
+node dist/cli.js convert --preset openai-6 --output generated
+node dist/cli.js install --preset openai-6
 ```
+
+若已有安裝，請改用 `node dist/cli.js switch-preset --preset openai-6`，先封存再替換受管 agents 與 Skills。
 
 `install` 寫入前會顯示實際解析出的 Preset ID、設定檔路徑、Skill 路徑與備份路徑，並要求確認；它會同時安裝選定的 agent preset 與三個受管 Slim Skills。`--scope global` 使用 `CODEX_HOME`（或 `~/.codex`）及 `$HOME/.agents/skills`，`--scope project` 使用目前專案的 `.codex` 及 `.agents/skills`；明確提供的 `--codex-home PATH`、`--skills-home PATH` 會覆寫對應目標。只有在明確需要非互動式安裝時才使用 `--yes`。
 
@@ -38,7 +42,7 @@ node dist/cli.js install --preset openai-5.6
 
 GitHub 原始碼與 `.tgz` 套件都包含 `presets/<id>/agents/`、`config.snippet.toml`，以及產生出的 `orchestrator.config.toml`、`council.config.toml` Root profiles，因此不一定要使用 CLI。
 
-1. 全域安裝時，將選定 preset 的全部 TOML 複製到 `CODEX_HOME/agents/`；專案安裝時，複製到 `<project>/.codex/agents/`。兩個受支援 preset 都包含套件目前的七角色 Current Role Contract；精確的歷史設定應由對應的歷史 Package Version 或 Git tag 取得。
+1. 全域安裝時，將選定 preset 的全部 TOML 複製到 `CODEX_HOME/agents/`；專案安裝時，複製到 `<project>/.codex/agents/`。所有受支援 preset 都包含套件目前的七角色 Current Role Contract；精確的歷史設定應由對應的歷史 Package Version 或 Git tag 取得。
 2. 備份對應的 `CODEX_HOME/config.toml` 或 `<project>/.codex/config.toml`。
 3. 將該版本的 `config.snippet.toml` 合併進對應的 `config.toml`。兩種 scope 都使用 `config_file = "agents/<role>.toml"`，並依 [Codex Configuration Reference](https://learn.chatgpt.com/docs/config-file/config-reference) 的規則，由宣告角色的 config 檔所在位置解析。
 4. 將 `slim-council`、`slim-goal-loop`、`slim-orchestration` 複製到全域 `$HOME/.agents/skills/` 或專案 `<project>/.agents/skills/`。
@@ -52,7 +56,7 @@ CLI 也使用相同布局。全域位置使用 `--scope global`，在專案根�
 
 ## Preset 生命週期
 
-最新版套件只支援 `openai-5.5` 與 `openai-5.6`，各自代表一個 OpenAI 模型世代。兩者產生相同的七角色 Current Role Contract，只有 model／effort mapping 可以不同；`latest` 與 `recommended` 都解析至 `openai-5.6`。
+目前原始碼支援 `openai-5.5`、`openai-5.6` 與 `openai-6`，各自代表一個 OpenAI 模型世代。三者產生相同的七角色 Current Role Contract，只有 model／effort mapping 可以不同；`latest`、`recommended` 與未指定 `--preset` 的指令都使用 `openai-6`。GPT-6 角色映射請參考 [Preset lifecycle](docs/preset-lifecycle.md)。
 
 精確輸出由 `(Package Version, Preset ID)` 識別。同世代的 prompt、policy、角色、model 或 effort 維護只增加 Package Version，不新增 suffix ID。退休的 `openai-5.5.1` 與 `openai-5.6.1` 至 `openai-5.6.4` 會在任何寫入前失敗，並指向 unsuffixed ID 或對應的歷史 package/tag。本專案不會自動替換或降級模型。
 
@@ -103,7 +107,7 @@ Root 會逐項核對交付結果，仍有驗收缺口就繼續已授權工作。
 
 若找不到 Skill，先確認它的目錄已安裝到選定的專案或全域 Skill 位置，再開啟新的 Codex 工作。若因決策或權限暫停，在同一個工作補上要求的資訊即可。工作中斷後，可要求從既有任務紀錄繼續同一目標，重新核對未完成條件。此 Skill 無法在宿主停止後自行喚醒，也不會額外授權 commit、發布或部署。
 
-需要新增 `openai-5.7` 或後續版本時，請參考[新增模型預設維護指南](docs/adding-a-preset.zh-TW.md)。
+需要新增其他模型世代時，請參考[新增模型預設維護指南](docs/adding-a-preset.zh-TW.md)。
 
 ## 指令
 

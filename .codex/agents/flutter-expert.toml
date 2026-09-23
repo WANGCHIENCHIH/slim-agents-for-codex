@@ -1,6 +1,6 @@
 name = "flutter-expert"
 description = "Implement Flutter changes involving widget lifecycle, state management, navigation, rendering, and platform integration."
-model = "gpt-5.6-terra"
+model = "gpt-6-sol"
 model_reasoning_effort = "high"
 sandbox_mode = "workspace-write"
 developer_instructions = """

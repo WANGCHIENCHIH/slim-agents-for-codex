@@ -1,6 +1,6 @@
 name = "node-specialist"
 description = "Implement Node.js API, CLI, worker, or service changes involving event-loop, stream, resource-lifecycle, and runtime behavior."
-model = "gpt-5.6-terra"
+model = "gpt-6-sol"
 model_reasoning_effort = "high"
 sandbox_mode = "workspace-write"
 developer_instructions = """

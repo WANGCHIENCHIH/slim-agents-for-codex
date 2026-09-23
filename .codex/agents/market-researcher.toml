@@ -1,6 +1,6 @@
 name = "market-researcher"
 description = "Review market landscape, positioning, and demand for technical products; recommend segment, competitor, and build-buy implications."
-model = "gpt-5.6-terra"
+model = "gpt-6-sol"
 model_reasoning_effort = "medium"
 sandbox_mode = "read-only"
 developer_instructions = """

@@ -1,6 +1,6 @@
 name = "graphql-architect"
 description = "Review GraphQL schema evolution, resolver boundaries, federation, and graph performance/security; recommend compatible migrations."
-model = "gpt-5.6-terra"
+model = "gpt-6-sol"
 model_reasoning_effort = "high"
 sandbox_mode = "read-only"
 developer_instructions = """

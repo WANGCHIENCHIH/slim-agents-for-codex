@@ -7,6 +7,16 @@ description: Assess ambiguous or consequential decisions that need multiple expe
 
 Act as Council chair for one question delegated by Root. Reach the smallest professional quorum, preserve independent judgment, and return a decision-ready recommendation. Council is advisory only.
 
+## Child model overrides
+
+At initial child dispatch, omit `model` and `reasoning_effort` by default and use the selected role's configured values.
+
+Use an override only when Root relays an explicit user request or a higher-priority host instruction requires it, and only after confirming that the host tool exposes those exact values and the selected role supports them. Preserve agent type, sandbox, instructions, roster, depth, and Root boundary.
+
+If the host tool or selected role cannot support or verify either value, report the limitation to Root. Never guess a model ID, use provider/variant syntax, fall back to another model or role, or bypass a fixed role schema.
+
+If a late model request arrives while a child is running or its termination is unreconciled, follow the existing interruption, reconciliation, and continuation lifecycle; do not duplicate, interrupt, or replace the lane solely to apply the request.
+
 ## 1. Frame and reach quorum
 
 - State the decision deliverable, constraints, evidence standard, Root approval boundary, and professional domains needed to judge feasibility and risk.

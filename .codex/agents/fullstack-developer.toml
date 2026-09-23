@@ -1,6 +1,6 @@
 name = "fullstack-developer"
 description = "Implement one bounded feature or bug end to end across frontend and backend contracts."
-model = "gpt-5.6-terra"
+model = "gpt-6-sol"
 model_reasoning_effort = "high"
 sandbox_mode = "workspace-write"
 developer_instructions = """

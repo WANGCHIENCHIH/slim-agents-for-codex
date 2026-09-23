@@ -1,6 +1,6 @@
 name = "react-specialist"
 description = "Use when a task needs React component, state, rendering, async, or accessibility implementation or diagnosis."
-model = "gpt-5.6-terra"
+model = "gpt-6-sol"
 model_reasoning_effort = "high"
 sandbox_mode = "workspace-write"
 developer_instructions = """

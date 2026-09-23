@@ -1,6 +1,6 @@
 name = "security-auditor"
 description = "Audit application and infrastructure security across auth, input, IAM, secrets, network isolation, workload hardening, detection, and artifact trust; recommend mitigations."
-model = "gpt-5.6-terra"
+model = "gpt-6-sol"
 model_reasoning_effort = "high"
 sandbox_mode = "read-only"
 developer_instructions = """

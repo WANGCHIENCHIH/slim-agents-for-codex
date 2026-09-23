@@ -1,6 +1,6 @@
 name = "design-bridge"
 description = "Use when a DESIGN.md must be translated into faithful, implementation-ready UI instructions covering brand, tokens, components, layout, elevation, and responsiveness."
-model = "gpt-5.6-terra"
+model = "gpt-6-sol"
 model_reasoning_effort = "high"
 sandbox_mode = "workspace-write"
 developer_instructions = """

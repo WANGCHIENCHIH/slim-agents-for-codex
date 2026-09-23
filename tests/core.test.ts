@@ -22,15 +22,16 @@ async function createCodexHomeFromPreset(id: string) {
 }
 
 describe("preset generation", () => {
-  it("exposes exactly two stable model-generation presets and current aliases", () => {
-    expect(Object.keys(presets)).toEqual(["openai-5.5", "openai-5.6"]);
-    expect(resolvePreset("latest").id).toBe("openai-5.6");
-    expect(resolvePreset("recommended").id).toBe("openai-5.6");
+  it("exposes exactly three stable model-generation presets and current aliases", () => {
+    expect(Object.keys(presets)).toEqual(["openai-5.5", "openai-5.6", "openai-6"]);
+    expect(resolvePreset("latest").id).toBe("openai-6");
+    expect(resolvePreset("recommended").id).toBe("openai-6");
   });
 
-  it("generates the shared seven-role Current Role Contract for both model generations", () => {
+  it("generates the shared seven-role Current Role Contract for all model generations", () => {
     const gpt55 = generatePreset("openai-5.5");
     const gpt56 = generatePreset("openai-5.6");
+    const gpt6 = generatePreset("openai-6");
     const expectedOrder = ["orchestrator", "oracle", "librarian", "explorer", "designer", "fixer", "council"];
     const withoutMapping = (toml) => {
       const document = parse(toml);
@@ -41,7 +42,9 @@ describe("preset generation", () => {
 
     expect(gpt55.roleOrder).toEqual(expectedOrder);
     expect(gpt56.roleOrder).toEqual(expectedOrder);
+    expect(gpt6.roleOrder).toEqual(expectedOrder);
     for (const name of expectedOrder) expect(withoutMapping(gpt55.agents[name])).toEqual(withoutMapping(gpt56.agents[name]));
+    for (const name of expectedOrder) expect(withoutMapping(gpt6.agents[name])).toEqual(withoutMapping(gpt56.agents[name]));
     expect(gpt56.agents).not.toHaveProperty("observer");
     expect(gpt56.agents).not.toHaveProperty("councillor");
   });
@@ -341,13 +344,13 @@ describe("preset generation", () => {
     }
   });
 
-  it("renders reviewed 2.2.21 provenance without changing model mappings", () => {
+  it("renders reviewed 2.2.22 provenance without changing model mappings", () => {
     const gpt55 = generatePreset("openai-5.5");
     const gpt56 = generatePreset("openai-5.6");
     const expectedProvenance = {
       source: "alvinunreal/oh-my-opencode-slim",
-      upstreamVersion: "2.2.21",
-      upstreamCommit: "f34d7ae22af0985bec257d72d0b6213f2aed3e48",
+      upstreamVersion: "2.2.22",
+      upstreamCommit: "3685293ae6896deca1d85a14a38ba47510a50add",
     };
 
     expect(JSON.parse(gpt55.manifest)).toMatchObject(expectedProvenance);
@@ -374,6 +377,32 @@ describe("preset generation", () => {
 });
 
 describe("CLI", () => {
+  it("generates GPT-6 role mappings and Root profiles through the public CLI", async () => {
+    const outputRoot = await mkdtemp(join(tmpdir(), "slim-gpt6-convert-"));
+    const io = { log: () => undefined, confirm: async () => false };
+    expect(await runCli(["convert", "--preset", "openai-6", "--output", outputRoot], io)).toBe(0);
+    const root = join(outputRoot, "openai-6");
+    const expected = {
+      orchestrator: ["gpt-6-sol", "high"],
+      oracle: ["gpt-6-astra", "high"],
+      librarian: ["gpt-6-luna", "low"],
+      explorer: ["gpt-6-luna", "low"],
+      designer: ["gpt-6-luna", "medium"],
+      fixer: ["gpt-6-luna", "high"],
+      council: ["gpt-6-astra", "high"],
+    };
+    for (const [name, [model, effort]] of Object.entries(expected)) {
+      expect(parse(await readFile(join(root, "agents", `${name}.toml`), "utf8"))).toMatchObject({ model, model_reasoning_effort: effort });
+    }
+    expect(parse(await readFile(join(root, "orchestrator.config.toml"), "utf8"))).toMatchObject({ model: "gpt-6-sol", model_reasoning_effort: "high" });
+    expect(parse(await readFile(join(root, "council.config.toml"), "utf8"))).toMatchObject({ model: "gpt-6-astra", model_reasoning_effort: "medium" });
+    for (const selection of [[], ["--preset", "latest"], ["--preset", "recommended"]]) {
+      const checked: string[] = [];
+      expect(await runCli(["convert", ...selection, "--output", outputRoot, "--check"], { ...io, log: (line) => checked.push(line) })).toBe(0);
+      expect(checked).toEqual([`checked ${root}`]);
+    }
+  });
+
   it("lists only the supported model generations and current aliases", async () => {
     const output: string[] = [];
     const code = await runCli(["list-presets"], { log: (line) => output.push(line), confirm: async () => false });
@@ -382,13 +411,14 @@ describe("CLI", () => {
     expect(output).toEqual([
       "openai-5.5 (supported)",
       "openai-5.6 (supported)",
-      "latest -> openai-5.6",
-      "recommended -> openai-5.6",
+      "openai-6 (supported)",
+      "latest -> openai-6",
+      "recommended -> openai-6",
     ]);
   });
 
-  it("validates both supported model generations as seven-role snapshots", async () => {
-    for (const id of ["openai-5.5", "openai-5.6"]) {
+  it("validates all supported model generations as seven-role snapshots", async () => {
+    for (const id of ["openai-5.5", "openai-5.6", "openai-6"]) {
       const output: string[] = [];
       const code = await runCli(["validate", "--preset", id, "--path", join(process.cwd(), "presets", id, "agents")], { log: (line) => output.push(line), confirm: async () => false });
       expect(code).toBe(0);
@@ -411,10 +441,35 @@ describe("CLI", () => {
     const checked: string[] = [];
 
     expect(await runCli(["convert", "--all", "--output", outputRoot], { log: (line) => generated.push(line), confirm: async () => false })).toBe(0);
-    expect(await readdir(outputRoot)).toEqual(["aliases.json", "openai-5.5", "openai-5.6"]);
+    expect(await readdir(outputRoot)).toEqual(["aliases.json", "openai-5.5", "openai-5.6", "openai-6"]);
     expect(await runCli(["convert", "--all", "--output", outputRoot, "--check"], { log: (line) => checked.push(line), confirm: async () => false })).toBe(0);
-    expect(generated).toHaveLength(2);
-    expect(checked).toHaveLength(3);
+    expect(generated).toHaveLength(3);
+    expect(checked).toHaveLength(4);
+  });
+
+  it("carries authorized child model override rules through all presets and managed Skills", async () => {
+    const outputRoot = await mkdtemp(join(tmpdir(), "slim-model-overrides-"));
+    await expect(runCli(["convert", "--all", "--output", outputRoot], { log: () => undefined, confirm: async () => false })).resolves.toBe(0);
+
+    const expected = [
+      /initial child dispatch[\s\S]*omit[\s\S]*model[\s\S]*reasoning_effort[\s\S]*configured values/is,
+      /Use an override only when Root relays an explicit user request or a higher-priority host instruction requires it[\s\S]*host tool exposes those exact values[\s\S]*selected role supports them/is,
+      /preserve agent type[\s\S]*sandbox[\s\S]*instructions[\s\S]*roster[\s\S]*depth[\s\S]*Root boundary/is,
+      /report the limitation[\s\S]*never guess[\s\S]*provider\/variant[\s\S]*another model or role[\s\S]*fixed role schema/is,
+      /late model request[\s\S]*running[\s\S]*unreconciled[\s\S]*existing interruption, reconciliation, and continuation lifecycle[\s\S]*do not duplicate, interrupt, or replace the lane solely to apply the request/is,
+    ];
+    for (const id of Object.keys(presets)) {
+      for (const name of ["orchestrator", "council"]) {
+        const instructions = await readFile(join(outputRoot, id, "agents", `${name}.toml`), "utf8");
+        for (const rule of expected) expect(instructions).toMatch(rule);
+        expect(instructions).not.toMatch(/providerID|modelID/);
+      }
+    }
+    for (const name of ["slim-orchestration", "slim-council"]) {
+      const instructions = await readFile(join(packagedSkillsHome, name, "SKILL.md"), "utf8");
+      for (const rule of expected) expect(instructions).toMatch(rule);
+      expect(instructions).not.toMatch(/providerID|modelID/);
+    }
   });
 
   it("convert --check rejects a missing selected manifest without mutating files", async () => {

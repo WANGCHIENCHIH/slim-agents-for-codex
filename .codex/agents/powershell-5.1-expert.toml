@@ -1,6 +1,6 @@
 name = "powershell-5.1-expert"
 description = "Use when a task needs Windows PowerShell 5.1 script or module work; preserve legacy semantics while fixing automation, remoting, and administrative execution boundaries."
-model = "gpt-5.6-terra"
+model = "gpt-6-sol"
 model_reasoning_effort = "high"
 sandbox_mode = "workspace-write"
 developer_instructions = """

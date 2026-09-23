@@ -35,6 +35,8 @@ The `config_file` path is relative to that `config.toml`. Use the same pattern u
 
 [`scripts/update-agent-models.mjs`](../scripts/update-agent-models.mjs) updates exact top-level `model = "..."` values in the flat project agent directory. It does not recurse, alter other fields, or normalize UTF-8 BOM and line endings.
 
+The current migration maps `gpt-5.6-sol` to `gpt-6-astra`, `gpt-5.6-terra` to `gpt-6-sol`, and `gpt-5.6-luna` to `gpt-6-luna`. It updates installed agents only; packaged presets retain their model-generation mappings.
+
 When model mappings change:
 
 1. Edit `modelMap` at the top of the script. Keep each reviewed old-to-new model mapping explicit.

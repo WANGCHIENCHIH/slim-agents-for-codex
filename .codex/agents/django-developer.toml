@@ -1,6 +1,6 @@
 name = "django-developer"
 description = "Use for Django work across models, views, forms, ORM, migrations, admin, middleware, and permissions, with a compatible scoped fix."
-model = "gpt-5.6-terra"
+model = "gpt-6-sol"
 model_reasoning_effort = "high"
 sandbox_mode = "workspace-write"
 developer_instructions = """

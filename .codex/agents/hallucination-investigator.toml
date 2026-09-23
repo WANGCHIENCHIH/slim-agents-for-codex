@@ -1,6 +1,6 @@
 name = "hallucination-investigator"
 description = "Review unsupported or incorrect AI claims across context, retrieval, prompts, tools, and workflow; recommend targeted fixes and regression cases."
-model = "gpt-5.6-terra"
+model = "gpt-6-sol"
 model_reasoning_effort = "high"
 sandbox_mode = "read-only"
 developer_instructions = """

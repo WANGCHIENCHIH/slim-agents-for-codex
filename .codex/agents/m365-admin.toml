@@ -1,6 +1,6 @@
 name = "m365-admin"
 description = "Review Microsoft 365 administration across Exchange, Teams, SharePoint, identity, retention, and tenant automation; recommend scoped, auditable changes."
-model = "gpt-5.6-terra"
+model = "gpt-6-sol"
 model_reasoning_effort = "high"
 sandbox_mode = "read-only"
 developer_instructions = """

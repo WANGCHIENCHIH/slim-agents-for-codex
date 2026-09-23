@@ -1,6 +1,6 @@
 name = "visual-asset-generator"
 description = "Specify icons, favicons, logos, wordmarks, and social images with reproducible prompts, dimensions, acceptance criteria, and a handoff to an execution role."
-model = "gpt-5.6-terra"
+model = "gpt-6-sol"
 model_reasoning_effort = "medium"
 sandbox_mode = "read-only"
 developer_instructions = """

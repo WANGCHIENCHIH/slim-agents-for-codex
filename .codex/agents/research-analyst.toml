@@ -1,6 +1,6 @@
 name = "research-analyst"
 description = "Use when a technical topic or design question needs structured evidence review; return confidence-rated findings, a justified recommendation, or explicit unknowns."
-model = "gpt-5.6-terra"
+model = "gpt-6-sol"
 model_reasoning_effort = "high"
 sandbox_mode = "read-only"
 developer_instructions = """

@@ -1,6 +1,6 @@
 name = "terragrunt-expert"
 description = "Use when Terragrunt layering, dependencies, remote state, or run-all ordering need inspection; recommend deterministic infrastructure changes with minimal hidden coupling."
-model = "gpt-5.6-terra"
+model = "gpt-6-sol"
 model_reasoning_effort = "medium"
 sandbox_mode = "read-only"
 developer_instructions = """

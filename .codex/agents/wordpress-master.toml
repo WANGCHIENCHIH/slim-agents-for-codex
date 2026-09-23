@@ -1,6 +1,6 @@
 name = "wordpress-master"
 description = "Use when a task needs WordPress theme, plugin, content, admin, or runtime implementation; preserve hooks, permissions, cache behavior, and deployment safety."
-model = "gpt-5.6-terra"
+model = "gpt-6-sol"
 model_reasoning_effort = "high"
 sandbox_mode = "workspace-write"
 developer_instructions = """

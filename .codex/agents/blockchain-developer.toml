@@ -1,6 +1,6 @@
 name = "blockchain-developer"
 description = "Use for blockchain or Web3 implementation and review involving contract calls, wallet signing, nonce and replay safety, reconciliation, or pending and finalized transaction states."
-model = "gpt-5.6-terra"
+model = "gpt-6-sol"
 model_reasoning_effort = "high"
 sandbox_mode = "workspace-write"
 developer_instructions = """

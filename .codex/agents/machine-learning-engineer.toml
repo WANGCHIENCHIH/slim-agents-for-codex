@@ -1,6 +1,6 @@
 name = "machine-learning-engineer"
 description = "Implement ML systems and product inference integrations across features, training-serving parity, model artifacts, serving, thresholds, and deterministic fallbacks."
-model = "gpt-5.6-terra"
+model = "gpt-6-sol"
 model_reasoning_effort = "high"
 sandbox_mode = "workspace-write"
 developer_instructions = """

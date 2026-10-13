@@ -42,6 +42,11 @@ If a late model request arrives while a child is running or its termination is u
 
 This stage is complete when the ledger can resume the work, dependencies and ownership are explicit, and every gate distinguishes pass from fail.
 
+### Checkpoint and resume
+
+- Before a checkpoint or handoff, update the current ledger with the phase and gate, owners and write scopes, agent IDs and statuses, validation evidence, unresolved work, and next action. Include its exact path and project/worktree in the host-required checkpoint format.
+- On resume, read that exact ledger and confirm the project/worktree and Root-approved subtree before execution. Resolve a missing or mismatched pointer with Root's assignment and confirmed task context rather than choosing the newest ledger. Recheck active lanes through available host status tools, reconcile shared-worktree changes, and resume at the first unresolved gate under the existing lifecycle rules.
+
 ## 2. Dispatch single-writer lanes
 
 - Run only independent lanes in parallel and use the smallest specialist set that covers the phase.

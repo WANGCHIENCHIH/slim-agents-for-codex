@@ -20,6 +20,11 @@ Run this workflow as the general Root agent. Keep final decisions and acceptance
 3. For new delegations use `fork_turns="none"` and a self-contained assignment. Reuse existing agents with the host's continuation tool (`followup_task` when available); `send_message` alone may not start a new turn. Observe completion before redispatch, and follow the existing orchestration lifecycle instead of spawning duplicate workers or polling repeatedly.
 4. Reconcile each returned artifact and check against every acceptance criterion. Inspect the actual user entry point when applicable; task checkboxes and a passing subset of tests are not proof of completion. If a gap remains and authorized work can proceed, send the concrete gap and evidence to Orchestrator for the next pass. Return to Council only for a new material decision.
 
+## Checkpoint and resume
+
+- Before a checkpoint or handoff, update the existing task record with acceptance evidence, decisions and authorization, unfinished work, agent IDs and statuses, and the next action. Include the project/worktree, exact task-record path, and any existing Orchestrator-ledger path in the host-required checkpoint format.
+- On resume, read those exact records before acting and confirm that the project/worktree and goal match the current assignment. Recover a missing or mismatched pointer from confirmed task context; a record's recency alone does not identify the current goal. Recheck recorded active agents through available host status tools, reconcile any completed results, and continue unresolved work under the existing lifecycle rules.
+
 ## Continue or stop
 
 - A batch boundary, status question, or partial success does not end the goal. Continue the next unblocked authorized action and give concise progress updates while working. Preserve scope and unfinished work through context compaction, using any host-required checkpoint format.

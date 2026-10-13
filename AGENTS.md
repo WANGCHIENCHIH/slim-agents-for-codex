@@ -1,146 +1,97 @@
-# Delivery Workflow
+# Project agent instructions
 
-Use this workflow for material work in this repository:
+## Scope and decisions
 
-`grill-with-docs -> to_spec -> to_ticket -> implement -> review -> archive`
+- Treat goals, acceptance criteria and explicit constraints as binding. Evaluate proposed
+  techniques and assumptions as candidates; challenge them with evidence and explain
+  meaningful departures. Independently choose in-scope, low-risk, reversible designs and tools.
+- Clear requests authorize decomposition and follow-through through implementation, affected
+  checks, review and necessary docs. Honor read-only, proposal and staged stop points.
+  Ask only about unresolved material scope, acceptance, data, security, cost or external-effect
+  decisions outside existing authorization; discover facts and recommend an option first.
+- Resolve recoverable errors and pause only dependent work. Later messages steer ongoing
+  work until explicit pause, cancellation or replacement; retain prior decisions and evidence.
+- Preserve unrelated work, UTF-8 encoding, BOM and line endings. Keep private data and
+  credentials out of logs, tests, artifacts and commits. Stage only authorized files.
+  Commit, push, publication, release and deployment need task authorization; confirm
+  destructive actions. Messages to others need explicit authorization.
 
-Matt Pocock's skills are the workflow authority: they define how decisions are
-resolved, specs are synthesized, tickets are sliced, work is implemented, TDD
-is performed, and changes are reviewed. OpenSpec is the institutional artifact
-system used to preserve accepted specs and designs, expose executable target
-tasks, verify change status, and archive completed changes. When their mechanics
-differ, preserve the Matt skill's method and use OpenSpec as the record and
-execution target.
+## Workflow selection
 
-Before invoking or recommending an OpenSpec skill, verify that its `SKILL.md`
-exists under `.agents/skills/` or `.codex/skills/`. When no installed skill
-owns an artifact step, follow `openspec status --change "<name>" --json` and
-`openspec instructions "<artifact-id>" --change "<name>" --json` instead of
-naming a removed workflow.
+Settled fixes, refactors, test maintenance and agreed presentation changes use implementation,
+affected checks and review directly. For material requirement changes or a selected OpenSpec
+lifecycle task, read only applicable sections of [Delivery workflow](docs/agents/delivery-workflow.md).
+Approved scope covers remaining stages unless the user set a stop. Planning waivers retain
+verification, affected operational docs and explicit spec gaps.
 
-## One-shot exception for simple tasks
+Read relevant code, callers, tests and requirements; reuse loaded guidance. For domain terms
+or architectural tradeoffs, consult relevant existing GLOSSARY.md, GLOSSARY-MAP.md and ADRs
+when present. Keep interfaces simple and hide complexity that would spread across callers.
+These repository rules work without a personal global AGENTS.md.
 
-When a task qualifies for direct handling under global Rule 12, use a
-one-shot workflow instead of the Matt Pocock workflow above. A one-shot task may
-use Matt's `grill-with-docs` when limited clarification is needed and may use
-Matt's `code-review` for code changes. Do not use `to-spec`, `to-tickets`, or
-other Matt workflow stages, and do not create OpenSpec artifacts for a one-shot
-task. If the task stops qualifying for direct handling, return to the full
-workflow.
+## Adapt upstream skills to the authorized task
 
-## 1. Grill with docs — Matt `grill-with-docs`
+Use skills when useful or explicitly invoked; read the selected skill and only needed
+references. Apply its method at the task's scope and risk. Recipes add no approval or
+full-suite gates and grant no action authorization. Preserve upstream skills; keep local
+adaptations here and OpenSpec artifact language/formatting in `openspec/config.yaml`.
 
-- Use Matt's `grill-with-docs` skill when requirements, tradeoffs, domain terms,
-  or acceptance criteria are not yet settled. It composes the `grilling` and
-  `domain-modeling` skills.
-- At the start of every `grill-with-docs`, `grilling`, or composed grill
-  workflow, create `docs/review/<topic>-grilling-ledger-YYYY-MM-DD.md` before
-  asking the first material decision. Reuse the topic's existing ledger when
-  resuming the same discussion.
-- After each investigation or owner response, update the ledger with the scope,
-  verified facts and sources, options and recommendation, the owner's exact
-  decision, open questions, and next action. Update it before yielding or
-  handing off so the file alone can resume the work after context compaction.
-- Resolve one decision at a time. Investigate discoverable facts instead of
-  asking the user, recommend an option, and wait for the user's decision.
-- Create or update only the durable supporting documents that become necessary
-  during the discussion:
-  - ADRs for consequential, durable decisions;
-  - operational or domain documents for background that must remain readable
-    outside the change;
-  - diagrams when they materially clarify a relationship or flow.
-- The grilling ledger and supporting documents are recovery records, not a
-  parallel requirements system. Confirmed product behavior must be captured by
-  OpenSpec.
-- Do not proceed to implementation until the user confirms shared
-  understanding.
+- Before invoking/recommending an OpenSpec skill, verify its `SKILL.md` under
+  `.agents/skills/` or `.codex/skills/`. When none owns the artifact step, use OpenSpec
+  status and artifact instructions as described in the delivery workflow.
+- For `openspec-apply-change`, repair authorized missing artifacts and recheck apply state;
+  resolve its blocked state before implementation. Verify tasks before marking them complete.
+- A separate `ponytail-review` is opt-in; assess complexity in the ordinary review.
 
-## 2. To spec — Matt `to-spec`, stored in OpenSpec
+## Verification and review
 
-- Use Matt's `to-spec` skill as the primary method: synthesize the resolved
-  conversation without reopening the interview, respect the domain glossary and
-  ADRs, prefer existing public test seams, and confirm proposed seams with the
-  user.
-- In this repository, publish that synthesis into an OpenSpec change instead of
-  creating a parallel PRD. For staged planning, scaffold with `openspec new
-  change "<name>"`, then use OpenSpec status and artifact instructions to write
-  only the approved proposal, capability specs, and design. Use
-  `openspec-update-change` to revise artifacts that already exist.
-- Use `openspec-propose` only when the user explicitly wants all apply-ready
-  artifacts generated in one pass and Matt's spec and ticket decisions are
-  already settled.
-- Treat `openspec/specs/` as the authority for current accepted behavior.
-- Treat `openspec/changes/<change>/` as the authority for the target behavior of
-  that in-progress change. It does not describe shipped behavior until verified
-  and archived.
-- ADRs explain why; they do not override requirements or acceptance scenarios.
-
-## 3. To ticket — Matt `to-tickets`, stored as OpenSpec tasks
-
-- Use Matt's `to-tickets` skill as the primary method. Create tracer-bullet
-  vertical slices that are independently demoable or verifiable, fit a fresh
-  context window, and declare their blocking edges. Present the breakdown and
-  obtain user approval before publishing it.
-- In this repository, publish the approved tickets into the OpenSpec tasks
-  artifact by following the current OpenSpec status and tasks instructions.
-  Preserve ticket boundaries, blockers, acceptance criteria, and dependency
-  order.
-- Do not duplicate OpenSpec tasks in `docs/superpowers/` or another plan file.
-
-## 4. Implement — Matt `implement` and `tdd`
-
-- Use Matt's `implement` skill as the primary implementation workflow.
-- Use `openspec-apply-change` to load the approved artifacts and target tasks;
-  it is the execution ledger, not the implementation methodology.
-- For code behavior, use Matt's `tdd` skill at the user-approved public seams:
-  one failing behavior test, the minimum implementation to pass it, then the
-  next vertical slice. Do not substitute a generic TDD workflow.
-- Select additional skills according to the deliverable, when available:
-  - code: Matt `tdd` plus the relevant language or framework skill;
-  - documents: `doc-coauthoring` or the relevant document skill;
-  - presentations: the presentation skill;
-  - spreadsheets: the spreadsheet skill;
-  - images or visual artifacts: the relevant image or visualization skill;
-  - infrastructure or operations: the relevant platform skill.
-- Read the applicable project files and conventions before changing anything.
-- If implementation exposes a missing decision or invalid assumption, stop the
-  affected work, return to Matt `grill-with-docs`, and update the OpenSpec
-  artifacts before continuing.
-
-## 5. Review — Matt `code-review`, then OpenSpec verification
-
-- For code changes, use Matt's `code-review` skill as the primary review with an
-  explicit fixed point and the originating OpenSpec change as the spec source.
-  Keep its Standards and Spec review axes separate.
-- When the `ponytail-review` skill is available, run it once after Matt's
-  `code-review` and remove justified redundancy before OpenSpec verification.
-- Then inspect `openspec status --change "<name>" --json`, run `openspec
-  validate "<name>" --strict`, and compare the proposal, specs, design, and
-  tasks against implementation and evidence before archive.
-- For non-code deliverables, apply global Rule 15 against the
-  originating OpenSpec acceptance scenarios. If no artifact-specific review
-  workflow exists, use a context-free reader or reviewer.
-
-## 6. Archive — OpenSpec lifecycle
-
-- Use `openspec-archive-change` only after implementation and review are
-  complete and the user accepts any remaining warnings.
-- Use `openspec-sync-specs` when accepted delta specs must be merged before
-  archive; then use `openspec-archive-change` to finalize the change.
-- Update operational docs, ADR links, and acceptance evidence when the completed
-  change affects them.
+- Bug fixes, core behavior and high-risk logic/data/contracts start with a minimal failing
+  behavior test at a stable public seam. Low-risk changes with adequate coverage may be
+  changed then checked; copy/prose/styling may use direct checks. Derive expected results
+  from specs, known-good examples or independent reasoning rather than copying implementation.
+- For bugs, reproduce the actual failure pattern and rerun the original scenario after
+  the fix; report reproduction gaps. Protect observable behavior, data, safety and contracts.
+- Use current test configuration and required gates. Historical workarounds need a verified
+  current reason. Diagnose failures before retrying, retain evidence and rerun affected checks.
+  Broaden for shared inputs, unresolved interactions or required gates. Preserve material-risk
+  coverage when simplifying tests. Validate configuration natively and scripts in their language.
+- Self-review routine work. Material risks, substantial independent scopes or an explicit
+  independent-review request need independent review. For code, use `code-review` with a
+  stated scoped baseline and separate Standards and Spec axes, including complexity.
+  Settled maintenance uses the accepted request/issue and established behavior.
+- Open/run non-code artifacts against acceptance criteria; prose needs content, link/anchor,
+  UTF-8/BOM/newline and whitespace checks. Verify actual entry/data paths and running versions
+  when relevant and available. Report missing runtime, integration or device evidence;
+  automated checks, documents and checked tasks establish only the layer they exercise.
 
 ## Document authority
 
-When sources conflict, do not blend them:
+1. Accepted behavior: `openspec/specs/`.
+2. Selected target behavior and tasks: `openspec/changes/<change>/`.
+3. Rationale: `docs/adr/`; it does not override requirements.
+4. Operations, testing, review and acceptance evidence: the relevant `docs/` area.
 
-1. For current accepted behavior: `openspec/specs/`.
-2. For the target of explicitly selected work: that active OpenSpec change.
-3. For decision rationale: `docs/adr/`.
-4. For operation, training, testing, database reference, review, and acceptance
-   evidence: the corresponding `docs/` area.
+For missing main specs, use verified behavior and an applicable active change; record the
+gap and capture/sync specs within authorized scope. Historical plans do not establish
+accepted behavior or block settled maintenance. Before archive, compare OpenSpec artifacts
+with evidence, run status and strict validation, and obtain acceptance of remaining warnings.
+Verify spec synchronization and archive separately from implementation and delivery.
 
-During migration, a capability may not yet have a main spec. Do not infer its
-accepted behavior from historical plans. Check verified runtime behavior and
-the relevant active change, report the missing main-spec boundary, and capture
-the capability through the normal OpenSpec verify and archive flow.
+## Maintenance records
+
+Small completed work needs only its result/checks and, if committed, its description.
+For unresolved work, durable decisions or handoffs, update an existing OpenSpec task,
+originating review or issue; link rather than copy requirements/progress. Multi-round material
+design discussions use the ledger in the delivery workflow; a single clarification needs none.
+Keep outcome, evidence/version, remaining work and actual delivery/commit status first.
+Keep AGENTS focused on judgment and conditional pointers; prefer existing automated checks
+for recurring mechanical errors. New permanent tooling or docs need a demonstrated purpose.
+
+## Repository context
+
+This is a TypeScript/Node.js CLI. Use `package.json` and
+[Development](README.md#development) for current environment, commands and package checks.
+For role contracts, model mappings or generated presets, read
+[Adding a model-generation preset](docs/adding-a-preset.md) and
+[Preset lifecycle](docs/preset-lifecycle.md); edit canonical sources and regenerate snapshots.
+Package validation does not establish live model access or agent behavior.
